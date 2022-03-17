@@ -1,1 +1,30 @@
-<p>login works!</p>
+<mat-card >
+    <mat-card-header> Login </mat-card-header>
+    <mat-card-content>
+        <form  id="log-in" [formGroup]="loginCredentials" (ngSubmit)="submit()">
+            <mat-form-field>
+                <input matInput (input) = "checkUserEntry()"  placeholder="Username or E-mail" formControlName = "usermail" />
+                <mat-error *ngIf="usermail && usermail.touched && usermail.invalid">
+                    <mat-error *ngIf=" usermail.errors?.['required']"> Username or E-mail is required! </mat-error>
+                    <mat-error *ngIf=" usermail.errors?.['minlength']">Username has to be at least 3 characters long!</mat-error>
+                    <mat-error *ngIf=" usermail.errors?.['maxlength']">Username can't have more than 15 characters!</mat-error>
+                    <mat-error *ngIf=" usermail.errors?.['email']">Entered an invalid E-mail address!</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <br /><br *ngIf="usermail && usermail.touched && usermail.invalid" />
+            <mat-form-field>
+                <input matInput (input)="checkUserEntry()" placeholder="Password" formControlName = "password" type = "password" />
+                <mat-error *ngIf="password && password.touched && password.invalid">
+                    <mat-error *ngIf=" password.errors?.['required']"> Password is required! </mat-error>
+                    <mat-error *ngIf=" password.errors?.['minlength']">Password has to be at least 6 characters long!</mat-error>
+                    <mat-error *ngIf=" password.errors?.['maxlength']">Password can't have more than 24 characters!</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <br/><br *ngIf="password && password.touched && password.invalid" />
+            
+            <button mat-button [disabled] = "this.loginCredentials.invalid" form="log-in" type = "submit"> {{ userEnteredEmail? "Login By E-mail Address": "Login By Username"}} </button>
+            <mat-error *ngIf="wrongPassword"> Wrong username or password! Please try again.</mat-error>
+        </form>
+    </mat-card-content>
+</mat-card>
+

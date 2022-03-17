@@ -1,1 +1,61 @@
-<p>signup works!</p>
+<mat-card>
+    <mat-card-header> Signup </mat-card-header>
+    <mat-card-content title="Sign-up">
+        <form id="sign-up" [formGroup] = "signupCredentials" (ngSubmit)="submit()">
+            <mat-form-field>
+                <input matInput placeholder="Name" formControlName = "name" />
+                <mat-error *ngIf="name && name.touched && name.invalid">
+                    <mat-error *ngIf=" name.errors?.['required']"> is required! </mat-error>
+                    <mat-error *ngIf=" name.errors?.['minlength']">has to be at least 3 characters long!</mat-error>
+                    <mat-error *ngIf=" name.errors?.['maxlength']">can't have more than 15 characters!</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <br/><br *ngIf="name && name.touched && name.invalid"/>
+            <mat-form-field>
+                <input matInput placeholder="Username" formControlName = "username" />
+                <mat-error *ngIf="username && username.touched && username.invalid">
+                    <mat-error *ngIf=" username.errors?.['required']"> Username is required! </mat-error>
+                    <mat-error *ngIf=" username.errors?.['minlength']">Username has to be at least 3 characters long!</mat-error>
+                    <mat-error *ngIf=" username.errors?.['maxlength']">Username can't have more than 15 characters!</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <br/><br *ngIf="username && username.touched && username.invalid"/>
+            <mat-form-field>
+                <input matInput placeholder="Password" formControlName = "password" type = "password" />
+                <mat-error *ngIf="password && password.touched && password.invalid">
+                    <mat-error *ngIf=" password.errors?.['required']"> Password required! </mat-error>
+                    <mat-error *ngIf=" password.errors?.['minlength']">Password has to be at least 6 characters long!</mat-error>
+                    <mat-error *ngIf=" password.errors?.['maxlength']">Password can't have more than 24 characters!</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <br/><br *ngIf="password && password.touched && password.invalid" />
+            <mat-form-field>
+                <input matInput placeholder="Phone Number" formControlName = "phonenumber"/>
+                <mat-error *ngIf="phone && phone.touched && phone.invalid">
+                    <mat-error *ngIf=" phone.errors?.['minlength'] && !phone.errors?.['pattern']">Phone number has to be at exactly 11 digits long!</mat-error>
+                    <mat-error *ngIf=" phone.errors?.['maxlength'] && !phone.errors?.['pattern']">Phone number has to be at exactly 11 digits long!</mat-error>
+                    <mat-error *ngIf=" phone.errors?.['pattern']">Phone number has to start with "09" and it can't contain alphabetical letters!</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <br/><br *ngIf="phone && phone.touched && phone.invalid" />
+            <mat-form-field>
+                <input matInput placeholder="E-mail Address" formControlName = "email" type = "email" />
+                <mat-error *ngIf="email && email.touched && email.invalid">
+                    <mat-error *ngIf=" email.errors?.['required']"> E-mail address is required! </mat-error>
+                    <mat-error *ngIf=" email.errors?.['email']">E-mail address is invalid!</mat-error>
+                    </mat-error>
+            </mat-form-field>
+            <br/><br *ngIf="email && email.touched && email.invalid"/>  
+            <mat-form-field>
+                <textarea matInput formControlName = "address" ></textarea>
+                <mat-placeholder > Address </mat-placeholder>
+                <mat-error *ngIf="address && address.touched && address.invalid">
+                    <mat-error *ngIf=" address.errors?.['minlength']">Address has to be at least 10 characters long!</mat-error>
+                    <mat-error *ngIf=" address.errors?.['maxlength']">Address can't have more than 115 characters!</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <br/><br *ngIf="address && address.touched && address.invalid"/>
+            <button mat-button [disabled] = "this.signupCredentials.invalid" form="sign-up" type = "submit" > Signup </button>
+        </form>
+    </mat-card-content>
+</mat-card>
