@@ -18,9 +18,9 @@ export class HttpRequestService {
   }
 
   // Define the login post request method (NOT USING THE ACTUAL DATA***)
-  login(creds : Object) :Object{
-    let body = {"username":"ADz","password":"123456"};
-    let sub = this.hC.post(this.db+"/api/login",body,{headers:{"Access-Control-Request-Headers":"Access-Control-Allow-Origin", "Content-Type":"application/json"}, observe: 'body', responseType: 'json'}).subscribe((r) => {
+  login(creds : {usermail: string, password: string, username?: string}): Object{
+    creds["username"] = creds["usermail"];
+    let sub = this.hC.post(this.db+"/api/login",creds,{headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'}).subscribe((r) => {
       console.log("next Handler...");
       this.rr = r;
       return;
@@ -30,9 +30,11 @@ export class HttpRequestService {
   
   //Define the signup post request method
   signup(creds:Object):void{
-    let sub = this.hC.post(this.db+"/api/login",creds,{headers:{"Access-Control-Request-Headers":"Access-Control-Allow-Origin", "Content-Type":"application/json"}, observe: 'body', responseType: 'json'}).subscribe((r) => {
+    let sub = this.hC.post(this.db+"/api/register",creds,{headers:{ "Content-Type":"application/json"}, observe: 'body', responseType: 'json'}).subscribe((r) => {
+    
       return;
     })
+    console.log(creds);
   }
 
   //Define the e-mail valideation post request method (INCOMPLET)

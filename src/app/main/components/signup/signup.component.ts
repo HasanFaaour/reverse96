@@ -19,7 +19,7 @@ export class SignupComponent implements OnInit {
   signupCredentials = new FormGroup({
     name : new FormControl('',[Validators.minLength(3), Validators.maxLength(15)]),
     address : new FormControl('',[Validators.minLength(10), Validators.maxLength(115)]),
-    phonenumber : new FormControl('',[Validators.minLength(11), Validators.maxLength(11), Validators.pattern("09[0-9]*")]),
+    phone_number : new FormControl('',[Validators.minLength(11), Validators.maxLength(11), Validators.pattern("09[0-9]*")]),
     email : new FormControl('',[Validators.required, Validators.email]),
     username : new FormControl('',[Validators.required, Validators.minLength(3), Validators.maxLength(15)]),
     password : new FormControl('',[Validators.required, Validators.minLength(6), Validators.maxLength(24)])
@@ -41,7 +41,7 @@ export class SignupComponent implements OnInit {
   }
 
   get phone(){
-    return this.signupCredentials.get("phonenumber")
+    return this.signupCredentials.get("phone_number")
   }
 
   get email(){

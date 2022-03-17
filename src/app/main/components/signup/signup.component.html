@@ -30,7 +30,7 @@
             </mat-form-field>
             <br/><br *ngIf="password && password.touched && password.invalid" />
             <mat-form-field>
-                <input matInput placeholder="Phone Number" formControlName = "phonenumber"/>
+                <input matInput placeholder="Phone Number" formControlName = "phone_number"/>
                 <mat-error *ngIf="phone && phone.touched && phone.invalid">
                     <mat-error *ngIf=" phone.errors?.['minlength'] && !phone.errors?.['pattern']">Phone number has to be at exactly 11 digits long!</mat-error>
                     <mat-error *ngIf=" phone.errors?.['maxlength'] && !phone.errors?.['pattern']">Phone number has to be at exactly 11 digits long!</mat-error>
