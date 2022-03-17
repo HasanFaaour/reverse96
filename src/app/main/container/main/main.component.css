@@ -79,23 +79,14 @@ main {
   }
 }
 
-
-.fav {
-}
-
 .info {
   width: 100%;
   height: auto;
-  border: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   border-top: 1px solid white;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-
 }
-
-
-
-
 
 .right-side {
     height: 53%;
@@ -130,12 +121,18 @@ main {
     margin-left: 15px;
   }
 
-.mat-icon {
-  
-}  
-
   @media screen and (max-width: 800px) {
     .right-side {
       visibility: hidden;
+    }
+  }
+
+  @media screen and (max-width: 800px) {
+    .place-card {
+      width: 83%;
+      margin-left: 60px;
+    }
+    .place-image {
+      height: 370px;
     }
   }
