@@ -3,6 +3,8 @@
     <mat-label > Signup </mat-label>
     <mat-card-content title="Sign-up">
         <form id="sign-up" [formGroup] = "signupCredentials" (ngSubmit)="submit()">
+
+            <!-- Name input -->
             <mat-form-field>
                 <input matInput placeholder="Name" formControlName = "name" />
                 <mat-error *ngIf="name && name.touched && name.invalid">
@@ -12,6 +14,8 @@
                 </mat-error>
             </mat-form-field>
             <br/><br *ngIf="name && name.touched && name.invalid"/>
+
+            <!-- Username input -->
             <mat-form-field>
                 <input matInput placeholder="Username" formControlName = "username" />
                 <mat-error *ngIf="username && username.touched && username.invalid">
@@ -21,6 +25,8 @@
                 </mat-error>
             </mat-form-field>
             <br/><br *ngIf="username && username.touched && username.invalid"/>
+
+            <!-- Password input -->
             <mat-form-field>
                 <input matInput placeholder="Password" formControlName = "password" type = "password" />
                 <mat-error *ngIf="password && password.touched && password.invalid">
@@ -30,6 +36,8 @@
                 </mat-error>
             </mat-form-field>
             <br/><br *ngIf="password && password.touched && password.invalid" />
+
+            <!-- Phone number input -->
             <mat-form-field>
                 <input matInput placeholder="Phone Number" formControlName = "phone_number"/>
                 <mat-error *ngIf="phone && phone.touched && phone.invalid">
@@ -39,6 +47,8 @@
                 </mat-error>
             </mat-form-field>
             <br/><br *ngIf="phone && phone.touched && phone.invalid" />
+
+            <!-- Email input -->
             <mat-form-field>
                 <input matInput placeholder="E-mail Address" formControlName = "email" type = "email" />
                 <mat-error *ngIf="email && email.touched && email.invalid">
@@ -46,7 +56,9 @@
                     <mat-error *ngIf=" email.errors?.['email']">E-mail address is invalid!</mat-error>
                     </mat-error>
             </mat-form-field>
-            <br/><br *ngIf="email && email.touched && email.invalid"/>  
+            <br/><br *ngIf="email && email.touched && email.invalid"/> 
+
+            <!-- Address input -->
             <mat-form-field>
                 <textarea matInput formControlName = "address" ></textarea>
                 <mat-placeholder > Address </mat-placeholder>
@@ -56,6 +68,8 @@
                 </mat-error>
             </mat-form-field>
             <br/><br *ngIf="address && address.touched && address.invalid"/>
+
+            <!-- Button -->
             <button mat-button [disabled] = "this.signupCredentials.invalid" form="sign-up" type = "submit" > Signup </button>
         </form>
     </mat-card-content>
@@ -66,6 +80,8 @@
     <mat-card-content>
         <mat-label>Please enter the code you received at your email address</mat-label>
         <form id = "vE" [formGroup]="codeGroup" (ngSubmit)="validate()">
+
+            <!-- Code input -->
             <mat-form-field >
                 <input formControlName="code" matInput placeholder="Code" />
                 <mat-error *ngIf="code && code.touched && code.invalid">
@@ -76,6 +92,8 @@
                 </mat-error>
             </mat-form-field>
             <br/><br *ngIf="code && code.touched && code.invalid" />
+
+            <!-- Button -->
             <button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit">Validate</button>
         </form>
     </mat-card-content>

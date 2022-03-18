@@ -26,7 +26,8 @@
                 </mat-error>
             </mat-form-field>
             <br/><br *ngIf="password && password.touched && password.invalid" />
-
+            
+            <!-- Button -->
             <button mat-button [disabled] = "this.loginCredentials.invalid" form="log-in" type = "submit"> {{ userEnteredEmail? "Login By E-mail Address": "Login By Username"}} </button>
             <mat-error *ngIf="wrongPassword"> Wrong username or password! Please try again.</mat-error>
         </form>
