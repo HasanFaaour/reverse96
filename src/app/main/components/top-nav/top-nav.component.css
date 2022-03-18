@@ -30,7 +30,7 @@
     margin-right: 20px;
     margin-left: 12%;
     background-color: rgb(248, 247, 247);
-    border: 1px solid #ddd;
+    border: none;
     border-radius: 8px;
     padding-left: 15px;
   }
@@ -44,9 +44,10 @@
     margin-left: 5%;
   }
   
-  .top-nav .search-box::after {
-    border: 1px solid #ddd;
-  }
+  
+  *:focus{
+    outline: none;
+}
 
   @media screen and (max-width: 800px) {
     .top-nav .search-box {
