@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
+import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
     TopNavComponent,
     FooterComponent,
     SideBarComponent,
+    HomeComponent,
   ],
   imports: [
     CommonModule,
