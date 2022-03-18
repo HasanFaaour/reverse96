@@ -18,28 +18,21 @@ export class HttpRequestService {
   }
 
   // Define the login post request method (NOT USING THE ACTUAL DATA***)
-  login(creds : {usermail: string, password: string, username?: string}): Object{
+  login(creds : {usermail: string, password: string, username?: string}): Observable<object>{
     creds["username"] = creds["usermail"];
-    let sub = this.hC.post(this.db+"/api/login",creds,{headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'}).subscribe((r) => {
-      console.log("next Handler...");
-      this.rr = r;
-      return;
-    });
-    return this.rr;
+    console.log("creds: ",creds);
+    return this.hC.post(this.db+"/api/login",creds,{headers:{"Content-Type":"application/json"},  responseType: 'json'});
   }
   
   //Define the signup post request method
-  signup(creds:Object):void{
-    let sub = this.hC.post(this.db+"/api/register",creds,{headers:{ "Content-Type":"application/json"}, observe: 'body', responseType: 'json'}).subscribe((r) => {
+  signup(creds:Object):Observable<object>{
+    return this.hC.post(this.db+"/api/register",creds,{headers:{ "Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
     
-      return;
-    })
-    console.log(creds);
   }
 
   //Define the e-mail valideation post request method (INCOMPLET)
-  validateEmail (email: string, code: number): void{
-    return;
+  validateEmail (email: string, code: number): Observable<object>{
+    return this.hC.post(this.db+"/api/email-activision",{email: email, code: code},{ headers:{"Content-Type":"application/json"}});
   }
 
   //Define the logout post request method (INCOMPLETE)

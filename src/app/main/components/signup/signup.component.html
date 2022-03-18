@@ -1,5 +1,5 @@
-<mat-card>
-    <mat-card-header> Signup </mat-card-header>
+<mat-card *ngIf="submittedEmail == ',,'">
+    <mat-label > Signup </mat-label>
     <mat-card-content title="Sign-up">
         <form id="sign-up" [formGroup] = "signupCredentials" (ngSubmit)="submit()">
             <mat-form-field>
@@ -56,6 +56,23 @@
             </mat-form-field>
             <br/><br *ngIf="address && address.touched && address.invalid"/>
             <button mat-button [disabled] = "this.signupCredentials.invalid" form="sign-up" type = "submit" > Signup </button>
+        </form>
+    </mat-card-content>
+</mat-card>
+<mat-card *ngIf="submittedEmail != ',,'">
+    <mat-card-content>
+        <mat-label>Please enter the code you received at your email address</mat-label>
+        <form id = "vE" [formGroup]="codeGroup" (ngSubmit)="validate()">
+            <mat-form-field >
+                <input formControlName="code" matInput placeholder="Code" />
+                <mat-error *ngIf="code && code.touched && code.invalid">
+                    <mat-error *ngIf="code.errors?.['required']">You haven't entered a code!</mat-error>
+                    <mat-error *ngIf="code.errors?.['minlength']">The code should be 4 digits long!</mat-error>
+                    <mat-error *ngIf="code.errors?.['maxlength']">The code should be 4 digits long!</mat-error>
+                    <mat-error *ngIf="code.errors?.['pattern']">The code only consists of digits!</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit">Validate</button>
         </form>
     </mat-card-content>
 </mat-card>

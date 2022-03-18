@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpRequestService } from '../../../http-service.service';
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { Router } from '@angular/router';
 
 
 //Creating a Custom Validator For Username or Email Field
@@ -25,7 +26,7 @@ function validateUserMail(): ValidatorFn{
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private Request : HttpRequestService) { }
+  constructor(private Request: HttpRequestService, private route: Router) { }
 
   ngOnInit(): void {
   }
@@ -56,14 +57,25 @@ export class LoginComponent implements OnInit {
 
   //Defining the submit method to handle the request
   submit ():void{
-    let response = this.Request.login(this.loginCredentials.value); 
-    if ("access" in response){
-      console.log("sucess");
-      this.loggedInUsername = this.loginCredentials.value['usermail'];
+    this.wrongPassword = true;
+    let sub = this.Request.login(this.loginCredentials.value).subscribe((response) =>{
       console.log(response);
-      return;
-    }else{
-      console.log("wrong!");
+      if ("access" in response){
+        console.log("sucess");
+        this.loggedInUsername = this.loginCredentials.value['usermail'];
+        console.log(this.loggedInUsername);
+        localStorage.setItem("acess",Object.values(response)[0]);
+        localStorage.setItem("refresh",Object.values(response)[1]);
+        this.route.navigate(["signup"]);
+        //redirect to homepage;
+      }else{
+        console.log("wrong!");
+        this.wrongPassword = true;
+      }
+      sub.unsubscribe();
+    });
+    if (this.wrongPassword){
+      console.log("wrong (maybe not actually)!");
       this.wrongPassword = true;
       return;
     }
