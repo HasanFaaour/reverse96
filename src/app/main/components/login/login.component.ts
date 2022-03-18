@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  //Defining ... Flags
+  //Defining Logic Flags
   userEnteredEmail = false;
   loggedInUsername = "@N/A";
   wrongPassword = false;
@@ -68,7 +68,6 @@ export class LoginComponent implements OnInit {
         localStorage.setItem("acess",Object.values(response)[0]);
         localStorage.setItem("refresh",Object.values(response)[1]);
         this.route.navigate([""]);
-        //redirect to homepage;
       }else{
         console.log("wrong!");
         this.wrongPassword = true;

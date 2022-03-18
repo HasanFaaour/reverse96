@@ -17,7 +17,7 @@ export class HttpRequestService {
     
   }
 
-  // Define the login post request method (NOT USING THE ACTUAL DATA***)
+  // Define the login post request method
   login(creds : {usermail: string, password: string, username?: string}): Observable<object>{
     creds["username"] = creds["usermail"];
     console.log("creds: ",creds);
@@ -30,7 +30,7 @@ export class HttpRequestService {
     
   }
 
-  //Define the e-mail valideation post request method (INCOMPLET)
+  //Define the e-mail valideation post request method
   validateEmail (email: string, code: number): Observable<object>{
     return this.hC.post(this.db+"/api/email-activision",{email: email, code: code},{ headers:{"Content-Type":"application/json"}});
   }

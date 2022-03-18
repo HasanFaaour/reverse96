@@ -27,9 +27,12 @@ export class SignupComponent implements OnInit {
     username : new FormControl('',[Validators.required, Validators.minLength(3), Validators.maxLength(15)]),
     password : new FormControl('',[Validators.required, Validators.minLength(6), Validators.maxLength(24)])
   });
+  
   codeGroup = new FormGroup({
     code : new FormControl("",[Validators.maxLength(4), Validators.maxLength(4), Validators.pattern("[0-9]*")])
   });
+
+
   //Defining logic flags
   submittedEmail = ",,";
 
