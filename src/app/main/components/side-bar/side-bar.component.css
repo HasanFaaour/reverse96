@@ -27,3 +27,13 @@
 .sidenav .mat-icon:hover {
   color:rgb(81, 187, 248)
 }
+
+@media screen and (max-width: 800px) {
+  .sidenav {
+    width: 60px;
+  }
+  .sidenav a {
+    margin-left: 0px;
+  }
+  
+}
