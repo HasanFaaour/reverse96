@@ -2,6 +2,7 @@ import { TypeofExpr } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { HttpRequestService } from '../../../http-service.service';
 
@@ -12,7 +13,7 @@ import { HttpRequestService } from '../../../http-service.service';
 })
 export class SignupComponent implements OnInit {
 
-  constructor(private Request : HttpRequestService) { }
+  constructor(private Request : HttpRequestService, private route: Router) { }
 
   ngOnInit(): void {
   }
@@ -35,18 +36,11 @@ export class SignupComponent implements OnInit {
   //Defining the submit method to handle the request
   submit() :void {
     let sub = this.Request.signup(this.signupCredentials.value).subscribe((response:object) => {
-      console.log(response);
-      console.log(response.valueOf());
-      if ("message" in Object.keys(response)){
-          if (Object.values(response)[0] == "success"){
+      if ("message" in response){
           this.submittedEmail = this.email?.value;
-        }
-      else{
-        console.log(Object.values(response)[0]);
+      }else{
+        console.log(11);
       }
-
-      }
-
       sub.unsubscribe();
       return;
     });
@@ -56,8 +50,9 @@ export class SignupComponent implements OnInit {
   validate(){
     let sub = this.Request.validateEmail(this.submittedEmail,this.code?.value).subscribe((response) =>{
       console.log(response);
-      if ('access' in response){
-        let field = 'access';
+      if ('message' in response){
+        console.log("success!");
+        this.route.navigate(["login"]);
        // localStorage.setItem('access',response[field as keyof Object]);
       }
       });

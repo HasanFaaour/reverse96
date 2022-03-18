@@ -1,3 +1,4 @@
+<!-- Signup form -->
 <mat-card *ngIf="submittedEmail == ',,'">
     <mat-label > Signup </mat-label>
     <mat-card-content title="Sign-up">
@@ -59,6 +60,8 @@
         </form>
     </mat-card-content>
 </mat-card>
+
+<!-- Email verification form -->
 <mat-card *ngIf="submittedEmail != ',,'">
     <mat-card-content>
         <mat-label>Please enter the code you received at your email address</mat-label>
@@ -72,6 +75,7 @@
                     <mat-error *ngIf="code.errors?.['pattern']">The code only consists of digits!</mat-error>
                 </mat-error>
             </mat-form-field>
+            <br/><br *ngIf="code && code.touched && code.invalid" />
             <button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit">Validate</button>
         </form>
     </mat-card-content>

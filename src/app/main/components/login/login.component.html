@@ -1,7 +1,10 @@
+<!-- Login form -->
 <mat-card *ngIf="loggedInUsername == '@N/A'">
     <mat-label > Login </mat-label>
     <mat-card-content>
         <form  id="log-in" [formGroup]="loginCredentials" (ngSubmit)="submit()">
+
+            <!-- Username or email input -->
             <mat-form-field>
                 <input matInput (input) = "checkUserEntry()"  placeholder="Username or E-mail" formControlName = "usermail" />
                 <mat-error *ngIf="usermail && usermail.touched && usermail.invalid">
@@ -12,6 +15,8 @@
                 </mat-error>
             </mat-form-field>
             <br /><br *ngIf="usermail && usermail.touched && usermail.invalid" />
+
+            <!-- Password input -->
             <mat-form-field>
                 <input matInput (input)="checkUserEntry()" placeholder="Password" formControlName = "password" type = "password" />
                 <mat-error *ngIf="password && password.touched && password.invalid">
@@ -21,10 +26,12 @@
                 </mat-error>
             </mat-form-field>
             <br/><br *ngIf="password && password.touched && password.invalid" />
-            
+
             <button mat-button [disabled] = "this.loginCredentials.invalid" form="log-in" type = "submit"> {{ userEnteredEmail? "Login By E-mail Address": "Login By Username"}} </button>
             <mat-error *ngIf="wrongPassword"> Wrong username or password! Please try again.</mat-error>
         </form>
     </mat-card-content>
 </mat-card>
+
+
 <h1 *ngIf="loggedInUsername != '@N/A' ">Already Logged In As {{loggedInUsername}}</h1>

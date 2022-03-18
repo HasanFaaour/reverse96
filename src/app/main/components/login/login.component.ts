@@ -5,6 +5,7 @@ import { Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 
 
+
 //Creating a Custom Validator For Username or Email Field
 function validateUserMail(): ValidatorFn{
   return (control : AbstractControl) : ValidationErrors | null => {
@@ -66,7 +67,7 @@ export class LoginComponent implements OnInit {
         console.log(this.loggedInUsername);
         localStorage.setItem("acess",Object.values(response)[0]);
         localStorage.setItem("refresh",Object.values(response)[1]);
-        this.route.navigate(["signup"]);
+        this.route.navigate([""]);
         //redirect to homepage;
       }else{
         console.log("wrong!");
