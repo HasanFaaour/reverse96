@@ -15,6 +15,16 @@ const routes: Routes = [
   {
     path: '',
     component: MainComponent,
+    children: [
+      {
+        path: 'home',
+        component: HomeComponent,
+      },
+      {
+        path: 'login',
+        
+      },
+    ],
   },
 ];
 
