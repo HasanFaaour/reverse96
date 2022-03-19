@@ -27,9 +27,12 @@ function validateUserMail(): ValidatorFn{
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private Request: HttpRequestService, private route: Router) { }
+  constructor(private request: HttpRequestService, private route: Router) {  
+    console.log("Login");
+  }
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
+    console.log("Login");
   }
 
   //Defining Logic Flags
@@ -57,9 +60,10 @@ export class LoginComponent implements OnInit {
   }
 
   //Defining the submit method to handle the request
-  submit ():void{
+   submit ():void{
     this.wrongPassword = true;
-    let sub = this.Request.login(this.loginCredentials.value).subscribe((response) =>{
+    console.log("Requesting");
+    let sub = this.request.login(this.loginCredentials.value).subscribe((response) =>{
       console.log(response);
       if ("access" in response){
         console.log("sucess");
@@ -79,7 +83,7 @@ export class LoginComponent implements OnInit {
       this.wrongPassword = true;
       return;
     }
-  }
+   }
 
   //Defining getter methods for easier acess to the reactive form inputs
   get usermail() {

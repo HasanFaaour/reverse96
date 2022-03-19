@@ -1,11 +1,11 @@
 <!-- Login form -->
-<mat-card *ngIf="loggedInUsername == '@N/A'">
+<mat-card style="margin-left: 124px; margin-top: 75px;" *ngIf="loggedInUsername == '@N/A'">
     <mat-label > Login </mat-label>
-    <mat-card-content>
-        <form  id="log-in" [formGroup]="loginCredentials" (ngSubmit)="submit()">
+    <mat-card-content >
+        <form  id="log-in" [formGroup]="loginCredentials" (ngSubmit)="submit()" >
 
             <!-- Username or email input -->
-            <mat-form-field>
+            <mat-form-field >
                 <input matInput (input) = "checkUserEntry()"  placeholder="Username or E-mail" formControlName = "usermail" />
                 <mat-error *ngIf="usermail && usermail.touched && usermail.invalid">
                     <mat-error *ngIf=" usermail.errors?.['required']"> Username or E-mail is required! </mat-error>
