@@ -96,7 +96,7 @@
 
             <!-- Button -->
             <button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit">Validate</button>
-            <mat-label *ngIf="validateStatus == 1" style="color:limegreen;">{{validateMessage}}</mat-label>
+            <mat-label *ngIf="validateStatus == 1" style="color:limegreen;">{{validateMessage}}<a routerLink="../login" >login to your account</a></mat-label>
             <mat-error *ngIf="validateStatus > 1" >{{validateMessage}} </mat-error>
         </form>
     </mat-card-content>
