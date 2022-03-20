@@ -1,12 +1,12 @@
 <!-- Signup form -->
-<mat-card *ngIf="submittedEmail == ',,'">
+<mat-card *ngIf="submittedEmail == ',,'" style="margin-left: 124px; margin-top: 74px; width: 300px;" >
     <mat-label > Signup </mat-label>
     <mat-card-content title="Sign-up">
         <form id="sign-up" [formGroup] = "signupCredentials" (ngSubmit)="submit()">
 
             <!-- Name input -->
             <mat-form-field>
-                <input matInput placeholder="Name" formControlName = "name" />
+                <input matInput placeholder="Name" formControlName = "name" (input)="checkEntry()" />
                 <mat-error *ngIf="name && name.touched && name.invalid">
                     <mat-error *ngIf=" name.errors?.['required']"> is required! </mat-error>
                     <mat-error *ngIf=" name.errors?.['minlength']">has to be at least 3 characters long!</mat-error>
@@ -17,7 +17,7 @@
 
             <!-- Username input -->
             <mat-form-field>
-                <input matInput placeholder="Username" formControlName = "username" />
+                <input matInput placeholder="Username" formControlName = "username" (input)="checkEntry()" />
                 <mat-error *ngIf="username && username.touched && username.invalid">
                     <mat-error *ngIf=" username.errors?.['required']"> Username is required! </mat-error>
                     <mat-error *ngIf=" username.errors?.['minlength']">Username has to be at least 3 characters long!</mat-error>
@@ -28,7 +28,7 @@
 
             <!-- Password input -->
             <mat-form-field>
-                <input matInput placeholder="Password" formControlName = "password" type = "password" />
+                <input matInput placeholder="Password" formControlName = "password" type = "password" (input)="checkEntry()" />
                 <mat-error *ngIf="password && password.touched && password.invalid">
                     <mat-error *ngIf=" password.errors?.['required']"> Password required! </mat-error>
                     <mat-error *ngIf=" password.errors?.['minlength']">Password has to be at least 6 characters long!</mat-error>
@@ -39,7 +39,7 @@
 
             <!-- Phone number input -->
             <mat-form-field>
-                <input matInput placeholder="Phone Number" formControlName = "phone_number"/>
+                <input matInput placeholder="Phone Number" formControlName = "phone_number" (input)="checkEntry()" />
                 <mat-error *ngIf="phone && phone.touched && phone.invalid">
                     <mat-error *ngIf=" phone.errors?.['minlength'] && !phone.errors?.['pattern']">Phone number has to be at exactly 11 digits long!</mat-error>
                     <mat-error *ngIf=" phone.errors?.['maxlength'] && !phone.errors?.['pattern']">Phone number has to be at exactly 11 digits long!</mat-error>
@@ -50,7 +50,7 @@
 
             <!-- Email input -->
             <mat-form-field>
-                <input matInput placeholder="E-mail Address" formControlName = "email" type = "email" />
+                <input matInput placeholder="E-mail Address" formControlName = "email" type = "email" (input)="checkEntry()" />
                 <mat-error *ngIf="email && email.touched && email.invalid">
                     <mat-error *ngIf=" email.errors?.['required']"> E-mail address is required! </mat-error>
                     <mat-error *ngIf=" email.errors?.['email']">E-mail address is invalid!</mat-error>
@@ -60,7 +60,7 @@
 
             <!-- Address input -->
             <mat-form-field>
-                <textarea matInput formControlName = "address" ></textarea>
+                <textarea matInput formControlName = "address" (input)="checkEntry()" ></textarea>
                 <mat-placeholder > Address </mat-placeholder>
                 <mat-error *ngIf="address && address.touched && address.invalid">
                     <mat-error *ngIf=" address.errors?.['minlength']">Address has to be at least 10 characters long!</mat-error>
@@ -71,19 +71,20 @@
 
             <!-- Button -->
             <button mat-button [disabled] = "this.signupCredentials.invalid" form="sign-up" type = "submit" > Signup </button>
+            <mat-error *ngIf="signupStatus > 0" >Something went wrong!</mat-error>
         </form>
     </mat-card-content>
 </mat-card>
 
 <!-- Email verification form -->
-<mat-card *ngIf="submittedEmail != ',,'">
+<mat-card *ngIf="submittedEmail != ',,'" style="margin-left: 124px; margin-top: 74px; width: 300px;" >
     <mat-card-content>
-        <mat-label>Please enter the code you received at your email address</mat-label>
+        <mat-label>Please enter the code you received at your email address ({{submittedEmail}}).</mat-label>
         <form id = "vE" [formGroup]="codeGroup" (ngSubmit)="validate()">
 
             <!-- Code input -->
             <mat-form-field >
-                <input formControlName="code" matInput placeholder="Code" />
+                <input formControlName="code" matInput placeholder="Code" (input)="checkEntry()" />
                 <mat-error *ngIf="code && code.touched && code.invalid">
                     <mat-error *ngIf="code.errors?.['required']">You haven't entered a code!</mat-error>
                     <mat-error *ngIf="code.errors?.['minlength']">The code should be 4 digits long!</mat-error>
@@ -95,6 +96,8 @@
 
             <!-- Button -->
             <button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit">Validate</button>
+            <mat-label *ngIf="validateStatus == 1" style="color:limegreen;">{{validateMessage}}</mat-label>
+            <mat-error *ngIf="validateStatus > 1" >{{validateMessage}} </mat-error>
         </form>
     </mat-card-content>
 </mat-card>

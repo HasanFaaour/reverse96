@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpRequestService } from '../../../http-service.service';
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 
@@ -27,8 +27,11 @@ function validateUserMail(): ValidatorFn{
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private request: HttpRequestService, private route: Router) {  
-    console.log("Login");
+  constructor(private request: HttpRequestService, private router: Router, private route: ActivatedRoute) {
+    if (sessionStorage.getItem('access') && sessionStorage.getItem('refresh')){
+      console.log("Already logged in");
+      this.router.navigate(['home']);
+    }
   }
 
   ngOnInit(): void {  
@@ -38,7 +41,8 @@ export class LoginComponent implements OnInit {
   //Defining Logic Flags
   userEnteredEmail = false;
   loggedInUsername = "@N/A";
-  wrongPassword = false;
+  problemStatus = 0;
+  problem = "Wrong username or password! Please try again.";
   token = "N/A";
 
 
@@ -55,34 +59,60 @@ export class LoginComponent implements OnInit {
     }else{
       this.userEnteredEmail = false;
     }
-    this.wrongPassword = false;
+    this.problemStatus = 0;
     return;
   }
 
   //Defining the submit method to handle the request
    submit ():void{
-    this.wrongPassword = true;
-    console.log("Requesting");
-    let sub = this.request.login(this.loginCredentials.value).subscribe((response) =>{
-      console.log(response);
-      if ("access" in response){
-        console.log("sucess");
-        this.loggedInUsername = this.loginCredentials.value['usermail'];
-        console.log(this.loggedInUsername);
-        localStorage.setItem("acess",Object.values(response)[0]);
-        localStorage.setItem("refresh",Object.values(response)[1]);
-        this.route.navigate([""]);
-      }else{
-        console.log("wrong!");
-        this.wrongPassword = true;
+    let sub = this.request.login(this.loginCredentials.value).subscribe(
+      //Handling the response in case of a successful request
+      (response) =>{
+        console.log(response);
+        if ("access" in response){
+          console.log("sucess");
+          this.loggedInUsername = this.loginCredentials.value['usermail'];
+          console.log(this.loggedInUsername);
+          sessionStorage.setItem('access',Object.values(response)[0]);
+          sessionStorage.setItem('refresh',Object.values(response)[1]);
+          this.router.navigate(['home']);
+        }else{
+          console.log("wrong!");
+          this.problemStatus = 1;
+        }
+        sub.unsubscribe();
+      },
+
+      //Handling the response in case of an unsuccessful request
+      (response) => {
+        if ('error' in response && typeof(response['error']) == 'object' && 'message' in response['error']){
+
+          if (response['error']['message'] == "invalid username or email"){
+            this.problem = `${this.userEnteredEmail ? "Email address" : "Username"} doesn't exist.`;
+            this.problemStatus = 2;
+            sub.unsubscribe();
+            return;
+
+          }if (response['error']['message'] == "wrong password"){
+            this.problem = "Wrong username or password! Please try again.";
+            this.problemStatus = 1;
+            sub.unsubscribe();
+            return;
+
+          }if (response['error']['message'] == "validate your email"){
+            this.router.navigate(['../signup',{email: this.usermail?.value}],{ relativeTo: this.route});
+            sub.unsubscribe();
+            return; 
+          }
+        }
+        
+        this.problem = "Something unexpected happened. Please try again later.";
+        this.problemStatus = 3;
+        sub.unsubscribe;
+        return;
+        
       }
-      sub.unsubscribe();
-    });
-    if (this.wrongPassword){
-      console.log("wrong (maybe not actually)!");
-      this.wrongPassword = true;
-      return;
-    }
+    );
    }
 
   //Defining getter methods for easier acess to the reactive form inputs

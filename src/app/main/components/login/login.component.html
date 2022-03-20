@@ -1,5 +1,5 @@
 <!-- Login form -->
-<mat-card style="margin-left: 124px; margin-top: 75px;" *ngIf="loggedInUsername == '@N/A'">
+<mat-card style="margin-left: 124px; margin-top: 75px; width: 300px;" *ngIf="loggedInUsername == '@N/A'">
     <mat-label > Login </mat-label>
     <mat-card-content >
         <form  id="log-in" [formGroup]="loginCredentials" (ngSubmit)="submit()" >
@@ -29,10 +29,11 @@
             
             <!-- Button -->
             <button mat-button [disabled] = "this.loginCredentials.invalid" form="log-in" type = "submit"> {{ userEnteredEmail? "Login By E-mail Address": "Login By Username"}} </button>
-            <mat-error *ngIf="wrongPassword"> Wrong username or password! Please try again.</mat-error>
+            <mat-error *ngIf="problemStatus > 0">
+                {{problem}} 
+                <a *ngIf="problemStatus == 1" routerLink = '../forgot?email={{usermail?.value}}'>Forgot your password?</a>
+                <a *ngIf="problemStatus == 2" routerLink = '../signup'>Don't have an account?</a>
+            </mat-error>
         </form>
     </mat-card-content>
 </mat-card>
-
-
-<h1 *ngIf="loggedInUsername != '@N/A' ">Already Logged In As {{loggedInUsername}}</h1>
