@@ -3,10 +3,10 @@
     width: 120px;
     position: fixed;
     z-index: 1;
-    top: 10%;
+    top: 10.5%;
     left: 0;
     background-color: rgb(255, 255, 255);
-    border: 1px solid #ddd;
+    border-right: 1px solid #ddd;
     padding-top: 20px;
   }
   
