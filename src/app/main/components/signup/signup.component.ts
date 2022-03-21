@@ -98,6 +98,14 @@ export class SignupComponent implements OnInit {
           return;
         }
 
+        if (typeof(response['error']) == 'object' && 'message' in response['error'] && response['error']['message'] == "Invalid email or username"){
+          console.log("Invalid email/username");
+          this.validateMessage = "Invalid action. Please login to your account again."
+          this.validateStatus = 2;
+          sub.unsubscribe();
+          return;
+        }
+
         this.validateMessage = "Something unexpected happened. Please try again later."
         this.validateStatus = 2;
         sub.unsubscribe();
