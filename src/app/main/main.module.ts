@@ -15,6 +15,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { LogoutComponent } from './components/logout/logout.component';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
@@ -38,6 +40,11 @@ const routes: Routes = [
       {
         path: 'signup',
         component: SignupComponent
+      },
+
+      {
+        path: 'logout',
+        component: LogoutComponent
       }
     ],
   },
@@ -51,7 +58,8 @@ const routes: Routes = [
     SideBarComponent,
     HomeComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    LogoutComponent
   ],
   imports: [
     CommonModule,

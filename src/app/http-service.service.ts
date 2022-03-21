@@ -36,8 +36,8 @@ export class HttpRequestService {
   }
 
   //Define the logout post request method (INCOMPLETE)
-  logout(rToken: string):void{
-    return;
+  logout(rToken: string|null):Observable<object>{
+    return this.hC.post(this.db+"/api/logout",{refresh: rToken});
   }
 
 }
