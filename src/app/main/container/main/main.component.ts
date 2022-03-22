@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class MainComponent implements OnInit {
 
   constructor(private router: Router){
-    this.router.navigate(['/home']);
+    this.router.navigate(['/signup']);
   }
   title = 'new-app';
   ngOnInit(): void {

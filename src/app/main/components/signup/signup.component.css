@@ -1,0 +1,35 @@
+.mat-card {
+    margin-left: 1%; 
+    margin-top: 20px;
+    width: 400px; 
+    height: 430px;
+    float: left;
+    border: 1px solid white;
+    box-shadow: 0 4px 8px 0 rgb(255, 255, 255), 0 6px 20px 0 rgb(255, 255, 255);
+}
+
+.mat-form-field {
+    width: 300px;
+}
+
+
+.container {
+    width: 80%;
+    height: 500px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-top: 85px;
+    margin-left: 185px;
+    display: inline-block;
+    box-shadow: 0 4px 8px 0 rgba(77, 76, 76, 0.116), 0 6px 20px 0 rgba(70, 70, 70, 0.096);
+}
+.log-img {
+    float: left;
+    margin-left: 5px;
+    margin-top: 30px;
+}
+.mat-card-content {
+    margin-left: 50px;
+    
+
+}
