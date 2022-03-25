@@ -18,13 +18,13 @@ export class LogoutComponent implements OnInit {
       return;
     }
     let sub = this.request.logout(sessionStorage.getItem('refresh')).subscribe((response) =>{
-      sessionStorage.removeItem('access');
-      sessionStorage.removeItem('refresh');
+      sessionStorage.clear();
       this.router.navigate(['../home'],{relativeTo:this.route});
       sub.unsubscribe();
+      return;
     });
-    sessionStorage.removeItem('access');
-    sessionStorage.removeItem('refresh');
+    console.log("Logout request error!");
+    sessionStorage.clear();
     this.router.navigate(['../homepage'],{relativeTo:this.route});
   }
 
