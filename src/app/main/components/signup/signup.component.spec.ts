@@ -1,4 +1,6 @@
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { SignupComponent } from './signup.component';
 
@@ -8,7 +10,8 @@ describe('SignupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SignupComponent ]
+      declarations: [ SignupComponent ],
+      providers: [HttpClient, HttpHandler, Router]
     })
     .compileComponents();
   });
@@ -20,6 +23,10 @@ describe('SignupComponent', () => {
   });
 
   it('should create', () => {
+    TestBed.inject(HttpClient);
+    TestBed.inject(HttpHandler);
+    TestBed.inject(Router);
+    //TestBed.inject(ActivatedRoute);
     expect(component).toBeTruthy();
   });
 });

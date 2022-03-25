@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'Social-Network-Location';
-  constructor(private router: Router){
+  constructor(){
 
   }
 }
