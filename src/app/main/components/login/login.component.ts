@@ -75,6 +75,8 @@ export class LoginComponent implements OnInit {
           console.log(this.loggedInUsername);
           sessionStorage.setItem('access',Object.values(response)[0]);
           sessionStorage.setItem('refresh',Object.values(response)[1]);
+          sessionStorage.setItem('name',Object.values(response)[2]);
+          sessionStorage.setItem('username',Object.values(response)[3]);
           this.router.navigate(['home']);
         }else{
           console.log("wrong!");
