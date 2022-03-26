@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpRequestService } from '../../../http-service.service';
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {/* ActivatedRoute,*/ Router } from '@angular/router';
 
 
 
@@ -15,7 +15,7 @@ function validateUserMail(): ValidatorFn{
       if (control.value.length < 3)
         return {minlength : control.value};
       else
-        return control.value.length > 15?{maxlength : control.value}:null;
+        return control.value.length > 30?{maxlength : control.value}:null;
     }
   }
 }
@@ -27,7 +27,7 @@ function validateUserMail(): ValidatorFn{
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private request: HttpRequestService, private router: Router, private route: ActivatedRoute) {
+  constructor(private request: HttpRequestService, private router: Router/*, private route: ActivatedRoute*/) {
     if (sessionStorage.getItem('access') && sessionStorage.getItem('refresh')){
       console.log("Already logged in");
       this.router.navigate(['home']);
@@ -102,7 +102,7 @@ export class LoginComponent implements OnInit {
             return;
 
           }if (response['error']['message'] == "validate your email"){
-            this.router.navigate(['../signup',{email: this.usermail?.value}],{ relativeTo: this.route});
+            this.router.navigate(['signup',{email: this.usermail?.value}]/*, { relativeTo: this.route}*/);
             sub.unsubscribe();
             return; 
           }
