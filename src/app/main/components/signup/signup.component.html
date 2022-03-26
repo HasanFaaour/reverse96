@@ -97,7 +97,8 @@
             <br/><br *ngIf="code && code.touched && code.invalid" />
 
             <!-- Button -->
-            <div class="submit-button"><button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit">Validate</button></div>
+            <div class="submit-button"><button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit"
+            style="color: white; background-color: blue;">Validate</button></div>
             <mat-label *ngIf="validateStatus == 1" style="color:limegreen;">{{validateMessage}}</mat-label>
             <mat-error *ngIf="validateStatus > 1" >{{validateMessage}} </mat-error>
         </form>

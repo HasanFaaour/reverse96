@@ -1,6 +1,6 @@
 .sidenav {
     height: 100%;
-    width: 120px;
+    width: 160px;
     position: fixed;
     z-index: 1;
     top: 10.5%;
@@ -17,7 +17,7 @@
     font-size: 25px;
     color: #818181;
     display: block;
-    margin-left: 60px;
+    margin-left: 90px;
   }
   
   .sidenav .mat-icon {
@@ -30,10 +30,16 @@
 
 @media screen and (max-width: 800px) {
   .sidenav {
-    width: 60px;
+    visibility: hidden;
   }
   .sidenav a {
     margin-left: 0px;
   }
   
+}
+
+@media screen and (max-width: 600px){
+  .sidenav {
+    visibility: hidden;
+  }
 }

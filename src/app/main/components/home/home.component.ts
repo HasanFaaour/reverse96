@@ -12,6 +12,15 @@ export class HomeComponent implements OnInit {
   isClicked: boolean = false;
   enaColor: boolean = false;
   likeNum: number = 10;
+  isReadMore = true
+
+  status: any[] = [{isReadMore : false},
+                   {isReadMore : false}];
+
+  showText(id : any) {
+     this.status[id].isReadMore = ! this.status[id].isReadMore;
+     this.isReadMore = !this.isReadMore
+  }
 
   onClick() {
     this.isClicked = !this.isClicked;
