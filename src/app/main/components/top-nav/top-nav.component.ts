@@ -7,6 +7,7 @@ import { MainComponent } from '../../container/main/main.component';
   styleUrls: ['./top-nav.component.css']
 })
 export class TopNavComponent implements OnInit {
+  name: string = '';
   message: boolean = false;
   tes : boolean = false;
   constructor() { 

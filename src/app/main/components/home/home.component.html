@@ -1,63 +1,36 @@
 <div class="blank-1"></div>
-<div class="place-card">
+<div *ngFor="let item of list; let i = index;" class="place-card">
   <div class="title">Dalan bhshti</div>
   <div class="place-image">
-    <img src="assets/images/khiam.jpg" style="height: 100%; width: 100%; border-radius: 8px;">
+    <img src={{item.image}} style="height: 100%; width: 100%; border-radius: 8px;">
   </div>
   <div class="icon-list">
     <a href="#"><mat-icon style="color: rgb(83, 81, 81); vertical-align: middle;">chat_bubble_outline</mat-icon></a>
-    <a href="#" class="ico">21<mat-icon style="color: rgb(88, 87, 87); vertical-align: middle; bottom: 3px;">share</mat-icon></a>
-    <a *ngIf ="!isClicked" (click)="onClick()" class="ico"><span class="fav">{{likeNum}}<mat-icon style="vertical-align: middle; bottom: 3px;">favorite_border</mat-icon></span></a>
-    <a *ngIf ="enaColor" (click)="onClick()"  class="ico"><span class="fav">{{likeNum}}<mat-icon style="color: rgb(252, 64, 64); vertical-align: middle; bottom: 3px;">favorite</mat-icon></span></a>
+    <a href="#" class="ico"><mat-icon style="color: rgb(88, 87, 87); vertical-align: middle; bottom: 3px;">share</mat-icon></a>
+    <a *ngIf ="!item.liked" (click)="onLike(i)" class="ico"><span class="fav"><mat-icon style="vertical-align: middle; bottom: 3px;">favorite_border</mat-icon></span></a>
+    <a *ngIf ="item.enaColor" (click)="onLike(i)"  class="ico"><span class="fav"><mat-icon style="color: rgb(252, 64, 64); vertical-align: middle; bottom: 3px;">favorite</mat-icon></span></a>
   </div>
   <div class="info">
-    <p class="likes">{{likeNum}} likes </p>
-    <div class="text-content" [ngClass]="{'limitTextHeight': !status[1].isReadMore }">
+    <p class="likes">{{item.likes}} likes </p>
+    <div class="text-content" [ngClass]="{'limitTextHeight': !item.isReadMore }">
       This is long text replaced with reading more/less link example in Angular application paragraph text shown here continue THis is long text replaced with read more/less link example in Angular application paragraph text shown here continue continue
       This is long text replaced with reading more/less link example in Angular application paragraph text shown here continue THis is long text replaced with read more/less link example in Angular application paragraph text shown here continue
       continue continue
     </div>
-    <a class="view-more" (click)="showText(1)">
+    <a class="view-more" (click)="showAllText(i)">
       {{ isReadMore ? 'view more': 'view less' }}
     </a>
     <div class="input-container">
-    <input type="text" class="add-comment" placeholder="add a comment">
-    <a><mat-icon>add</mat-icon></a>
+    <input type="text" class="add-comment" placeholder="add a comment" >
+    <a (click)="search()"><mat-icon>add</mat-icon></a>
   </div>
   </div>
 </div>
 
-<div class="place-card">
-  <div class="title"><p>Gilan</p></div>
-  <div class="place-image">
-    <img src="assets/images/gilan.jpg" style="height: 100%; width: 100%; border-radius: 8px;">
-  </div>
-  <div class="icon-list">
-    <a href="#"><mat-icon style="color: rgb(83, 81, 81);">chat_bubble_outline</mat-icon></a>
-    <a href="#" class="ico"><mat-icon style="color: rgb(88, 87, 87);">share</mat-icon></a>
-    <a *ngIf ="!isClicked" (click)="onClick()" class="ico"><span class="fav"><mat-icon>favorite_border</mat-icon></span></a>
-    <a *ngIf ="enaColor" (click)="onClick()"  class="ico"><span class="fav"><mat-icon style="color: rgb(252, 64, 64);">favorite</mat-icon></span></a>
-  </div>
 
-  <div class="info">
-    <div class="likes">
-    {{likeNum}} likes
-    </div>
-    <div class="text-content" [ngClass]="{'limitTextHeight': !status[0].isReadMore}">
-    This is long text replaced with reading more/less link example in Angular application paragraph text shown here continue THis is long text replaced with read more/less link example in Angular application paragraph text shown here continue continue
-    This is long text replaced with reading more/less link example in Angular application paragraph text shown here continue THis is long text replaced with read more/less link example in Angular application paragraph text shown here continue
-    continue THis is long text replaced with reading more/less link example in Angular application paragraph text shown here continue THis is long text replaced with read more/less link example in Angular application paragraph text shown here
-    continue continue
-    </div>
-    <a class="view-more" (click)="showText(0)" style="margin-bottom: 10px;">
-    {{ isReadMore ? 'view more': 'view less' }}
-    </a>
-    <div class="input-container">
-      <input type="text" class="add-comment" placeholder="add a comment">
-      <mat-icon>add</mat-icon>
-  </div>
-</div>
-</div>
+
+
+
 <div class="blank-two">
   
 </div>

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule } from '@angular/forms';
 import { MainComponent } from './container/main/main.component';
 import { TopNavComponent } from './components/top-nav/top-nav.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -65,7 +65,8 @@ const routes: Routes = [
     MatRadioModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatMenuModule
+    MatMenuModule,
+    FormsModule
   ]
 })
 export class MainModule { }
