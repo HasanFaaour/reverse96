@@ -11,9 +11,7 @@ describe('HttpServiceService', () => {
     service = TestBed.inject(HttpRequestService);
   });
 
-  it('should be created', () => {
-    TestBed.inject(HttpClient);
-    TestBed.inject(HttpHandler);
+  it('should create', () => {
     expect(service).toBeTruthy();
   });
 });
