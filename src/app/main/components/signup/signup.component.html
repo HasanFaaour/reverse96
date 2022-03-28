@@ -71,7 +71,9 @@
 
             <!-- Button -->
             <button mat-button [disabled] = "this.signupCredentials.invalid" form="sign-up" type = "submit" > Signup </button>
-            <mat-error *ngIf="signupStatus > 0" >Something went wrong!</mat-error>
+
+            <!-- Submit Error-->
+            <mat-error *ngIf="signupStatus > 0" >{{signupMessage}}</mat-error>
         </form>
     </mat-card-content>
 </mat-card>

@@ -43,6 +43,7 @@ export class SignupComponent implements OnInit {
   validateStatus = 0;
   validateMessage = "";
   signupStatus = 0;
+  signupMessage = "Something went wrong";
 
   checkEntry(){
     this.validateStatus = 0;
@@ -51,6 +52,7 @@ export class SignupComponent implements OnInit {
 
   //Defining the submit method to handle the request
   submit() :void {
+    this.signupStatus = 0;
     let sub = this.Request.signup(this.signupCredentials.value).subscribe(
 
       //Successful submit
@@ -65,7 +67,10 @@ export class SignupComponent implements OnInit {
       },
 
       //Failed submit
-      (error) => {
+      (response) => {
+        let error = response['error'];
+        // console.log(error);
+        this.signupMessage = "phone_number" in error?"There is already an account registered with this phone number!":"email" in error?"There is already an account registered with this E-mail address!":"Something went wrong";
         console.log("signup error");
         this.signupStatus =1;
         sub.unsubscribe();
