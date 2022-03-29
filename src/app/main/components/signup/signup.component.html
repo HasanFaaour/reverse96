@@ -1,11 +1,13 @@
 <!-- Signup form -->
-<mat-card *ngIf="submittedEmail == ',,'" style="margin-left: 124px; margin-top: 74px; width: 300px;" >
-    <mat-label > Signup </mat-label>
+<div class="container">
+<div class="log-img"><img src="assets/images/signup.jpg" style="width: 500px; height: 400px;"></div>
+<mat-card *ngIf="submittedEmail == ',,'" >
+    <mat-label style="margin-left: 150px; font-size: 30px;"> Signup </mat-label>
     <mat-card-content title="Sign-up">
         <form id="sign-up" [formGroup] = "signupCredentials" (ngSubmit)="submit()">
-
+            
             <!-- Name input -->
-            <mat-form-field>
+            <mat-form-field >
                 <input matInput placeholder="Name" formControlName = "name" (input)="checkEntry()" />
                 <mat-error *ngIf="name && name.touched && name.invalid">
                     <mat-error *ngIf=" name.errors?.['required']"> is required! </mat-error>
@@ -97,9 +99,13 @@
             <br/><br *ngIf="code && code.touched && code.invalid" />
 
             <!-- Button -->
-            <button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit">Validate</button>
+            <div class="submit-button">
+              <button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit" style="color: white; background-color: blue;"> Validate </button>
+            </div>
+          
         </form>
         <mat-label *ngIf="validateStatus == 1" style="color:limegreen;">{{validateMessage}}<a routerLink="../login" >login to your account</a></mat-label>
         <mat-error *ngIf="validateStatus > 1" >{{validateMessage}} </mat-error>
     </mat-card-content>
 </mat-card>
+</div>

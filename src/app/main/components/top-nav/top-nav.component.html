@@ -1,5 +1,17 @@
 <div class="top-nav">
+    <div class="more-menu">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </div>
+      <mat-menu #menu="matMenu" >
+        <button mat-menu-item>home</button>
+        <button mat-menu-item>add location</button>
+        <button mat-menu-item>favorite</button>
+        <button mat-menu-item>notifications</button>
+        <button mat-menu-item>profile</button>
+      </mat-menu>
     <a href="login" class="login">log in</a>
     <a href="#"><mat-icon style="color: rgb(65, 64, 64);">settings</mat-icon></a>
-    <input type="text"  class="search-box" placeholder="search...">
+    <input name="name" [(ngModel)]="name" type="search"  class="search-box" placeholder="search...">
 </div>

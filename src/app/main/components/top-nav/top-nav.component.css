@@ -17,9 +17,13 @@
     margin-right: 20px;
     float: right;
   }
-  
-  .top-nav .logo {
-    float: left;
+  .more-menu {
+    display: inline-block;
+    visibility: hidden;
+  }
+
+  .top-nav .login {
+    margin-right: 140px;
   }
   
   .top-nav .search-box {
@@ -49,10 +53,28 @@
     outline: none;
 }
 
+
+.side-bar-button {
+  width: 30px;
+  height: 20px;
+  visibility: hidden;
+}
+
   @media screen and (max-width: 800px) {
     .top-nav .search-box {
-      margin-left: 80px;
-      width: 50%;
+      margin-left: 70px;
+      width: 40%;
+    }
+    .side-bar-button {
+      visibility: visible;
+    }
+    .more-menu  {
+      visibility: visible;
+    }
+    .top-nav .login {
+      margin-right: 30px;
     }
   }
 
+
+ 
