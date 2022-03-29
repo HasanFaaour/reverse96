@@ -43,6 +43,7 @@ export class SignupComponent implements OnInit {
   validateStatus = 0;
   validateMessage = "";
   signupStatus = 0;
+  signupMessage = "Something went wrong";
 
   checkEntry(){
     this.validateStatus = 0;
@@ -51,6 +52,7 @@ export class SignupComponent implements OnInit {
 
   //Defining the submit method to handle the request
   submit() :void {
+    this.signupStatus = 0;
     let sub = this.Request.signup(this.signupCredentials.value).subscribe(
 
       //Successful submit
@@ -65,7 +67,10 @@ export class SignupComponent implements OnInit {
       },
 
       //Failed submit
-      (error) => {
+      (response) => {
+        let error = response['error'];
+        // console.log(error);
+        this.signupMessage = "phone_number" in error?"There is already an account registered with this phone number!":"email" in error?"There is already an account registered with this E-mail address!":"username" in error?"The username already exists. Please try another username.": "Something went wrong";
         console.log("signup error");
         this.signupStatus =1;
         sub.unsubscribe();
@@ -93,6 +98,14 @@ export class SignupComponent implements OnInit {
         if (typeof(response['error']) == 'object' && 'message' in response['error'] && response['error']['message'] == "wrong code"){
           console.log("wrong code");
           this.validateMessage = "Make sure to enter the correct code."
+          this.validateStatus = 2;
+          sub.unsubscribe();
+          return;
+        }
+
+        if (typeof(response['error']) == 'object' && 'message' in response['error'] && response['error']['message'] == "Invalid email or username"){
+          console.log("Invalid email/username");
+          this.validateMessage = "Invalid action. Please login to your account again."
           this.validateStatus = 2;
           sub.unsubscribe();
           return;

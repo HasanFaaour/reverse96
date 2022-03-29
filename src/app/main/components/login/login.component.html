@@ -12,7 +12,7 @@
                 <mat-error *ngIf="usermail && usermail.touched && usermail.invalid">
                     <mat-error *ngIf=" usermail.errors?.['required']"> Username or E-mail is required! </mat-error>
                     <mat-error *ngIf=" usermail.errors?.['minlength']">Username has to be at least 3 characters long!</mat-error>
-                    <mat-error *ngIf=" usermail.errors?.['maxlength']">Username can't have more than 15 characters!</mat-error>
+                    <mat-error *ngIf=" usermail.errors?.['maxlength']">Username can't have more than 30 characters!</mat-error>
                     <mat-error *ngIf=" usermail.errors?.['email']">Entered an invalid E-mail address!</mat-error>
                 </mat-error>
             </mat-form-field>

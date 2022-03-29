@@ -17,26 +17,39 @@ export class HttpRequestService {
     
   }
 
-  // Define the login post request method
+  // Defining the login post request method
   login(creds : {usermail: string, password: string, username?: string}): Observable<object>{
     creds["username"] = creds["usermail"];
-    console.log("creds: ",creds);
-    return this.hC.post(this.db+"/api/login",creds,{headers:{"Content-Type":"application/json"},  responseType: 'json'});
+    return this.hC.post(`${this.db}/api/login`,creds,{headers:{"Content-Type":"application/json"},  responseType: 'json'});
   }
   
-  //Define the signup post request method
+  //Defining the signup post request method
   signup(creds:Object):Observable<object>{
-    return this.hC.post(this.db+"/api/register",creds,{headers:{ "Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
+    return this.hC.post(`${this.db}/api/register`,creds,{headers:{ "Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
     
   }
 
-  //Define the e-mail valideation post request method
+  //Defining the e-mail valideation post request method
   validateEmail (email: string, code: number): Observable<object>{
-    return this.hC.post(this.db+"/api/email-activision",{email: email, code: code},{ headers:{"Content-Type":"application/json"}});
+    return this.hC.post(`${this.db}/api/email-activision`,{email: email, code: code},{ headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
   }
 
-  //Define the logout post request method (INCOMPLETE)
-  logout(rToken: string):void{
+  //Defining the logout post request method (INCOMPLETE)
+  logout(rToken: string|null):Observable<object>{
+    return this.hC.post(`${this.db}/api/logout`,{refresh: rToken});
+  }
+
+  //Defining the refresh post request method
+  refresh ():void{
+    let refresh = sessionStorage.getItem('refresh')
+    if (refresh){
+      let sub = this.hC.post(`${this.db}/api/login/refresh`,{refresh: refresh},{ headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'}).subscribe((response) => {
+        sessionStorage.setItem('access',Object.values(response)[0]);
+        sessionStorage.setItem('refresh',Object.values(response)[1]);
+        sub.unsubscribe();
+        return;   
+      });
+    }
     return;
   }
 
