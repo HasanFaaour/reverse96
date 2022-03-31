@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { TopNavComponent } from '../../components/top-nav/top-nav.component';
 
 @Component({
   selector: 'app-main',
@@ -6,10 +8,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-
-  constructor() { }
+  ishide: boolean = true;
+  va: boolean = true;
+  constructor(private router: Router){
+    this.router.navigate(['/login']);
+  }
   title = 'new-app';
   ngOnInit(): void {
+    
   }
 
+  sett() {
+    
+  }
 }

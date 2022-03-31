@@ -1,0 +1,62 @@
+.container {
+    width: 75%;
+    height: 450px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-top: 85px;
+    margin-left: 185px;
+    display: inline-block;
+    box-shadow: 0 4px 8px 0 rgba(77, 76, 76, 0.116), 0 6px 20px 0 rgba(70, 70, 70, 0.096);
+}
+
+.mat-card {
+    margin-left: 0%; 
+    margin-top: 100px;
+    width: 40%; 
+    height: 250px;
+    float: left;
+    border: 1px solid white;
+    box-shadow: 0 4px 8px 0 rgb(255, 255, 255), 0 6px 20px 0 rgb(255, 255, 255);
+}
+
+.mat-form-field {
+    width: 300px;
+}
+
+.log-img {
+    width: 40%;
+    height: 400px;
+    float: left;
+    margin-left: 10%;
+    margin-top: 0px;
+}
+.mat-card-content {
+    margin-left: 50px;
+    margin-top: 30px;
+}
+
+.mat-button {
+    color: white;
+    background-color: rgb(88, 99, 255);;
+}
+
+@media screen and (max-width: 600px){
+    .container {
+        height: 800px;
+        width: 470px;
+        margin-left: 8px;
+        margin-top: 60px;
+    }
+    .log-img {
+      width: 200px;
+      margin-left: 40px;
+      margin-top: 10px;
+    }
+    .mat-card {
+        margin-top: 0px;
+        margin-left: 25px;
+    }
+}
+
+
+
