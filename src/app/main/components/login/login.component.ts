@@ -65,9 +65,9 @@ export class LoginComponent implements OnInit {
 
   //Defining the submit method to handle the request
    submit ():void{
-    let sub = this.request.login(this.loginCredentials.value).subscribe(
+    let sub = this.request.login(this.loginCredentials.value).subscribe({
       //Handling the response in case of a successful request
-      (response) =>{
+      next: (response) =>{
         console.log(response);
         if ("access" in response){
           console.log("sucess");
@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit {
       },
 
       //Handling the response in case of an unsuccessful request
-      (response) => {
+      error: (response) => {
         if ('error' in response && typeof(response['error']) == 'object' && 'message' in response['error']){
 
           if (response['error']['message'] == "invalid username or email"){
@@ -114,7 +114,7 @@ export class LoginComponent implements OnInit {
         return;
         
       }
-    );
+    });
    }
 
   //Defining getter methods for easier acess to the reactive form inputs

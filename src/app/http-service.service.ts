@@ -34,12 +34,12 @@ export class HttpRequestService {
     return this.hC.post(`${this.db}/api/email-activision`,{email: email, code: code},{ headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
   }
 
-  //Defining the logout post request method (INCOMPLETE)
+  //Defining the logout post request method
   logout(rToken: string|null):Observable<object>{
-    return this.hC.post(`${this.db}/api/logout`,{refresh: rToken});
+    return this.hC.post(`${this.db}/api/logout`,{refresh: rToken},{ headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
   }
 
-  //Defining the refresh post request method
+  //Defining the refresh post request method (Errors not handled)
   refresh ():void{
     let refresh = sessionStorage.getItem('refresh')
     if (refresh){
