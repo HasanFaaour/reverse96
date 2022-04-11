@@ -1,0 +1,7 @@
+.image-display:active{
+    border: 3px dashed rgb(88, 99, 255);
+}
+
+.image-display{
+    border: 3px dashed rgb(88, 99, 155);
+}
