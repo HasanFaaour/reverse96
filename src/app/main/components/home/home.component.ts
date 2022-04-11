@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
   name: string = 'dalan';
-  constructor() { 
+  constructor(private router: Router) { 
   }
   list: any[] = [
     {name: "dalan" , image: "assets/images/khiam.jpg" , likes: 200 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
@@ -57,6 +58,10 @@ export class HomeComponent implements OnInit {
     this.likeNum = - this.likeNum;
   }
   ngOnInit(): void {
+    if (!localStorage.getItem('access')){
+      console.log("Not logged in, redirecting to login page...");
+      this.router.navigate(['../login']);
+    }
   }
 
   search() {

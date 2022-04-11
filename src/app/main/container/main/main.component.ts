@@ -10,8 +10,8 @@ import { TopNavComponent } from '../../components/top-nav/top-nav.component';
 export class MainComponent implements OnInit {
   ishide: boolean = true;
   va: boolean = true;
-  constructor(private router: Router){
-    this.router.navigate(['/login']);
+  constructor(/*private router: Router*/){
+    //this.router.navigate(['/login']);
   }
   title = 'new-app';
   ngOnInit(): void {

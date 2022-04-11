@@ -27,15 +27,13 @@ function validateUserMail(): ValidatorFn{
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private request: HttpRequestService, private router: Router/*, private route: ActivatedRoute*/) {
-    if (sessionStorage.getItem('access') && sessionStorage.getItem('refresh')){
+  constructor(private request: HttpRequestService, private router: Router/*, private route: ActivatedRoute*/) {  }
+
+  ngOnInit(): void {  
+    if (localStorage.getItem('access') && localStorage.getItem('refresh')){
       console.log("Already logged in");
       this.router.navigate(['home']);
     }
-  }
-
-  ngOnInit(): void {  
-    console.log("Login");
   }
 
   //Defining Logic Flags
@@ -65,18 +63,18 @@ export class LoginComponent implements OnInit {
 
   //Defining the submit method to handle the request
    submit ():void{
-    let sub = this.request.login(this.loginCredentials.value).subscribe(
+    let sub = this.request.login(this.loginCredentials.value).subscribe({
       //Handling the response in case of a successful request
-      (response) =>{
-        console.log(response);
+      next: (response) =>{
+        //console.log(response);
         if ("access" in response){
-          console.log("sucess");
+          //console.log("sucess");
           this.loggedInUsername = this.loginCredentials.value['usermail'];
-          console.log(this.loggedInUsername);
-          sessionStorage.setItem('access',Object.values(response)[0]);
-          sessionStorage.setItem('refresh',Object.values(response)[1]);
-          sessionStorage.setItem('name',Object.values(response)[2]);
-          sessionStorage.setItem('username',Object.values(response)[3]);
+          //console.log(this.loggedInUsername);
+          localStorage.setItem('access',Object.values(response)[0]);
+          localStorage.setItem('refresh',Object.values(response)[1]);
+          localStorage.setItem('name',Object.values(response)[2]);
+          localStorage.setItem('username',Object.values(response)[3]);
           this.router.navigate(['home']);
         }else{
           console.log("wrong!");
@@ -86,7 +84,7 @@ export class LoginComponent implements OnInit {
       },
 
       //Handling the response in case of an unsuccessful request
-      (response) => {
+      error: (response) => {
         if ('error' in response && typeof(response['error']) == 'object' && 'message' in response['error']){
 
           if (response['error']['message'] == "invalid username or email"){
@@ -114,7 +112,7 @@ export class LoginComponent implements OnInit {
         return;
         
       }
-    );
+    });
    }
 
   //Defining getter methods for easier acess to the reactive form inputs
