@@ -73,9 +73,7 @@
 
             <!-- Button -->
             <button mat-button [disabled] = "this.signupCredentials.invalid" form="sign-up" type = "submit" > Signup </button>
-
-            <!-- Submit Error-->
-            <mat-error *ngIf="signupStatus > 0" >{{signupMessage}}</mat-error>
+            <mat-error *ngIf="signupStatus > 0" >Something went wrong!</mat-error>
         </form>
     </mat-card-content>
 </mat-card>
@@ -83,8 +81,8 @@
 <!-- Email verification form -->
 <mat-card *ngIf="submittedEmail != ',,'" style="margin-left: 124px; margin-top: 74px; width: 300px;" >
     <mat-card-content>
-        <form *ngIf="validateStatus != 1"  id = "vE" [formGroup]="codeGroup" (ngSubmit)="validate()">
-            <mat-label>Please enter the code you received at your email address ({{submittedEmail}}).</mat-label><br/>
+        <mat-label>Please enter the code you received at your email address ({{submittedEmail}}).</mat-label>
+        <form id = "vE" [formGroup]="codeGroup" (ngSubmit)="validate()">
 
             <!-- Code input -->
             <mat-form-field >
@@ -99,13 +97,11 @@
             <br/><br *ngIf="code && code.touched && code.invalid" />
 
             <!-- Button -->
-            <div class="submit-button">
-              <button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit" style="color: white; background-color: blue;"> Validate </button>
-            </div>
-          
+            <div class="submit-button"><button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit"
+            style="color: white; background-color: rgb(38, 152, 245);">Validate</button></div>
+            <mat-label *ngIf="validateStatus == 1" style="color:limegreen;">{{validateMessage}}</mat-label>
+            <mat-error *ngIf="validateStatus > 1" >{{validateMessage}} </mat-error>
         </form>
-        <mat-label *ngIf="validateStatus == 1" style="color:limegreen;">{{validateMessage}}<a routerLink="../login" >login to your account</a></mat-label>
-        <mat-error *ngIf="validateStatus > 1" >{{validateMessage}} </mat-error>
     </mat-card-content>
 </mat-card>
 </div>

@@ -30,6 +30,10 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       {
+        path:'',
+        redirectTo: 'home'
+      },
+      {
         path: 'home',
         component: HomeComponent,
       },

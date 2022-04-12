@@ -18,7 +18,7 @@ export class LogoutComponent implements OnInit {
       return;
     }
     let sub = this.request.logout(sessionStorage.getItem('refresh')).subscribe((response) =>{
-      sessionStorage.clear();
+      localStorage.clear();
       this.router.navigate(['../home']/*, {relativeTo:this.route}*/);
       sub.unsubscribe();
       return;
