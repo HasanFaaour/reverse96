@@ -53,10 +53,10 @@ export class SignupComponent implements OnInit {
   //Defining the submit method to handle the request
   submit() :void {
     this.signupStatus = 0;
-    let sub = this.Request.signup(this.signupCredentials.value).subscribe(
+    let sub = this.Request.signup(this.signupCredentials.value).subscribe({
 
       //Successful submit
-      (response:object) => {
+      next: (response:object) => {
         if ("message" in response){
             this.submittedEmail = this.email?.value;
         }else{
@@ -67,7 +67,7 @@ export class SignupComponent implements OnInit {
       },
 
       //Failed submit
-      (response) => {
+      error: (response) => {
         let error = response['error'];
         // console.log(error);
         this.signupMessage = "phone_number" in error?"There is already an account registered with this phone number!":"email" in error?"There is already an account registered with this E-mail address!":"username" in error?"The username already exists. Please try another username.": "Something went wrong";
@@ -76,13 +76,13 @@ export class SignupComponent implements OnInit {
         sub.unsubscribe();
         return;
       }
-    );
+    });
   }
 
   //Defining a method to handle the email validation request
   validate(){
-    let sub = this.Request.validateEmail(this.submittedEmail,this.code?.value).subscribe(
-      (response) =>{
+    let sub = this.Request.validateEmail(this.submittedEmail,this.code?.value).subscribe({
+      next: (response) =>{
         if ('message' in response){
 
           if (Object.values(response)[0] == "go to login") {
@@ -94,7 +94,7 @@ export class SignupComponent implements OnInit {
           }
         }
       },
-      (response) => {
+      error: (response) => {
         if (typeof(response['error']) == 'object' && 'message' in response['error'] && response['error']['message'] == "wrong code"){
           console.log("wrong code");
           this.validateMessage = "Make sure to enter the correct code."
@@ -116,7 +116,7 @@ export class SignupComponent implements OnInit {
         sub.unsubscribe();
         return;
       }
-      );
+    });
   }
 
   //Defining getter methods for easier access to reactive form inputs

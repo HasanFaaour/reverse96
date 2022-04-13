@@ -6,8 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./side-bar.component.css']
 })
 export class SideBarComponent implements OnInit {
-  ishide: boolean = false;
-  constructor() { }
+  isLogin: boolean = false;
+  constructor() { 
+    if (localStorage.getItem('access')){
+      this.isLogin = true;
+      //console.log(localStorage.getItem('access'));
+    }else{
+      this.isLogin = false;
+    }
+  }
 
   ngOnInit(): void {
   }

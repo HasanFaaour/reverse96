@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -7,8 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
   name: string = 'dalan';
-  constructor() { 
-  }
+  isLogin: boolean = false;
+
+  constructor(private router: Router) {}
+  
   list: any[] = [
     {name: "dalan" , image: "assets/images/khiam.jpg" , likes: 200 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
     {name: "dalan" , image: "assets/images/gilan.jpg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false} 
@@ -26,8 +29,6 @@ export class HomeComponent implements OnInit {
      this.list[id].isReadMore = ! this.list[id].isReadMore;
      this.isReadMore = !this.isReadMore
   }                 
-
-  
 
    /*for delete */
   showText(id : any) {
@@ -57,6 +58,12 @@ export class HomeComponent implements OnInit {
     this.likeNum = - this.likeNum;
   }
   ngOnInit(): void {
+    if (!localStorage.getItem('access')){
+      console.log("Not logged in, redirecting to login page...");
+      this.router.navigate(['../login']);
+    }else{
+      this.isLogin = true;
+    }
   }
 
   search() {
@@ -66,7 +73,6 @@ export class HomeComponent implements OnInit {
         console.log("ya hosien");
         this.searchList.push(this.list[i]);
       }
-     
       this.list = this.searchList;
     }
   }

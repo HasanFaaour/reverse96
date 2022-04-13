@@ -16,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { AddReviewComponent } from './components/add-review/add-review.component';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -30,7 +31,7 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       {
-        path:'',
+        path: '',
         redirectTo: 'home'
       },
       {
@@ -50,6 +51,10 @@ const routes: Routes = [
       {
         path: 'logout',
         component: LogoutComponent
+      },
+      {
+        path: 'reviews/add',
+        component: AddReviewComponent
       }
     ],
   },
@@ -64,7 +69,8 @@ const routes: Routes = [
     HomeComponent,
     LoginComponent,
     SignupComponent,
-    LogoutComponent
+    LogoutComponent,
+    AddReviewComponent
   ],
   imports: [
     CommonModule,

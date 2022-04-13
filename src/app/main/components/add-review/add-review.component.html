@@ -1,0 +1,57 @@
+<mat-card style="margin-left: 165px; margin-top: 85px;width: 480px; min-height: 540px; float:left;" >
+    <mat-card-content>
+        <form id="add-review" [formGroup]="reviewParams" (ngSubmit)="submit()" style="width: 900px;" >
+
+            <!-- Image Field -->
+            <div style="position: absolute; left: 260px; top: 5px;" >
+                <input #Image type="file" accept="image/*" (change)="checkImage(Image)" style="display: none;" />
+                <mat-hint *ngIf="image && image.invalid"> Click to select an image for your review!</mat-hint><br />
+                <input class="image-display" type="image" style="width: 208px; height: 117px;" alt="Choose an image" src="{{src}}" (click)="Image.click()" (click)="$event.preventDefault()" />
+            </div>
+            
+            <!-- Location Name-->
+            <mat-form-field >
+                <mat-label>Location</mat-label>
+                <mat-select formControlName="location">
+                    <mat-option [value]="locationID" >{{locationName}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br/>
+
+            <!-- Title Field -->
+            <mat-form-field style="width: 150px;">
+                <input matInput placeholder="Title" formControlName = 'title' (input)="checkEntry()" (keydown.enter)="$event.preventDefault()"/>
+                <mat-error *ngIf="title && title.touched && title.invalid">
+                    <mat-error *ngIf="title.errors?.['required']">You have to set a title for your review</mat-error>
+                    <mat-error *ngIf="title.errors?.['maxlength']">Title can't be more than 30 characters long</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <br/><br *ngIf="title && title.touched && title.invalid" />
+
+            <!-- Text Field -->
+            <mat-form-field style="width: 450px;" >
+                <textarea style="height: 340px;" matInput placeholder="Text" formControlName = 'text' (input)="checkEntry()">    
+                </textarea>
+                <mat-error *ngIf="text && text.touched && text.invalid">
+                    <mat-error *ngIf="text.errors?.['required']">You didn't enter any text for your review</mat-error>
+                    <mat-error *ngIf="text.errors?.['maxlength']">Review can't be more than 1500 characters long</mat-error>
+                </mat-error>
+            </mat-form-field>
+            <br/><br *ngIf="text && text.touched && text.invalid" />
+
+            <!-- Button -->
+            <button mat-button [style]="reviewParams.invalid?'color: rgb(100,100,100);background-color: rgb(200, 200, 200);':'color: white;background-color: rgb(88, 99, 255);'" form="add-review" [disabled]="reviewParams.invalid" type="submit">
+                Add
+            </button>
+        </form>
+        <mat-error *ngIf="errorStatus">
+            {{errorMessage}}
+        </mat-error>
+
+        <!-- Picture (Experimental) -->
+        <!-- <div class="picture">
+            <img src="assets/images/To Be Determined.jpg" alt="cool picture" style="position: absolute; right:0px; height: 300px;width: 200px;top: 120px;" />
+        </div> -->
+        
+        </mat-card-content>
+</mat-card>

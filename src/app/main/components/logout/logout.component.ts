@@ -9,22 +9,25 @@ import { HttpRequestService } from 'src/app/http-service.service';
 })
 export class LogoutComponent implements OnInit {
 
-  constructor(private request: HttpRequestService, private router: Router/*, private route: ActivatedRoute*/) { }
+  constructor(private request: HttpRequestService, private router: Router/*, private route: ActivatedRoute*/)
+   { }
 
   ngOnInit(): void {
-    if (!sessionStorage.getItem('refresh')){
+    if (!localStorage.getItem('refresh')){
       console.log("Not logged in!");
       this.router.navigate(['../login']/*, {relativeTo:this.route}*/);
       return;
     }
+
     let sub = this.request.logout(sessionStorage.getItem('refresh')).subscribe((response) =>{
+
       localStorage.clear();
       this.router.navigate(['../home']/*, {relativeTo:this.route}*/);
       sub.unsubscribe();
       return;
     });
     console.log("Logout request error!");
-    sessionStorage.clear();
+    localStorage.clear();
     this.router.navigate(['../home']/*, {relativeTo:this.route}*/);
   }
 

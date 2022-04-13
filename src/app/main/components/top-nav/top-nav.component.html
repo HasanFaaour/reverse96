@@ -11,7 +11,8 @@
         <button mat-menu-item>notifications</button>
         <button mat-menu-item>profile</button>
       </mat-menu>
-    <a href="login" class="login">log in</a>
+    <a *ngIf="!isLogin" (click)="onLogout()" class="login">log in</a>
+    <a *ngIf="isLogin" href="login" class="login"><mat-icon style="color: red;">logout</mat-icon></a>
     <a href="#"><mat-icon style="color: rgb(65, 64, 64);">settings</mat-icon></a>
     <input name="name" [(ngModel)]="name" type="search"  class="search-box" placeholder="search...">
 </div>
