@@ -1,0 +1,11 @@
+.map-reviews {
+    width: 75%;
+    height: 70%;
+    margin-top: 100px;
+    margin-left: 200px;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}

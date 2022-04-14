@@ -6,7 +6,7 @@ import { TopNavComponent } from './components/top-nav/top-nav.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RouterModule, Routes } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { HomeComponent } from './components/home/home.component';
@@ -24,6 +24,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
+import { ComponentsComponent } from './components/components.component';
+import { MapReviewComponent } from './components/map-review/map-review.component';
+import { AppComponent } from '../app.component';
 
 const routes: Routes = [
   {
@@ -53,6 +56,10 @@ const routes: Routes = [
         component: LogoutComponent
       },
       {
+        path: 'map-reviws',
+        component: MapReviewComponent
+      },
+      {
         path: 'reviews/add',
         component: AddReviewComponent
       }
@@ -70,7 +77,9 @@ const routes: Routes = [
     LoginComponent,
     SignupComponent,
     LogoutComponent,
-    AddReviewComponent
+    AddReviewComponent,
+    ComponentsComponent,
+    MapReviewComponent
   ],
   imports: [
     CommonModule,
@@ -85,6 +94,6 @@ const routes: Routes = [
     MatInputModule,
     MatMenuModule,
     FormsModule
-  ]
+  ],
 })
 export class MainModule { }

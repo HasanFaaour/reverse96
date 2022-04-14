@@ -1,7 +1,7 @@
 <div class = "sidenav" >
-    <a routerLink="/home"><span class="ico"><mat-icon class="icon-1">home</mat-icon></span></a>
+    <a routerLink="/home" routerLinkActive="active"><span class="ico"><mat-icon class="icon-1">home</mat-icon></span></a>
     <a ><span class="sid-ico"><mat-icon>favorite_border</mat-icon></span></a>
     <a ><mat-icon>notifications_none</mat-icon></a>
-    <a *ngIf="isLogin"><mat-icon>add_location</mat-icon></a>
+    <a routerLink="/map-reviws" routerLinkActive="active" *ngIf="isLogin"><mat-icon>add_location</mat-icon></a>
     <a *ngIf="isLogin"><mat-icon>person</mat-icon></a>
 </div>

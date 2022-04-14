@@ -8,9 +8,9 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   name: string = 'dalan';
-  isLogin: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+  }
   
   list: any[] = [
     {name: "dalan" , image: "assets/images/khiam.jpg" , likes: 200 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
@@ -61,8 +61,6 @@ export class HomeComponent implements OnInit {
     if (!localStorage.getItem('access')){
       console.log("Not logged in, redirecting to login page...");
       this.router.navigate(['../login']);
-    }else{
-      this.isLogin = true;
     }
   }
 

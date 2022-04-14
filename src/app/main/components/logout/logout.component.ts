@@ -29,6 +29,10 @@ export class LogoutComponent implements OnInit {
     console.log("Logout request error!");
     localStorage.clear();
     this.router.navigate(['../home']/*, {relativeTo:this.route}*/);
+    this.refresh();
   }
 
+  refresh(): void {
+    window.location.reload();
+  }
 }
