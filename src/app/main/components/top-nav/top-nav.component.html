@@ -1,3 +1,10 @@
+<mat-progress-bar *ngIf="showProgress"
+          class="example-margin"
+          [color]="color"
+          [mode]="mode"
+          [value]="value"
+          [bufferValue]="bufferValue">
+</mat-progress-bar>
 <div class="top-nav">
     <div class="more-menu">
     <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">

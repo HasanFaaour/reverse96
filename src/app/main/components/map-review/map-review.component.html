@@ -1,5 +1,26 @@
-<div class="map-reviews">
+<div [ngStyle]="{'width' : showReview ? '60%' : '86%'}" class="map-reviews">
   <div id="map"></div>
 </div>
- 
+
+<div *ngIf="showReview" class="reviews">
+  <div class="image">
+    <!-- <img src="assets\images\location-review.png" style="height: 100%; width: 100%;"/> -->
+  </div>
+  <p class="placeName">Khiam</p>
+  <div class="contianer">
+    <div class="rate">
+      <a><mat-icon style="color: rgb(253, 224, 60); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
+      <a><mat-icon style="color: rgb(253, 224, 60); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
+      <a><mat-icon style="color: rgb(253, 224, 60); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
+      <a><mat-icon style="color: rgb(253, 224, 60); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
+      <a><mat-icon style="color: rgb(253, 224, 60); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
+    </div>
+    <br>
+    <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">room</mat-icon>Tehran-tehran pars- iust</a>
+    <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">phone</mat-icon>+989371811432</a>
+    <button class="addReview" (click)="openDialog()">add review</button>
+    <!-- <button mat-raised-button (click)="openDialog()">Pick one</button> -->
+  </div>
+</div>
+
 

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
+import {MatProgressBarModule, ProgressBarMode} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-side-bar',
@@ -7,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SideBarComponent implements OnInit {
   isLogin: boolean = false;
+  show: boolean = false;
+
   constructor() { 
     if (localStorage.getItem('access')){
       this.isLogin = true;

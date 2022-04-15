@@ -27,6 +27,9 @@ import {MatMenuModule} from '@angular/material/menu';
 import { ComponentsComponent } from './components/components.component';
 import { MapReviewComponent } from './components/map-review/map-review.component';
 import { AppComponent } from '../app.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatDialogModule} from '@angular/material/dialog';
 
 const routes: Routes = [
   {
@@ -81,6 +84,7 @@ const routes: Routes = [
     ComponentsComponent,
     MapReviewComponent
   ],
+  entryComponents: [AddReviewComponent],
   imports: [
     CommonModule,
     MatIconModule,
@@ -91,8 +95,11 @@ const routes: Routes = [
     MatSelectModule,
     MatRadioModule,
     ReactiveFormsModule,
+    MatProgressBarModule,
+    MatSidenavModule,
     MatInputModule,
     MatMenuModule,
+    MatDialogModule,
     FormsModule
   ],
 })

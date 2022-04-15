@@ -50,3 +50,9 @@
 .active {
   border-right: 2px solid rgb(35, 180, 247);
 }
+
+.mat-progress-bar {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+}

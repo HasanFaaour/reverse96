@@ -1,8 +1,10 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subscriber } from 'rxjs';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import * as L from 'leaflet';
-import { environment } from 'src/environments/environment';
+import { MatSidenav } from '@angular/material/sidenav';
+import { MatDialog } from '@angular/material/dialog';
+import { AddReviewComponent } from '../add-review/add-review.component';
 
 @Component({
   selector: 'app-map-review',
@@ -10,6 +12,11 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./map-review.component.css']
 })
 export class MapReviewComponent implements AfterViewInit {
+  showReview = false;
+  @ViewChild('sidenav') drawer!: MatSidenav;
+ 
+
+  message: string = '';
   tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> Contributors'});
   map: any;
@@ -17,7 +24,15 @@ export class MapReviewComponent implements AfterViewInit {
   lnga: any;
   latlng = L.latLng(50.5, 30.5);
 
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
+  
+  openDialog() {
+    this.dialog.open(AddReviewComponent);
+  }
+
+  toggle() {
+    this.drawer.toggle();
+  }
 
   ngAfterViewInit(): void {
     this.loadMap();
@@ -60,22 +75,33 @@ export class MapReviewComponent implements AfterViewInit {
 
     const marker = L.marker([position.latitude, position.longitude],{
         icon,
-        draggable: true,
+        draggable: false,
         autoPan: true
     }).addTo(this.map);
   
-  marker.on('dragend', function (e) {
+ /*  marker.on('dragend', function (e) {
   updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
+  }); */
+  marker.on('click',  (e: any) => {
+    this.showReview = !this.showReview;
   });
-  
-  this.map.on('click', function (e: any) {
+
+  marker.on('click',  (e: any) => {
+    marker.setLatLng(e.latlng);
+    updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
+  });
+
+  /* this.map.on('click',  (e: any) => {
   marker.setLatLng(e.latlng);
+  
   updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
-  });
+  }); */
   
   const updateLatLng = (lat: any,lng: any) => {
    // this.latitude.nativeElement.innerHTML = '1111';
     console.log(marker.getLatLng().lat.toString());
+    this.message = 'Ya Hosien Salam';
+    //this.showReview = !this.showReview;
     //document.getElementById('latitude').value = marker.getLatLng().lat;
     //document.getElementById('longitude').value = marker.getLatLng().lng;
   }

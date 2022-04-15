@@ -1,11 +1,57 @@
 .map-reviews {
-    width: 75%;
-    height: 70%;
-    margin-top: 100px;
-    margin-left: 200px;
+    width: 80%;
+    height: 86%;
+    position: absolute;
+    top: 70px;
+    left: 170px;
 }
 
 #map {
     height: 100%;
     width: 100%;
+}
+
+.reviews {
+    width: 27%;
+    height: 88%;
+    overflow-y: scroll;
+    position: fixed;
+    top: 70px;
+    right: 0px;
+    border: 1px solid #ddd;
+}
+
+.contianer a {
+    display: block;
+    margin-left: 20px;
+    margin-top: 10px;
+}
+.rate a {
+    display: inline-block;
+    margin-left: 20px;
+    margin-top: 0px;
+}
+.addReview {
+    width: 100px;
+    height: 30px;
+    margin-left: 20px;
+    margin-top: 20px;
+    text-decoration: none;
+    background-color: white;
+    color: rgb(54, 178, 250);
+    border: 1px solid rgb(56, 177, 247);
+    border-radius: 7px;
+    cursor: pointer;
+}
+.reviews p {
+    margin-left: 23px;
+    margin-top: 10px;
+}
+.image {
+    width: 100%;
+    height: 200px;
+    background-color: #ddd;
+}
+br {
+    color: #ddd;
 }
