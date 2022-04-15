@@ -106,7 +106,7 @@ export class AddReviewComponent implements OnInit {
     //Remove the error message
     this.errorStatus = false;
 
-    let textFieldStyle:any = document.getElementById('text-field')?.style;
+    /*let textFieldStyle:any = document.getElementById('text-field')?.style;
     //Check if the user has manually changed the text field's size (don't change it in that case)
     if (['', '330px'].includes(textFieldStyle.getPropertyValue('height'))){
 
@@ -118,7 +118,7 @@ export class AddReviewComponent implements OnInit {
         //minimize the text field's size
         textFieldStyle.setProperty('height','');
       }
-    }
+    }*/
   }
 
 

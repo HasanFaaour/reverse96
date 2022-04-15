@@ -62,6 +62,10 @@ mat-card{
                 color: inherit;
             }
 
+            textarea{
+                height: 250px;
+            }
+
             mat-label{
                 color: inherit;
             }
