@@ -1,25 +1,22 @@
-<mat-card style="margin-left: 165px; margin-top: 85px;width: 480px; min-height: 540px; float:left;" >
+<mat-card >
     <mat-card-content>
-        <form id="add-review" [formGroup]="reviewParams" (ngSubmit)="submit()" style="width: 900px;" >
+        <form id="add-review" [formGroup]="reviewParams" (ngSubmit)="submit()" >
 
             <!-- Image Field -->
-            <div style="position: absolute; left: 260px; top: 5px;" >
-                <input #Image type="file" accept="image/*" (change)="checkImage(Image)" style="display: none;" />
-                <mat-hint *ngIf="image && image.invalid"> Click to select an image for your review!</mat-hint><br />
-                <input class="image-display" type="image" style="width: 208px; height: 117px;" alt="Choose an image" src="{{src}}" (click)="Image.click()" (click)="$event.preventDefault()" />
+            <div class="image-div" >
+                <input #Image class="image-input" type="file" accept="image/*" (change)="checkImage(Image)" />
+                <input class="image-display" type="image" alt="Choose an image" src="{{src}}" (click)="Image.click()" (click)="$event.preventDefault()" />
+                <mat-hint class="image-hint" *ngIf="(image && image.invalid) || uploading" >{{uploading?"Uploaded: "+uploadedPercent+"%": "Click to select an image"}}</mat-hint><br />
             </div>
             
             <!-- Location Name-->
-            <mat-form-field >
-                <mat-label>Location</mat-label>
-                <mat-select formControlName="location">
-                    <mat-option [value]="locationID" >{{locationName}}</mat-option>
-                </mat-select>
+            <mat-form-field class="s-form-field" >
+                <input matInput placeholder="{{locationName}}" disabled >
             </mat-form-field>
             <br/>
 
             <!-- Title Field -->
-            <mat-form-field style="width: 150px;">
+            <mat-form-field class="s-form-field" >
                 <input matInput placeholder="Title" formControlName = 'title' (input)="checkEntry()" (keydown.enter)="$event.preventDefault()"/>
                 <mat-error *ngIf="title && title.touched && title.invalid">
                     <mat-error *ngIf="title.errors?.['required']">You have to set a title for your review</mat-error>
@@ -29,8 +26,8 @@
             <br/><br *ngIf="title && title.touched && title.invalid" />
 
             <!-- Text Field -->
-            <mat-form-field style="width: 450px;" >
-                <textarea style="height: 340px;" matInput placeholder="Text" formControlName = 'text' (input)="checkEntry()">    
+            <mat-form-field class="l-form-field" >
+                <textarea id="text-field" matInput placeholder="Text" formControlName = 'text' (input)="checkEntry()">    
                 </textarea>
                 <mat-error *ngIf="text && text.touched && text.invalid">
                     <mat-error *ngIf="text.errors?.['required']">You didn't enter any text for your review</mat-error>
@@ -47,11 +44,6 @@
         <mat-error *ngIf="errorStatus">
             {{errorMessage}}
         </mat-error>
-
-        <!-- Picture (Experimental) -->
-        <!-- <div class="picture">
-            <img src="assets/images/To Be Determined.jpg" alt="cool picture" style="position: absolute; right:0px; height: 300px;width: 200px;top: 120px;" />
-        </div> -->
         
         </mat-card-content>
 </mat-card>
