@@ -1,3 +1,4 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,15 +14,18 @@ export class AddReviewComponent implements OnInit {
 
   constructor(private router: Router, private request: HttpRequestService) { }
 
-  @Input() locationID:string = '-5';
-  //Defining the logic flags
-  userToken :string|null = null;
+  //Input from parent component
+  @Input() locationID: string = '-5';
 
+  //Defining the logic variables
+  userToken :string|null = null;
+  
   locationName : string = "Examplary Location";
-  //titleImage: File|null = null;
   src:any = 'assets/images/choose-image-picture-illustration-512.webp';
   errorStatus = false;
   errorMessage = "";
+  uploading = false;
+  uploadedPercent = 0;
 
   //Defining Reactive Form
   reviewParams = new FormGroup({
@@ -37,10 +41,13 @@ export class AddReviewComponent implements OnInit {
     if (this.userToken){
       console.log("Adding Review");
     }else{
+
+      //Deny access if not logged in 
       console.log("Can't add review, not logged in.");
       this.router.navigate(['../../home']);
     }
 
+    
     this.reviewParams.get('location')?.setValue(this.locationID);
   }
 
@@ -48,17 +55,24 @@ export class AddReviewComponent implements OnInit {
   submit(): void{
     if (this.image){
       console.log("Uploading...");
+      this.uploading = true;
+      this.uploadedPercent = 0;
       let sub = this.request.addReview(this.reviewParams.value).subscribe({
 
         //Successful request
         next: (response:any) => {
+          if (response.type == HttpEventType.UploadProgress){
+            this.uploadedPercent = 100 * response.loaded / response.total;
+            return;
+          }
           console.log("success!");
-          this.router.navigate(['../../home']);
+          return;
         },
 
         //Failed request
         error: (response:any) => {
           console.log("failure!");
+          this.uploading = false;
           this.errorMessage = "Something went wrong!";
           this.errorStatus = true;
         } 
@@ -88,8 +102,25 @@ export class AddReviewComponent implements OnInit {
     }
   }
 
+  //On User Input
   checkEntry(): void {
+
+    //Remove the error message
     this.errorStatus = false;
+
+    /*let textFieldStyle:any = document.getElementById('text-field')?.style;
+    //Check if the user has manually changed the text field's size (don't change it in that case)
+    if (['', '330px'].includes(textFieldStyle.getPropertyValue('height'))){
+
+      if (this.text?.value){
+        //maximize the text field's size
+        textFieldStyle.setProperty('height','330px');
+
+      }else{
+        //minimize the text field's size
+        textFieldStyle.setProperty('height','');
+      }
+    }*/
   }
 
 
