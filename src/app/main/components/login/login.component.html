@@ -30,7 +30,7 @@
             <br/><br *ngIf="password && password.touched && password.invalid" />
             
             <!-- Button -->
-            <button mat-button [disabled] = "this.loginCredentials.invalid" [style]="this.loginCredentials.invalid?'color: rgb(100,100,100);background-color: rgb(200, 200, 200);':'color: white;background-color: rgb(88, 99, 255);'" form="log-in" 
+            <button mat-button [disabled] = "this.loginCredentials.invalid"  form="log-in" 
             type = "submit"> {{ userEnteredEmail? "Login By E-mail Address": "Login By Username"}}
             </button>
             <mat-error *ngIf="problemStatus > 0">

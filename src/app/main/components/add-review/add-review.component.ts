@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UnsubscriptionError } from 'rxjs';
 import { HttpRequestService } from 'src/app/http-service.service';
 
 @Component({
@@ -12,9 +13,10 @@ export class AddReviewComponent implements OnInit {
 
   constructor(private router: Router, private request: HttpRequestService) { }
 
+  @Input() locationID:string = '-5';
   //Defining the logic flags
   userToken :string|null = null;
-  locationID : string = '-5';
+
   locationName : string = "Examplary Location";
   //titleImage: File|null = null;
   src:any = 'assets/images/choose-image-picture-illustration-512.webp';

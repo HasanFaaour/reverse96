@@ -23,11 +23,12 @@ export class MapReviewComponent implements AfterViewInit {
   lata!: string;
   lnga: any;
   latlng = L.latLng(50.5, 30.5);
+  dlg = true;
 
   constructor(public dialog: MatDialog) { }
   
   openDialog() {
-    this.dialog.open(AddReviewComponent);
+    this.dlg = false;
   }
 
   toggle() {

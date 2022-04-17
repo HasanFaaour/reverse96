@@ -35,10 +35,15 @@
     margin-top: 30px;
 }
 
-/* .mat-button {
+.mat-button {
     color: white;
     background-color: rgb(88, 99, 255);;
-} */
+} 
+
+.mat-button:disabled{
+    color: black;
+    background-color:azure;
+}
 
 @media screen and (max-width: 600px){
     .container {
