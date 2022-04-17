@@ -13,7 +13,7 @@ export class AddReviewComponent implements OnInit {
 
   constructor(private router: Router, private request: HttpRequestService) { }
 
-  @Input() locationID:string = '-5';
+  @Input() locationID:string = '';
   //Defining the logic flags
   userToken :string|null = null;
 

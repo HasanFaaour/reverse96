@@ -13,15 +13,13 @@ import { AddReviewComponent } from '../add-review/add-review.component';
 })
 export class MapReviewComponent implements AfterViewInit {
   showReview = false;
-  @ViewChild('sidenav') drawer!: MatSidenav;
- 
-
+  latitude: string = '35.7952';
+  longitude: string = '51.4322';
+  locId: string = '12345.678.99';
   message: string = '';
   tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> Contributors'});
   map: any;
-  lata!: string;
-  lnga: any;
   latlng = L.latLng(50.5, 30.5);
   dlg = true;
 
@@ -29,10 +27,6 @@ export class MapReviewComponent implements AfterViewInit {
   
   openDialog() {
     this.dlg = false;
-  }
-
-  toggle() {
-    this.drawer.toggle();
   }
 
   ngAfterViewInit(): void {
@@ -84,14 +78,26 @@ export class MapReviewComponent implements AfterViewInit {
   updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
   }); */
   marker.on('click',  (e: any) => {
+    const la = marker.getLatLng().lat.toString(); 
+    const lo = marker.getLatLng().lng.toString();
     this.showReview = !this.showReview;
+    if(this.latitude === la && this.longitude === lo){
+      console.log("ya ali");
+    }
+    console.log(la);
+    console.log(lo);
+    console.log(this.latitude);
+    console.log(this.longitude);
   });
 
+  /*
   marker.on('click',  (e: any) => {
     marker.setLatLng(e.latlng);
+    this.latitude = marker.getLatLng().lat.toString();
+    this.longitude = marker.getLatLng().lng.toString();
     updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
   });
-
+*/
   /* this.map.on('click',  (e: any) => {
   marker.setLatLng(e.latlng);
   
