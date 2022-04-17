@@ -1,3 +1,10 @@
+<mat-progress-bar *ngIf="showProgress"
+          class="example-margin"
+          [color]="color"
+          [mode]="mode"
+          [value]="value"
+          [bufferValue]="bufferValue">
+</mat-progress-bar>
 <div class="top-nav">
     <div class="more-menu">
     <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
@@ -11,8 +18,8 @@
         <button mat-menu-item>notifications</button>
         <button mat-menu-item>profile</button>
       </mat-menu>
-    <a *ngIf="!isLogin" (click)="onLogout()" class="login">log in</a>
-    <a *ngIf="isLogin" href="login" class="login"><mat-icon style="color: red;">logout</mat-icon></a>
+    <a *ngIf="!isLogin" routerLink="/login" class="login">log in</a>
+    <a *ngIf="isLogin" routerLink="/logout" class="login"><mat-icon style="color: red;">logout</mat-icon></a>
     <a href="#"><mat-icon style="color: rgb(65, 64, 64);">settings</mat-icon></a>
     <input name="name" [(ngModel)]="name" type="search"  class="search-box" placeholder="search...">
 </div>

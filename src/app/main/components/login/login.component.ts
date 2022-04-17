@@ -79,6 +79,8 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('username',Object.values(response)[3]);
 
           this.router.navigate(['home']);
+          //for refresh sid-bar, top-nav components
+          this.refresh();
         }else{
           console.log("wrong!");
           this.problemStatus = 1;
@@ -128,7 +130,9 @@ export class LoginComponent implements OnInit {
   }
 
 
-
+  refresh(): void {
+    window.location.reload();
+  }
 
 
 
