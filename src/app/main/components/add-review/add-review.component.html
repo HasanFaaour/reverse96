@@ -10,16 +10,8 @@
             </div>
             
             <!-- Location Name-->
-
-            <mat-form-field >
-                <mat-label>Location</mat-label>
-                <mat-select formControlName="location">
-                    <mat-option [value]="locationID" >{{locationID}}</mat-option>
-                </mat-select>
-
             <mat-form-field class="s-form-field" >
                 <input matInput placeholder="{{locationName}}" disabled >
-              
             </mat-form-field>
             <br/>
 
@@ -48,7 +40,10 @@
             <button mat-button [style]="reviewParams.invalid?'color: rgb(100,100,100);background-color: rgb(200, 200, 200);':'color: white;background-color: rgb(88, 99, 255);'" form="add-review" [disabled]="reviewParams.invalid" type="submit">
                 Add
             </button>
+
         </form>
+
+        <!-- Error message -->
         <mat-error *ngIf="errorStatus">
             {{errorMessage}}
         </mat-error>

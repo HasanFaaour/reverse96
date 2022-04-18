@@ -9,41 +9,61 @@
     box-shadow: 0 4px 8px 0 rgba(77, 76, 76, 0.116), 0 6px 20px 0 rgba(70, 70, 70, 0.096);
 }
 
-.mat-card {
-    margin-left: 0%; 
-    margin-top: 100px;
-    width: 40%; 
-    height: 250px;
-    float: left;
-    border: 1px solid white;
-    box-shadow: 0 4px 8px 0 rgb(255, 255, 255), 0 6px 20px 0 rgb(255, 255, 255);
-}
+    .log-img {
+        width: 40%;
+        height: 400px;
+        float: left;
+        margin-left: 10%;
+        margin-top: 0px;
+    }
 
-.mat-form-field {
-    width: 300px;
-}
+        img{
+            width: 400px;
+            height: 400px;
+        }
 
-.log-img {
-    width: 40%;
-    height: 400px;
-    float: left;
-    margin-left: 10%;
-    margin-top: 0px;
-}
-.mat-card-content {
-    margin-left: 50px;
-    margin-top: 30px;
-}
+    .mat-card {
+        margin-left: 0%; 
+        margin-top: 100px;
+        width: 36%; 
+        height: 250px;
+        float: left;
+        /* border: 1px solid white; */
+        background-color: rgb(247, 255, 255);
+        /* box-shadow: 0 4px 8px 0 rgb(255, 255, 255), 0 6px 20px 0 rgb(255, 255, 255); */
+    }
 
-.mat-button {
-    color: white;
-    background-color: rgb(88, 99, 255);;
-} 
+        mat-label {
+            margin-left: 50px;
+            margin-bottom: 50px;
+            font-size: 21px;
+            font-weight: 400;
+            color:#b55;
+            text-shadow: 6px 2.5px 4px #588;
+        }
 
-.mat-button:disabled{
-    color: black;
-    background-color:azure;
-}
+        .mat-card-content {
+            margin-left: 50px;
+            margin-top: 30px;
+        }
+
+            .mat-form-field {
+                width: 300px;
+            }            
+
+            .mat-button {
+                color: white;
+                background-color: rgb(88, 99, 255);
+            }
+
+            .mat-button:disabled{
+                color: rgb(100, 100, 100);
+                background-color: rgb(200, 200, 200);
+            }
+
+            .link{
+                margin-left: 10px;
+            }
 
 @media screen and (max-width: 600px){
     .container {

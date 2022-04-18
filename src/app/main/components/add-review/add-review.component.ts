@@ -2,7 +2,6 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UnsubscriptionError } from 'rxjs';
 import { HttpRequestService } from 'src/app/http-service.service';
 
 @Component({
@@ -19,7 +18,6 @@ export class AddReviewComponent implements OnInit {
 
   //Defining the logic variables
   userToken :string|null = null;
-  
   locationName : string = "Examplary Location";
   src:any = 'assets/images/choose-image-picture-illustration-512.webp';
   errorStatus = false;

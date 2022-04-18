@@ -67,20 +67,15 @@ export class LoginComponent implements OnInit {
     let sub = this.request.login(this.loginCredentials.value).subscribe({
       //Handling the response in case of a successful request
       next: (response) =>{
-        //console.log(response);
         if ("access" in response){
-          //console.log("sucess");
           this.loggedInUsername = this.loginCredentials.value['usermail'];
 
-          //console.log(this.loggedInUsername);
           localStorage.setItem('access',Object.values(response)[0]);
           localStorage.setItem('refresh',Object.values(response)[1]);
           localStorage.setItem('name',Object.values(response)[2]);
           localStorage.setItem('username',Object.values(response)[3]);
 
           this.router.navigate(['home']);
-          //for refresh sid-bar, top-nav components
-          this.refresh();
         }else{
           console.log("wrong!");
           this.problemStatus = 1;
@@ -105,7 +100,7 @@ export class LoginComponent implements OnInit {
             return;
 
           }if (response['error']['message'] == "validate your email"){
-            this.router.navigate(['../signup',{email: this.usermail?.value}]/*, { relativeTo: this.route}*/);
+            this.router.navigate(['../signup',{email: this.usermail?.value}]);
             sub.unsubscribe();
             return; 
           }
@@ -130,9 +125,7 @@ export class LoginComponent implements OnInit {
   }
 
 
-  refresh(): void {
-    window.location.reload();
-  }
+
 
 
 
