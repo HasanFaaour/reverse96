@@ -16,6 +16,7 @@ export class SignupComponent implements OnInit {
   constructor(private Request : HttpRequestService, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    //Check if user is trying to validate an account after login (there will be an email address in the url parameters)
     let email = this.route.snapshot.paramMap.get('email');
     if (email){
       this.submittedEmail = email;
@@ -62,9 +63,8 @@ export class SignupComponent implements OnInit {
       next: (response:object) => {
         if ("message" in response){
             this.submittedEmail = this.email?.value;
-        }else{
-          console.log(11);
         }
+
         sub.unsubscribe();
         return;
       },
@@ -72,9 +72,12 @@ export class SignupComponent implements OnInit {
       //Failed submit
       error: (response) => {
         let error = response['error'];
+
+        //Detect the problem and set the message accordingly
         this.signupMessage = "phone_number" in error?"There is already an account registered with this phone number!":"email" in error?"There is already an account registered with this E-mail address!":"username" in error?"The username already exists. Please try another username.": "Something went wrong";
-        console.log("signup error");
         this.signupStatus =1;
+
+        console.log("signup error");
         sub.unsubscribe();
         return;
       }
@@ -85,27 +88,40 @@ export class SignupComponent implements OnInit {
   validate(){
     this.validateStatus = 0;
     let sub = this.Request.validateEmail(this.submittedEmail,this.code?.value).subscribe({
+
+      //Sucessful activation
       next: (response) =>{
         if ('message' in response){
 
           if (Object.values(response)[0] == "go to login") {
             console.log("sucess!");
+
+            //Set the message accordingly
             this.validateMessage = "Congratulations! You can now ";
             this.validateStatus = 1;
+
             sub.unsubscribe();
             return;
           }
         }
       },
+
+      //Failed avtivation
       error: (response) => {
+
+        //Wrong code
         if (typeof(response['error']) == 'object' && 'message' in response['error'] && response['error']['message'] == "wrong code"){
           console.log("wrong code");
+
+          //Set the message accordingly
           this.validateMessage = "Make sure to enter the correct code."
           this.validateStatus = 2;
+
           sub.unsubscribe();
           return;
         }
 
+        //Not a real account
         if (typeof(response['error']) == 'object' && 'message' in response['error'] && response['error']['message'] == "Invalid email or username"){
           console.log("Invalid email/username");
           this.validateMessage = "Invalid action. Please login to your account again."
@@ -114,6 +130,7 @@ export class SignupComponent implements OnInit {
           return;
         }
 
+        //None of the above / Unexpected error
         this.validateMessage = "Something unexpected happened. Please try again later."
         this.validateStatus = 2;
         sub.unsubscribe();

@@ -7,14 +7,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 //Creating a Custom Validator For Username or Email Field
 function validateUserMail(): ValidatorFn{
+
   return (control : AbstractControl) : ValidationErrors | null => {
+
+    //It's an e-mail address
     if (control.value.includes("@")){
       return Validators.email(control);
-    }else{
-      if (control.value.length < 3)
+    }
+    
+    //It's a username
+    else{
+
+      if (control.value.length < 3){
         return {minlength : control.value};
-      else
+      }
+
+      else{
         return control.value.length > 15?{maxlength : control.value}:null;
+      }
+
     }
   }
 }
@@ -30,10 +41,13 @@ export class LoginComponent implements OnInit {
   constructor(private request: HttpRequestService, private router: Router/*, private route: ActivatedRoute*/) {  }
 
   ngOnInit(): void {  
+
+    //Checking if the user is already logged in (redirect to homepage if so)
     if (localStorage.getItem('access') && localStorage.getItem('refresh')){
 
       console.log("Already logged in");
       this.router.navigate(['home']);
+
     }
   }
 
@@ -51,7 +65,7 @@ export class LoginComponent implements OnInit {
     password : new FormControl('',[Validators.required, Validators.minLength(6), Validators.maxLength(24)])
   });
 
-  //Lookin for the '@' character in the "username or e-mail" input to determine if the user is trying to enter a username or a password 
+  //Lookin for the '@' character in the "username or e-mail" input to determine if the user is trying to enter a username or an e-mail address 
   checkUserEntry():void{
     if (this.usermail?.value.includes("@")){
       this.userEnteredEmail = true;
@@ -68,15 +82,20 @@ export class LoginComponent implements OnInit {
       //Handling the response in case of a successful request
       next: (response) =>{
         if ("access" in response){
-          this.loggedInUsername = this.loginCredentials.value['usermail'];
 
+          //Saving the login information in local storage
           localStorage.setItem('access',Object.values(response)[0]);
           localStorage.setItem('refresh',Object.values(response)[1]);
           localStorage.setItem('name',Object.values(response)[2]);
           localStorage.setItem('username',Object.values(response)[3]);
 
+          //redirecting to homepage
           this.router.navigate(['home']);
-        }else{
+  
+        }
+        
+        //Idk (Weird server resonse, Ig?)
+        else{
           console.log("wrong!");
           this.problemStatus = 1;
         }
@@ -87,25 +106,33 @@ export class LoginComponent implements OnInit {
       error: (response) => {
         if ('error' in response && typeof(response['error']) == 'object' && 'message' in response['error']){
 
+          //Username doesn't exist
           if (response['error']['message'] == "invalid username or email"){
             this.problem = `${this.userEnteredEmail ? "Email address" : "Username"} doesn't exist.`;
             this.problemStatus = 2;
             sub.unsubscribe();
             return;
 
-          }if (response['error']['message'] == "wrong password"){
+          }
+
+          //Password is wrong
+          if (response['error']['message'] == "wrong password"){
             this.problem = "Wrong username or password! Please try again.";
             this.problemStatus = 1;
             sub.unsubscribe();
             return;
 
-          }if (response['error']['message'] == "validate your email"){
+          }
+          
+          //Account is not activated
+          if (response['error']['message'] == "validate your email"){
             this.router.navigate(['../signup',{email: this.usermail?.value}]);
             sub.unsubscribe();
             return; 
           }
         }
         
+        //None of the above / Unexpected Error
         this.problem = "Something unexpected happened. Please try again later.";
         this.problemStatus = 3;
         sub.unsubscribe;
@@ -123,10 +150,5 @@ export class LoginComponent implements OnInit {
   get password() {
     return this.loginCredentials.get("password");
   }
-
-
-
-
-
 
 }
