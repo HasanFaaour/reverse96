@@ -1,14 +1,7 @@
 <mat-card >
-    <mat-card-content>
+    <mat-card-content >
         <form id="add-review" [formGroup]="reviewParams" (ngSubmit)="submit()" >
 
-            <!-- Image Field -->
-            <div class="image-div" >
-                <input #Image class="image-input" type="file" accept="image/*" (change)="checkImage(Image)" />
-                <input class="image-display" type="image" alt="Choose an image" src="{{src}}" (click)="Image.click()" (click)="$event.preventDefault()" />
-                <mat-hint class="image-hint" *ngIf="(image && image.invalid) || uploading" >{{uploading?"Uploaded: "+uploadedPercent+"%": "Click to select an image"}}</mat-hint><br />
-            </div>
-            
             <!-- Location Name-->
             <mat-form-field class="s-form-field" >
                 <input matInput placeholder="{{locationName}}" disabled >
@@ -25,6 +18,13 @@
             </mat-form-field>
             <br/><br *ngIf="title && title.touched && title.invalid" />
 
+            <!-- Image Field -->
+            <div class="image-div" (dragenter)="startDrag($event)" (dragleave)="endDrag($event)" >
+                <input #Image class="image-input" type="file" accept="image/*" (change)="checkImage(Image)" />
+                <input class="image-display" type="image" alt="Choose an image" src="{{src}}" (click)="Image.click()" (click)="$event.preventDefault()" />
+                <mat-hint class="image-hint" *ngIf="(image && image.invalid) || uploading" >{{imageHint}}</mat-hint><br />
+            </div>
+            
             <!-- Text Field -->
             <mat-form-field class="l-form-field" >
                 <textarea id="text-field" matInput placeholder="Text" formControlName = 'text' (input)="checkEntry()">    
