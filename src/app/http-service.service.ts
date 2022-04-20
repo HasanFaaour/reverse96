@@ -60,7 +60,7 @@ export class HttpRequestService {
     body.append('text', data.text);
     body.append('image', data.image, data.image.name);
 
-    return this.hC.post(`${this.db}/api/reviews/add`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    return this.hC.post(`${this.db}/api/reviews/add`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
   }
 
 }

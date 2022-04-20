@@ -12,21 +12,29 @@ import { AddReviewComponent } from '../add-review/add-review.component';
   styleUrls: ['./map-review.component.css']
 })
 export class MapReviewComponent implements AfterViewInit {
+  @ViewChild('drawer')
+  sidenav!: MatSidenav;
   showReview = false;
-  latitude: string = '35.7952';
-  longitude: string = '51.4322';
-  locId: string = '12345.678.99';
+  
+  showFiller = false;
+
   message: string = '';
   tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> Contributors'});
   map: any;
+  lata!: string;
+  lnga: any;
   latlng = L.latLng(50.5, 30.5);
   dlg = true;
 
   constructor(public dialog: MatDialog) { }
   
-  openDialog() {
+  addReview() {
     this.dlg = false;
+  }
+
+  toggle() {
+    this.sidenav.toggle();
   }
 
   ngAfterViewInit(): void {
@@ -74,53 +82,21 @@ export class MapReviewComponent implements AfterViewInit {
         autoPan: true
     }).addTo(this.map);
   
- /*  marker.on('dragend', function (e) {
-  updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
-  }); */
+
   marker.on('click',  (e: any) => {
-    const la = marker.getLatLng().lat.toString(); 
-    const lo = marker.getLatLng().lng.toString();
     this.showReview = !this.showReview;
-    if(this.latitude === la && this.longitude === lo){
-      console.log("ya ali");
-    }
-    console.log(la);
-    console.log(lo);
-    console.log(this.latitude);
-    console.log(this.longitude);
+    this.toggle();
   });
 
-  /*
-  marker.on('click',  (e: any) => {
-    marker.setLatLng(e.latlng);
-    this.latitude = marker.getLatLng().lat.toString();
-    this.longitude = marker.getLatLng().lng.toString();
-    updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
-  });
-*/
-  /* this.map.on('click',  (e: any) => {
-  marker.setLatLng(e.latlng);
-  
-  updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
-  }); */
-  
-  const updateLatLng = (lat: any,lng: any) => {
-   // this.latitude.nativeElement.innerHTML = '1111';
-    console.log(marker.getLatLng().lat.toString());
-    this.message = 'Ya Hosien Salam';
-    //this.showReview = !this.showReview;
-    //document.getElementById('latitude').value = marker.getLatLng().lat;
-    //document.getElementById('longitude').value = marker.getLatLng().lng;
-  }
-
+ 
   const provider = new OpenStreetMapProvider();
   const searchControl  = GeoSearchControl({
     style: 'bar',
     provider: provider,
     showMarker: true,
-    marker: marker, // use custom marker, not working
+    marker: marker, 
   });
-  //this.map.addControl(searchControl);
+
 });
 }
 
