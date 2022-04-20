@@ -7,7 +7,7 @@
   <div class="icon-list">
     <a href="#"><mat-icon style="color: rgb(83, 81, 81); vertical-align: middle;">chat_bubble_outline</mat-icon></a>
     <a href="#" class="ico"><mat-icon style="color: rgb(88, 87, 87); vertical-align: middle; bottom: 3px;">share</mat-icon></a>
-    <a *ngIf ="!item.liked" (click)="onLike(i)" class="ico"><span class="fav"><mat-icon style="vertical-align: middle; bottom: 3px;">favorite_border</mat-icon></span></a>
+    <a *ngIf ="!item.liked" (click)="onLike(i)" class="ico"><span class="fav"><mat-icon style="color: rgb(88, 87, 87); vertical-align: middle; bottom: 3px; cursor: pointer;">favorite_border</mat-icon></span></a>
     <a *ngIf ="item.enaColor" (click)="onLike(i)"  class="ico"><span class="fav"><mat-icon style="color: rgb(252, 64, 64); vertical-align: middle; bottom: 3px;">favorite</mat-icon></span></a>
   </div>
   <div class="info">

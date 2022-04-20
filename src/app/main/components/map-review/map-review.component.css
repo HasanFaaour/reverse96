@@ -4,6 +4,8 @@
     position: absolute;
     top: 70px;
     left: 170px;
+    display: flex;
+    flex-direction: column;
 }
 
 #map {
@@ -55,3 +57,13 @@
 br {
     color: #ddd;
 }
+
+
+.example-container {
+    position: absolute;
+    top: 70px;
+    right: 0px;
+    width: 27%;
+    height: 88%;
+  }
+  

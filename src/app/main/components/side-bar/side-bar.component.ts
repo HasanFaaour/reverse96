@@ -10,11 +10,12 @@ import {MatProgressBarModule, ProgressBarMode} from '@angular/material/progress-
 export class SideBarComponent implements OnInit {
   isLogin: boolean = false;
   show: boolean = false;
-
+  firstCharName: any;
   constructor() { 
     if (localStorage.getItem('access')){
       this.isLogin = true;
-      //console.log(localStorage.getItem('access'));
+      this.firstCharName = localStorage.getItem('name')?.charAt(0).toUpperCase();
+      console.log(this.firstCharName);
     }else{
       this.isLogin = false;
     }

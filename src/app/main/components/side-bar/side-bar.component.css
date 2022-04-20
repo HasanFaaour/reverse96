@@ -10,7 +10,7 @@
     padding-top: 20px;
   }
   
-  .sidenav a {
+  .sidenav a{
     padding: 6px 8px 6px 16px;
     margin-bottom: 10px;
     text-decoration: none;
@@ -19,7 +19,21 @@
     display: block;
     margin-left: 90px;
   }
-  
+  .user-image {
+    width: 40px;
+    height: 40px;
+    display: block;
+    margin-top: 190px;
+    padding-left: 10px;
+    padding-top: 10px ;
+    background-color: rgb(81, 187, 248);
+    font-size: 25px;
+    color: #ffffff;
+    margin-left: 100px;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    cursor: pointer;
+  }
   .sidenav .mat-icon {
     font-size: 30px;
     color: rgb(92, 91, 91);

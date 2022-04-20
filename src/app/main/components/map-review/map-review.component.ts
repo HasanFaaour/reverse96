@@ -12,9 +12,11 @@ import { AddReviewComponent } from '../add-review/add-review.component';
   styleUrls: ['./map-review.component.css']
 })
 export class MapReviewComponent implements AfterViewInit {
+  @ViewChild('drawer')
+  sidenav!: MatSidenav;
   showReview = false;
-  @ViewChild('sidenav') drawer!: MatSidenav;
- 
+  
+  showFiller = false;
 
   message: string = '';
   tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -32,7 +34,7 @@ export class MapReviewComponent implements AfterViewInit {
   }
 
   toggle() {
-    this.drawer.toggle();
+    this.sidenav.toggle();
   }
 
   ngAfterViewInit(): void {
@@ -85,6 +87,7 @@ export class MapReviewComponent implements AfterViewInit {
   }); */
   marker.on('click',  (e: any) => {
     this.showReview = !this.showReview;
+    this.toggle();
   });
 
   marker.on('click',  (e: any) => {
