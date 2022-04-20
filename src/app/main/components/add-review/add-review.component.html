@@ -3,6 +3,14 @@
         <form id="add-review" [formGroup]="reviewParams" (ngSubmit)="submit()" >
 
             <!-- Location Name-->
+
+            <mat-form-field >
+                <mat-label>Location</mat-label>
+                <mat-select formControlName="location">
+                    <mat-option [value]="locationID" >{{locationID}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
             <mat-form-field class="s-form-field" >
                 <input matInput placeholder="{{locationName}}" disabled >
             </mat-form-field>
