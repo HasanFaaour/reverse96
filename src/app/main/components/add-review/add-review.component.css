@@ -1,10 +1,11 @@
 mat-card{
     position: relative;
     float:left;
-    margin-top: 85px;
+    margin-top: 15px;
     margin-left: 20px;
-    width: 300px;
-    background-color: #eee;
+    margin-bottom: 5px;
+    width: 355px;
+    background-color: #fafaff  ;
     color: #202;
     /* border: #202 solid 1px; */
 }
@@ -21,11 +22,9 @@ mat-card{
         }
         
             .image-div{
-                position:absolute;
-                top: 20px;
-                right: 5%;
-                width: 45%;
-                height: 50%;
+                /* top: 20px; */
+                /* right: 5%; */
+                width: 100%;
                 /* border: 1px solid black; */
             }
 
@@ -34,36 +33,36 @@ mat-card{
                 }
 
                 .image-display:active{
-                    border: 3px dashed rgb(88, 99, 255);
+                    border: 3px dashed #555;
                 }
 
                 .image-display{
-                    float: right;
-                    width: 100px;;
-                    height: 100px;
-                    border: 3px dashed rgb(88, 99, 155);
-                    object-fit: cover;
+                    width: 100%;
+                    height: 195px;
+                    border: 2px dotted #555;
+                    border-radius: 4px;
+                    object-fit:scale-down;
                 }
 
                 .image-hint{
                     float: right;
                 }
 
-            .s-form-field{
-                width: 45%;
+            mat-form-field{
+                width: 100%;
                 height: 8%;
                 color: inherit;
                 /* border: 1px solid black; */
             }
 
-            .l-form-field{
+            /* .l-form-field{
                 margin-top: 20px;
                 width: 98%;
                 color: inherit;
-            }
+            } */
 
             textarea{
-                height: 250px;
+                height: 20px;
             }
 
             mat-label{
