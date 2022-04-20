@@ -15,10 +15,12 @@ export class MapReviewComponent implements AfterViewInit {
   @ViewChild('drawer')
   sidenav!: MatSidenav;
   showReview = false;
-  
   showFiller = false;
 
   message: string = '';
+  latitude: string = '35.7952';
+  longitude: string = '51.4322';
+  locId: string = '12345.678.99';
   tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> Contributors'});
   map: any;
@@ -76,7 +78,7 @@ export class MapReviewComponent implements AfterViewInit {
       popupAnchor: [13, 0],
     });
 
-    const marker = L.marker([position.latitude, position.longitude],{
+    const marker = L.marker([+this.latitude, +this.longitude],{
         icon,
         draggable: false,
         autoPan: true
