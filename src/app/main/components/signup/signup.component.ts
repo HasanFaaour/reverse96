@@ -45,6 +45,7 @@ export class SignupComponent implements OnInit {
   validateMessage = "";
   signupStatus = 0;
   signupMessage = "Something went wrong";
+  processing = false;
 
   //On Input Changes
   checkEntry(){
@@ -56,11 +57,15 @@ export class SignupComponent implements OnInit {
 
   //Defining the submit method to handle the request
   submit() :void {
+    this.processing = true;
     this.signupStatus = 0;
+
     let sub = this.Request.signup(this.signupCredentials.value).subscribe({
 
       //Successful submit
       next: (response:object) => {
+        this.processing = false;
+
         if ("message" in response){
             this.submittedEmail = this.email?.value;
         }
@@ -71,6 +76,8 @@ export class SignupComponent implements OnInit {
 
       //Failed submit
       error: (response) => {
+        this.processing = false;
+
         let error = response['error'];
 
         //Detect the problem and set the message accordingly
@@ -86,11 +93,15 @@ export class SignupComponent implements OnInit {
 
   //Defining a method to handle the email validation request
   validate(){
+    this.processing = true;
     this.validateStatus = 0;
+
     let sub = this.Request.validateEmail(this.submittedEmail,this.code?.value).subscribe({
 
       //Sucessful activation
       next: (response) =>{
+        this.processing = false;
+
         if ('message' in response){
 
           if (Object.values(response)[0] == "go to login") {
@@ -108,6 +119,7 @@ export class SignupComponent implements OnInit {
 
       //Failed avtivation
       error: (response) => {
+        this.processing = false;
 
         //Wrong code
         if (typeof(response['error']) == 'object' && 'message' in response['error'] && response['error']['message'] == "wrong code"){

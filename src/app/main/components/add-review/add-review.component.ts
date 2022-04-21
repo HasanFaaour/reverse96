@@ -23,6 +23,7 @@ export class AddReviewComponent implements OnInit {
   //Defining the logic variables
   userToken :string|null = null;
   src:any = selectImageIcon;
+  imageError = false;
   errorStatus = false;
   errorMessage = "";
   imageHint = selectImageHint;
@@ -83,6 +84,7 @@ export class AddReviewComponent implements OnInit {
             return;
           }
           console.log("success!");
+          this.uploading = false;
           return;
         },
 
@@ -101,21 +103,33 @@ export class AddReviewComponent implements OnInit {
   //Checking if user has selected a valid image
   checkImage (selectedImage: any){
     this.errorStatus = false;
+    this.imageError = false;
+
     this.image?.setValue(selectedImage.files[0]);
+
     if (!this.image?.value){
       
+      //Display the default icon in the input
       this.src = selectImageIcon;
 
     }else{
-
-      //Display the selected image in the input
-      let reader = new FileReader();
-      reader.onload = (e) => {
-        this.src = reader.result;
+      if (this.image.value.size > 10 ** 6){
+        this.src = selectImageIcon;
+        this.imageError = true;
+        this.image.setValue(null);
         return;
       }
 
-      reader.readAsDataURL(this.image.value);
+      else{
+        //Display the selected image in the input
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          this.src = reader.result;
+          return;
+        }
+
+        reader.readAsDataURL(this.image.value);
+      }
     }
   }
 

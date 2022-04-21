@@ -1,8 +1,6 @@
 <!-- Login form -->
 <div class="container" >
     
-    <div class="log-img" > <img src="assets/images/login-image.jpg" > </div>
-
     <mat-card  *ngIf="loggedInUsername == '@N/A'" >
 
         <mat-label > Log in </mat-label>
@@ -35,7 +33,7 @@
                 <br/><br *ngIf="password && password.touched && password.invalid" />
                 
                 <!-- Button -->
-                <button mat-button [disabled] = "this.loginCredentials.invalid" form="log-in" type = "submit">
+                <button mat-button [disabled] = "loginCredentials.invalid || processing" form="log-in" type = "submit">
                     {{ userEnteredEmail? "Login By E-mail Address": "Login By Username"}}
                 </button>
 
@@ -53,4 +51,6 @@
             </form>
         </mat-card-content>
     </mat-card>
+    <div class="log-img" > <img src="assets/images/login-image.jpg" > </div>
+
 </div>
