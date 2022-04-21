@@ -112,7 +112,7 @@ export class AddReviewComponent implements OnInit {
       this.src = selectImageIcon;
 
     }else{
-      if (this.image.value.size > 10 ** 6){
+      if (this.image.value.size > 10 ** 7){
         this.src = selectImageIcon;
         this.imageError = true;
         this.image.setValue(null);

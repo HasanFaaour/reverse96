@@ -187,9 +187,8 @@ describe('AddReviewComponent', () => {
 
   });
 
-  it('(Validators: Image) should count normal image (<= 10MB) as invalid', () => {
+  it('(Validators: Image) should count normal image (<= 10MB) as valid', () => {
     let normalImage = {files: [validImage]};
-    console.log(validImage.size);
     
     component.title?.setValue(validTitle);
     component.text?.setValue(validText);
