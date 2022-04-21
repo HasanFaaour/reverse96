@@ -16,14 +16,6 @@ export class AddReviewComponent implements OnInit {
 
   constructor(private router: Router, private request: HttpRequestService) { }
 
-
- 
-
-
-  
-  locationName : string = "Examplary Location";
-  src:any = 'assets/images/choose-image-picture-illustration-512.webp';
-
   //Input from parent component
   @Input() locationID: string = '-5';
   @Input() locationName: string = "No Location";
@@ -36,7 +28,7 @@ export class AddReviewComponent implements OnInit {
   imageHint = selectImageHint;
   uploading = false;
   uploadedPercent = 0;
-imageError = false;
+  imageError = false;
   //Defining Reactive Form
   reviewParams = new FormGroup({
     image: new FormControl(null ,Validators.required),
