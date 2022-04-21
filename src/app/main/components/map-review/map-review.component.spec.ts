@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { MapReviewComponent } from './map-review.component';
@@ -11,7 +12,8 @@ describe('MapReviewComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ MapReviewComponent ],
-      providers: [{provide: Router, useValue: routerStub}]
+      providers: [{provide: Router, useValue: routerStub}],
+      imports: [MatDialogModule]
     })
     .compileComponents();
   });
