@@ -1,14 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatMenuModule } from '@angular/material/menu';
+import { Router } from '@angular/router';
 
 import { TopNavComponent } from './top-nav.component';
 
 describe('TopNavComponent', () => {
   let component: TopNavComponent;
   let fixture: ComponentFixture<TopNavComponent>;
+  let routerStub = {navigate: (param: any) => {}};
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TopNavComponent ]
+      declarations: [ TopNavComponent ],
+      providers: [{provide: Router, useValue: routerStub}],
+      imports: [MatMenuModule]
     })
     .compileComponents();
   });
