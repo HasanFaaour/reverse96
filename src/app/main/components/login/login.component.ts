@@ -23,7 +23,7 @@ function validateUserMail(): ValidatorFn{
       }
 
       else{
-        return control.value.length > 15?{maxlength : control.value}:null;
+        return control.value.length > 30?{maxlength : control.value}:null;
       }
 
     }
@@ -57,6 +57,7 @@ export class LoginComponent implements OnInit {
   problemStatus = 0;
   problem = "Wrong username or password! Please try again.";
   token = "N/A";
+  processing = false;
 
 
   //Defining Reactive Forms
@@ -78,9 +79,12 @@ export class LoginComponent implements OnInit {
 
   //Defining the submit method to handle the request
    submit ():void{
+     this.processing = true;
     let sub = this.request.login(this.loginCredentials.value).subscribe({
       //Handling the response in case of a successful request
       next: (response) =>{
+        this.processing = false;
+        
         if ("access" in response){
 
           //Saving the login information in local storage
@@ -104,6 +108,8 @@ export class LoginComponent implements OnInit {
 
       //Handling the response in case of an unsuccessful request
       error: (response) => {
+        this.processing = false;
+
         if ('error' in response && typeof(response['error']) == 'object' && 'message' in response['error']){
 
           //Username doesn't exist

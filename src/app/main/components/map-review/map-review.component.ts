@@ -17,12 +17,10 @@ export class MapReviewComponent implements AfterViewInit {
   sidenav!: MatSidenav;
   list : any;
   showReview = false;
-  showFiller = false;
+  @ViewChild('sidenav') drawer!: MatSidenav;
+ 
 
   message: string = '';
-  latitude: string = '35.7952';
-  longitude: string = '51.4322';
-  locId: string = '12345.678.99';
   tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> Contributors'});
   map: any;
@@ -36,12 +34,12 @@ export class MapReviewComponent implements AfterViewInit {
     this.getuserinformation();
   }
   
-  addReview() {
+  openDialog() {
     this.dlg = false;
   }
 
   toggle() {
-    this.sidenav.toggle();
+    this.drawer.toggle();
   }
 
   ngAfterViewInit(): void {
@@ -83,27 +81,47 @@ export class MapReviewComponent implements AfterViewInit {
       popupAnchor: [13, 0],
     });
 
-    const marker = L.marker([+this.latitude, +this.longitude],{
+    const marker = L.marker([position.latitude, position.longitude],{
         icon,
         draggable: false,
         autoPan: true
     }).addTo(this.map);
   
-
+ /*  marker.on('dragend', function (e) {
+  updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
+  }); */
   marker.on('click',  (e: any) => {
     this.showReview = !this.showReview;
-    this.toggle();
   });
 
- 
+  marker.on('click',  (e: any) => {
+    marker.setLatLng(e.latlng);
+    updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
+  });
+
+  /* this.map.on('click',  (e: any) => {
+  marker.setLatLng(e.latlng);
+  
+  updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
+  }); */
+  
+  const updateLatLng = (lat: any,lng: any) => {
+   // this.latitude.nativeElement.innerHTML = '1111';
+    console.log(marker.getLatLng().lat.toString());
+    this.message = 'Ya Hosien Salam';
+    //this.showReview = !this.showReview;
+    //document.getElementById('latitude').value = marker.getLatLng().lat;
+    //document.getElementById('longitude').value = marker.getLatLng().lng;
+  }
+
   const provider = new OpenStreetMapProvider();
   const searchControl  = GeoSearchControl({
     style: 'bar',
     provider: provider,
     showMarker: true,
-    marker: marker, 
+    marker: marker, // use custom marker, not working
   });
-
+  //this.map.addControl(searchControl);
 });
 }
 

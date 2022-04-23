@@ -1,6 +1,6 @@
 .container {
     width: 80%;
-    height: 500px;
+    min-height: 500px;
     border: 1px solid #ddd;
     border-radius: 10px;
     margin-top: 85px;
@@ -10,40 +10,46 @@
 }
 
     .log-img {
-        float: left;
-        margin-left: 45px;
-        margin-top: 30px;
+        float: right;
+        margin-right: 5%;
+        margin-top: 2%;
+        width: 45%;
     }
 
-        img{
-            width: 500px;
-            height: 400px;
+        img {
+            width: 100%;
+            height: auto;
         }
 
     .signup-card {
-        margin-left: 1%; 
-        margin-top: 20px;
-        margin-left: 84px;
-        width: 400px; 
         float: left;
-        background-color: rgb(247, 255, 255);
+        margin-left: 5%;
+        margin-top: 1%;
+        width: 38%; 
+        min-width: 420px;
+        box-shadow: none;
     }
 
-        .mat-card-content {
-            margin-left: 50px;
-            border-radius: 10px;
+        .signup-label {
+            margin-left: 1%;
+            margin-bottom: 10%;
+            font-size: 21px;
+            font-weight: 400;
+            color:#b55;
+            text-shadow: 6px 3px 4px #588;
         }
 
-            .signup-label{
-                margin-left: 48px;
-                font-size: 21px;
-                font-weight: 400;
-                color:#b55;
-                text-shadow: 6px 3px 4px #588;
-            }
+        .signup-content {
+            margin-top: 20px;
+        }
 
             .mat-form-field {
-                width: 300px;
+                width: 100%;
+                margin-top: 30px;
+            }
+
+            textarea {
+                height: 120px;
             }
 
             .mat-button {
@@ -61,14 +67,60 @@
             }
 
     .validation-card {
-        margin-left: 1%; 
+        margin-left: 5%; 
         margin-top: 75px;
-        margin-left: 84px;
-        width: 400px; 
+        width: 38%; 
         float: left;
-        background-color: rgb(247, 255, 255);
     }
 
         .success-message{
             color:limegreen;
         }
+
+@media screen and (max-width: 1215px)  {
+    
+    .log-img {
+        width: 30%;
+
+    }
+
+    .validation-card {
+        width: 53%;
+    }
+}
+
+@media screen and (max-width: 988px) {
+    .log-img {
+        width: 95%;
+    }
+
+    .validation-card {
+        width: 500px;
+        float: none;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .container {
+        margin-left: 1%;
+        min-width: 98%;
+        margin-bottom: 1%;
+    }
+
+    .signup-card {
+        float: none;
+    }
+
+    .validation-card {
+        float: none;
+        /* min-width: 90%; */
+    }
+
+    .log-img {
+        float: none;
+        margin: auto;
+    }
+
+}
