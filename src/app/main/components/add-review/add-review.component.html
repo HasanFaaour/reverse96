@@ -1,16 +1,9 @@
 <mat-card >
     <mat-card-content >
+
         <form id="add-review" [formGroup]="reviewParams" (ngSubmit)="submit()" >
 
             <!-- Location Name-->
-
-            <mat-form-field >
-                <mat-label>Location</mat-label>
-                <mat-select formControlName="location">
-                    <mat-option [value]="locationID" >{{locationID}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-
             <mat-form-field class="s-form-field" >
                 <input matInput placeholder="{{locationName}}" disabled >
             </mat-form-field>
@@ -29,7 +22,7 @@
             <!-- Image Field -->
             <div class="image-div" (dragenter)="startDrag($event)" (dragleave)="endDrag($event)" >
                 <input #Image class="image-input" type="file" accept="image/*" (change)="checkImage(Image)" />
-                <input class="image-display" type="image" alt="Choose an image" src="{{src}}" (click)="Image.click()" (click)="$event.preventDefault()" />
+                <input class="image-display" type="image" alt="Choose an image" src="{{imageDisplay}}" (click)="Image.click()" (click)="$event.preventDefault()" />
                 <mat-hint class="image-hint" *ngIf="(image && image.invalid) || uploading" >{{imageHint}}</mat-hint><br />
             </div>
 
@@ -51,6 +44,7 @@
             <button mat-button form="add-review" [disabled]="reviewParams.invalid || uploading" type="submit">
                 Add
             </button>
+            <button mat-button id="reset-button" form="add-review" type="reset">sda</button>
 
         </form>
 
@@ -58,6 +52,11 @@
         <mat-error *ngIf="errorStatus">
             {{errorMessage}}
         </mat-error>
+
+        <!-- Success message -->
+        <mat-label class="s-message" *ngIf="successStatus">
+            ✓ Your review was successfully added.
+        </mat-label>
         
         </mat-card-content>
 </mat-card>

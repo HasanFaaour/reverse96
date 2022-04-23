@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { HttpRequestService } from 'src/app/http-service.service';
 
 const selectImageIcon = 'assets/images/icons8-add-image-48.png';
-const selectImageHint = "Click to select an image, or use drag and drop";
+const selectImageHint = "Click to select an image(10MB or smaller)";
 
 @Component({
   selector: 'app-add-review',
@@ -16,30 +16,22 @@ export class AddReviewComponent implements OnInit {
 
   constructor(private router: Router, private request: HttpRequestService) { }
 
-
-  locationName : string = "Examplary Location";
-  src:any = 'assets/images/choose-image-picture-illustration-512.webp';
-
-
-
   //Input from parent component
   @Input() locationID: string = '-5';
-
-  //**** */ @Input() locationName: string = "No Location";
+  @Input() locationName: string = "No Location";
 
   //Defining the logic variables
   userToken :string|null = null;
-
-  //****src:any = selectImageIcon;
-
-  //src:any = selectImageIcon;
-
+  imageDisplay:any = selectImageIcon;
   errorStatus = false;
   errorMessage = "";
   imageHint = selectImageHint;
   uploading = false;
   uploadedPercent = 0;
   imageError = false;
+  formReset: any;
+  successStatus = false;
+  
   //Defining Reactive Form
   reviewParams = new FormGroup({
     image: new FormControl(null ,Validators.required),
@@ -60,50 +52,88 @@ export class AddReviewComponent implements OnInit {
       this.router.navigate(['../../home']);
     }
 
-    
     this.reviewParams.get('location')?.setValue(this.locationID);
+    
+    this.formReset = document.getElementById("reset-button");
+
   }
 
   //Start Dragged
   startDrag(ev: Event): void {
-    this.imageHint = "Drop your image in the box above"
-    this.src = 'assets/images/icons8-drag-and-drop-50.png'
+    this.imageHint = "Drag & Drop coming soon..."
+    this.imageDisplay = 'assets/images/icons8-drag-and-drop-50.png'
   }
 
   //End Drag
   endDrag(ev: Event): void {
     // console.log(ev.currentTarget,ev.target);
     this.imageHint = selectImageHint;
-    this.src = selectImageIcon;
+    this.imageDisplay = selectImageIcon;
   }
 
   //Defining the submit method to handle the request
   submit(): void{
+    this.errorStatus = false;
+    this.uploading = true;
+
     if (this.image){
       console.log("Uploading...");
-      this.uploading = true;
-      this.imageHint = `Uploaded: ${this.uploadedPercent}%`;
       this.uploadedPercent = 0;
+      this.imageHint = `Uploaded: ${this.uploadedPercent}%`;
+
       let sub = this.request.addReview(this.reviewParams.value).subscribe({
 
-        //Successful request
+        //Response
         next: (response:any) => {
+
+          //Progress report event
           if (response.type == HttpEventType.UploadProgress){
+
+            //Update the processbar
             this.uploadedPercent = 100 * response.loaded / response.total;
             this.imageHint = `Uploaded: ${this.uploadedPercent}%`;
+
             return;
           }
-          console.log("success!");
-          this.uploading = false;
-          return;
+          
+          //Sent evnet
+          if (response.type == HttpEventType.Sent) {
+            console.log('sent!');
+            return;
+          }
+
+          //Sucessfully done event
+          if (response.type == HttpEventType.Response) {
+            console.log("success!");
+
+            //Reset the form (except location id)
+            this.formReset.click();
+            this.reviewParams.get('location')?.setValue(this.locationID);
+            this.uploading = false;
+            this.imageHint = selectImageHint;
+            this.imageDisplay = selectImageIcon;
+
+            
+            //✓ Congratualations Message
+            this.successStatus = true;  
+            
+            //Done
+            sub.unsubscribe();
+            return;
+          }
         },
 
-        //Failed request
+        //Error
         error: (response:any) => {
-          console.log("failure!");
+
+          //Unexpected error
           this.uploading = false;
+          console.log("failure!");
+          
+          //Show error
           this.errorMessage = "Something went wrong!";
           this.errorStatus = true;
+
         } 
       })
       return;
@@ -120,11 +150,12 @@ export class AddReviewComponent implements OnInit {
     if (!this.image?.value){
       
       //Display the default icon in the input
-      this.src = selectImageIcon;
+      this.imageDisplay = selectImageIcon;
+      this.imageHint = selectImageHint;
 
     }else{
       if (this.image.value.size > 10 ** 7){
-        this.src = selectImageIcon;
+        this.imageDisplay = selectImageIcon;
         this.imageError = true;
         this.image.setValue(null);
         return;
@@ -134,7 +165,7 @@ export class AddReviewComponent implements OnInit {
         //Display the selected image in the input
         let reader = new FileReader();
         reader.onload = (e) => {
-          this.src = reader.result;
+          this.imageDisplay = reader.result;
           return;
         }
 
