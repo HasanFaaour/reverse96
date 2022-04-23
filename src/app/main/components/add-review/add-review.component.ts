@@ -35,7 +35,7 @@ export class AddReviewComponent implements OnInit {
   //Defining Reactive Form
   reviewParams = new FormGroup({
     image: new FormControl(null ,Validators.required),
-    location: new FormControl({value: this.locationID, disabled: true},[Validators.required]),
+    location: new FormControl(this.locationID,[Validators.required]),
     title: new FormControl('',[Validators.required, Validators.maxLength(30)]),
     text: new FormControl('',[Validators.required, Validators.maxLength(1500)])
   });
@@ -77,7 +77,6 @@ export class AddReviewComponent implements OnInit {
     this.uploading = true;
 
     if (this.image){
-      console.log("Uploading...");
       this.uploadedPercent = 0;
       this.imageHint = `Uploaded: ${this.uploadedPercent}%`;
 

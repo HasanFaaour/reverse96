@@ -80,11 +80,26 @@ export class SignupComponent implements OnInit {
 
         let error = response['error'];
 
-        //Detect the problem and set the message accordingly
-        this.signupMessage = "phone_number" in error?"There is already an account registered with this phone number!":"email" in error?"There is already an account registered with this E-mail address!":"username" in error?"The username already exists. Please try another username.": "Something went wrong";
+        //Adjust the status to show the error message
         this.signupStatus =1;
 
-        console.log("signup error");
+        //Detect the problem and set the message accordingly
+        if ('phone_number' in error && error['phone_number'][0].includes("already")) {
+          this.signupMessage = "There is already an account registered with this phone number!";
+        }
+
+        else if ('email' in error && error['email'][0].includes("already")) {
+          this.signupMessage = "There is already an account registered with this E-mail address!";
+        }
+
+        else if ('username' in error && error['username'][0].includes("already")) {
+          this.signupMessage = "This username already exists. Please try another username.";
+        }
+
+        else {
+          this.signupMessage = "Something went wrong";
+        }
+
         sub.unsubscribe();
         return;
       }
