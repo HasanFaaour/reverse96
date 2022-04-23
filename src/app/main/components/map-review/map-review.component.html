@@ -1,6 +1,6 @@
-<div [ngStyle]="{'width' : showReview ? '59%' : '86%'}" class="map-reviews">
+<!--div [ngStyle]="{'width' : showReview ? '59%' : '86%'}" class="map-reviews">
   <div id="map"></div>
-</div>
+</div-->
 
 <mat-drawer-container class="example-container" autosize>
   <mat-drawer #drawer class="example-sidenav" mode="side" position="end">
@@ -28,8 +28,11 @@
     </div>
     
     
-    
   </mat-drawer>
+
+  <div class="example-sidenav-content">
+    <div id="map"></div>
+  </div>  
 
 </mat-drawer-container>
 

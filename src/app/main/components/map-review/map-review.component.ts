@@ -3,8 +3,9 @@ import { Observable, Subscriber } from 'rxjs';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import * as L from 'leaflet';
 import { MatSidenav } from '@angular/material/sidenav';
-import { MatDialog } from '@angular/material/dialog';
+//import { MatDialog } from '@angular/material/dialog';
 import { AddReviewComponent } from '../add-review/add-review.component';
+import { LocationsService } from '../../services/locations.service';
 
 @Component({
   selector: 'app-map-review',
@@ -14,11 +15,14 @@ import { AddReviewComponent } from '../add-review/add-review.component';
 export class MapReviewComponent implements AfterViewInit {
   @ViewChild('drawer')
   sidenav!: MatSidenav;
+  list : any;
   showReview = false;
-  
   showFiller = false;
 
   message: string = '';
+  latitude: string = '35.7952';
+  longitude: string = '51.4322';
+  locId: string = '12345.678.99';
   tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> Contributors'});
   map: any;
@@ -26,10 +30,13 @@ export class MapReviewComponent implements AfterViewInit {
   lnga: any;
   latlng = L.latLng(50.5, 30.5);
   dlg = true;
+  hol: string = "hol";
 
-  constructor(public dialog: MatDialog) { }
+  constructor(/* public dialog: MatDialog ,*/ private locationSer: LocationsService) { 
+    this.getuserinformation();
+  }
   
-  openDialog() {
+  addReview() {
     this.dlg = false;
   }
 
@@ -76,52 +83,44 @@ export class MapReviewComponent implements AfterViewInit {
       popupAnchor: [13, 0],
     });
 
-    const marker = L.marker([position.latitude, position.longitude],{
+    const marker = L.marker([+this.latitude, +this.longitude],{
         icon,
         draggable: false,
         autoPan: true
     }).addTo(this.map);
   
- /*  marker.on('dragend', function (e) {
-  updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
-  }); */
+
   marker.on('click',  (e: any) => {
     this.showReview = !this.showReview;
     this.toggle();
   });
 
-  marker.on('click',  (e: any) => {
-    marker.setLatLng(e.latlng);
-    updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
-  });
-
-  /* this.map.on('click',  (e: any) => {
-  marker.setLatLng(e.latlng);
-  
-  updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
-  }); */
-  
-  const updateLatLng = (lat: any,lng: any) => {
-   // this.latitude.nativeElement.innerHTML = '1111';
-    console.log(marker.getLatLng().lat.toString());
-    this.message = 'Ya Hosien Salam';
-    //this.showReview = !this.showReview;
-    //document.getElementById('latitude').value = marker.getLatLng().lat;
-    //document.getElementById('longitude').value = marker.getLatLng().lng;
-  }
-
+ 
   const provider = new OpenStreetMapProvider();
   const searchControl  = GeoSearchControl({
     style: 'bar',
     provider: provider,
     showMarker: true,
-    marker: marker, // use custom marker, not working
+    marker: marker, 
   });
-  //this.map.addControl(searchControl);
+
 });
 }
 
   ngOnInit(): void {
+  }
+
+  getuserinformation() : void {
+    this.locationSer.getUserInfo().subscribe(
+      (data) => {
+        //console.log(Object.values(data)[0]);
+        this.list = Object.values(data)[0];
+        console.log(this.list);
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
   }
 
 }
