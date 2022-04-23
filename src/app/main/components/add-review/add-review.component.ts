@@ -24,13 +24,13 @@ export class AddReviewComponent implements OnInit {
 
   //Input from parent component
   @Input() locationID: string = '-5';
+
   //**** */ @Input() locationName: string = "No Location";
 
   //Defining the logic variables
   userToken :string|null = null;
 
   //****src:any = selectImageIcon;
-
 
   //src:any = selectImageIcon;
 

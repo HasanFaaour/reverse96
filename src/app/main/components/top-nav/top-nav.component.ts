@@ -28,7 +28,11 @@ export class TopNavComponent implements OnInit {
   }
   
   onLogout(){
-   // this.route.navigate(['../logout']);
+    if(confirm("Do you really want to log out?")) {
+      console.log("Implement delete functionality here");
+      this.route.navigate(['/logout']);
+    }
+    //this.route.navigate(['/logout']);
   }
 
   ngOnInit(): void {
@@ -43,7 +47,4 @@ export class TopNavComponent implements OnInit {
     });
   }
   
-  viewSideBar() {
-    
-  }
 }
