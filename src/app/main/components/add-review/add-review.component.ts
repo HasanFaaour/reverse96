@@ -2,8 +2,10 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UnsubscriptionError } from 'rxjs';
 import { HttpRequestService } from 'src/app/http-service.service';
+
+const selectImageIcon = 'assets/images/icons8-add-image-48.png';
+const selectImageHint = "Click to select an image, or use drag and drop";
 
 @Component({
   selector: 'app-add-review',
@@ -14,18 +16,25 @@ export class AddReviewComponent implements OnInit {
 
   constructor(private router: Router, private request: HttpRequestService) { }
 
-  @Input() locationID:string = '';
-  //Defining the logic flags
-  userToken :string|null = null;
+
+ 
 
 
-  //Defining the logic variables
-  //userToken :string|null = null;
   
   locationName : string = "Examplary Location";
   src:any = 'assets/images/choose-image-picture-illustration-512.webp';
+
+  //Input from parent component
+  @Input() locationID: string = '-5';
+  @Input() locationName: string = "No Location";
+
+  //Defining the logic variables
+  userToken :string|null = null;
+  src:any = selectImageIcon;
+
   errorStatus = false;
   errorMessage = "";
+  imageHint = selectImageHint;
   uploading = false;
   uploadedPercent = 0;
 
@@ -53,11 +62,25 @@ export class AddReviewComponent implements OnInit {
     this.reviewParams.get('location')?.setValue(this.locationID);
   }
 
+  //Start Dragged
+  startDrag(ev: Event): void {
+    this.imageHint = "Drop your image in the box above"
+    this.src = 'assets/images/icons8-drag-and-drop-50.png'
+  }
+
+  //End Drag
+  endDrag(ev: Event): void {
+    // console.log(ev.currentTarget,ev.target);
+    this.imageHint = selectImageHint;
+    this.src = selectImageIcon;
+  }
+
   //Defining the submit method to handle the request
   submit(): void{
     if (this.image){
       console.log("Uploading...");
       this.uploading = true;
+      this.imageHint = `Uploaded: ${this.uploadedPercent}%`;
       this.uploadedPercent = 0;
       let sub = this.request.addReview(this.reviewParams.value).subscribe({
 
@@ -65,6 +88,7 @@ export class AddReviewComponent implements OnInit {
         next: (response:any) => {
           if (response.type == HttpEventType.UploadProgress){
             this.uploadedPercent = 100 * response.loaded / response.total;
+            this.imageHint = `Uploaded: ${this.uploadedPercent}%`;
             return;
           }
           console.log("success!");
@@ -89,7 +113,7 @@ export class AddReviewComponent implements OnInit {
     this.image?.setValue(selectedImage.files[0]);
     if (!this.image?.value){
       
-      this.src = 'assets/images/choose-image-picture-illustration-512.webp';
+      this.src = selectImageIcon;
 
     }else{
 
@@ -110,19 +134,19 @@ export class AddReviewComponent implements OnInit {
     //Remove the error message
     this.errorStatus = false;
 
-    /*let textFieldStyle:any = document.getElementById('text-field')?.style;
+    let textFieldStyle:any = document.getElementById('text-field')?.style;
     //Check if the user has manually changed the text field's size (don't change it in that case)
-    if (['', '330px'].includes(textFieldStyle.getPropertyValue('height'))){
+    if (['', '130px'].includes(textFieldStyle.getPropertyValue('height'))){
 
       if (this.text?.value){
         //maximize the text field's size
-        textFieldStyle.setProperty('height','330px');
+        textFieldStyle.setProperty('height','130px');
 
       }else{
         //minimize the text field's size
         textFieldStyle.setProperty('height','');
       }
-    }*/
+    }
   }
 
 

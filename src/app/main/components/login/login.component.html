@@ -1,44 +1,56 @@
 <!-- Login form -->
-<div class="container">
-<div class="log-img"><img src="assets/images/login-image.jpg" style="width: 400px; height: 400px;"></div>
-<mat-card  *ngIf="loggedInUsername == '@N/A'">
-    <mat-label style="margin-left: 150px; font-size: 30px; margin-bottom: 50px;"> Login </mat-label>
-    <mat-card-content >
-        <form  id="log-in" [formGroup]="loginCredentials" (ngSubmit)="submit()" >
+<div class="container" >
+    
+    <div class="log-img" > <img src="assets/images/login-image.jpg" > </div>
 
-            <!-- Username or email input -->
-            <mat-form-field >
-                <input matInput (input) = "checkUserEntry()"  placeholder="Username or E-mail" formControlName = "usermail" />
-                <mat-error *ngIf="usermail && usermail.touched && usermail.invalid">
-                    <mat-error *ngIf=" usermail.errors?.['required']"> Username or E-mail is required! </mat-error>
-                    <mat-error *ngIf=" usermail.errors?.['minlength']">Username has to be at least 3 characters long!</mat-error>
-                    <mat-error *ngIf=" usermail.errors?.['maxlength']">Username can't have more than 30 characters!</mat-error>
-                    <mat-error *ngIf=" usermail.errors?.['email']">Entered an invalid E-mail address!</mat-error>
-                </mat-error>
-            </mat-form-field>
-            <br /><br *ngIf="usermail && usermail.touched && usermail.invalid" />
+    <mat-card  *ngIf="loggedInUsername == '@N/A'" >
 
-            <!-- Password input -->
-            <mat-form-field>
-                <input matInput (input)="checkUserEntry()" placeholder="Password" formControlName = "password" type = "password" />
-                <mat-error *ngIf="password && password.touched && password.invalid">
-                    <mat-error *ngIf=" password.errors?.['required']"> Password is required! </mat-error>
-                    <mat-error *ngIf=" password.errors?.['minlength']">Password has to be at least 6 characters long!</mat-error>
-                    <mat-error *ngIf=" password.errors?.['maxlength']">Password can't have more than 24 characters!</mat-error>
-                </mat-error>
-            </mat-form-field>
-            <br/><br *ngIf="password && password.touched && password.invalid" />
+        <mat-label > Log in </mat-label>
+
+        <mat-card-content >
             
-            <!-- Button -->
-            <button mat-button [disabled] = "this.loginCredentials.invalid"  form="log-in" 
-            type = "submit"> {{ userEnteredEmail? "Login By E-mail Address": "Login By Username"}}
-            </button>
-            <mat-error *ngIf="problemStatus > 0">
-                {{problem}} 
-                <a *ngIf="problemStatus == 1" routerLink = '../forgot?email={{usermail?.value}}'>Forgot your password?</a>
-                <a *ngIf="problemStatus == 2" routerLink = '../signup'>Don't have an account?</a>
-            </mat-error>
-        </form>
-    </mat-card-content>
-</mat-card>
+            <form  id="log-in" [formGroup]="loginCredentials" (ngSubmit)="submit()" >
+
+                <!-- Username or email input -->
+                <mat-form-field >
+                    <input matInput (input) = "checkUserEntry()"  placeholder="Username or E-mail" formControlName = "usermail" />
+                    <mat-error *ngIf="usermail && usermail.touched && usermail.invalid">
+                        <mat-error *ngIf=" usermail.errors?.['required']"> Username or E-mail is required! </mat-error>
+                        <mat-error *ngIf=" usermail.errors?.['minlength']">Username has to be at least 3 characters long!</mat-error>
+                        <mat-error *ngIf=" usermail.errors?.['maxlength']">Username can't have more than 30 characters!</mat-error>
+                        <mat-error *ngIf=" usermail.errors?.['email']">Entered an invalid E-mail address!</mat-error>
+                    </mat-error>
+                </mat-form-field>
+                <br /><br *ngIf="usermail && usermail.touched && usermail.invalid" />
+
+                <!-- Password input -->
+                <mat-form-field>
+                    <input matInput (input)="checkUserEntry()" placeholder="Password" formControlName = "password" type = "password" />
+                    <mat-error *ngIf="password && password.touched && password.invalid">
+                        <mat-error *ngIf=" password.errors?.['required']"> Password is required! </mat-error>
+                        <mat-error *ngIf=" password.errors?.['minlength']">Password has to be at least 6 characters long!</mat-error>
+                        <mat-error *ngIf=" password.errors?.['maxlength']">Password can't have more than 24 characters!</mat-error>
+                    </mat-error>
+                </mat-form-field>
+                <br/><br *ngIf="password && password.touched && password.invalid" />
+                
+                <!-- Button -->
+                <button mat-button [disabled] = "this.loginCredentials.invalid" form="log-in" type = "submit">
+                    {{ userEnteredEmail? "Login By E-mail Address": "Login By Username"}}
+                </button>
+
+                <!-- Link to signup -->
+                <a class="link" *ngIf="problemStatus != 2" routerLink = "../signup">Don't have an account?</a>
+
+                <!-- Error messages -->
+                <br/><br/>
+                <mat-error *ngIf="problemStatus > 0">
+                    {{problem}} 
+                    <a *ngIf="problemStatus == 1" routerLink = './forgot?email={{usermail?.value}}'>Forgot your password?</a>
+                    <a *ngIf="problemStatus == 2" routerLink = '../signup'>Don't have an account?</a>
+                </mat-error>
+
+            </form>
+        </mat-card-content>
+    </mat-card>
 </div>
