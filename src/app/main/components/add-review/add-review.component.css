@@ -1,5 +1,5 @@
 mat-card{
-    position: relative;
+    /*position: relative;*/
     float:left;
     margin-top: 15px;
     margin-left: 20px;
@@ -67,5 +67,15 @@ mat-card{
 
             mat-label{
                 color: inherit;
+            }
+
+            .mat-button {
+                color: white;
+                background-color: rgb(88, 99, 255);
+            }
+
+            .mat-button:disabled {
+                color: rgb(100,100,100);
+                background-color: rgb(200, 200, 200);
             }
 

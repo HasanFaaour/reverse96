@@ -32,6 +32,7 @@ main {
     margin-bottom: 20px;
     font-size: 18px;
     color: rgb(90, 89, 89);
+    cursor: pointer;
   }
 
 .title {
@@ -102,7 +103,7 @@ main {
 
   .ro-1 .con-1 {
     margin-left: 15px;
-    color: rgb(58, 183, 255);
+    color: rgb(81, 187, 248);
     margin-bottom: 0px;
   }
   .ro-1 .con-2 {
@@ -145,10 +146,11 @@ main {
 }
 .info mat-icon {
   font-size: 30px;
-  color: rgb(46, 188, 253);
+  color: rgb(81, 187, 248);
   vertical-align: middle;
   margin-right: 20px;
   margin-top: 8px;
+  cursor: pointer;
 }
 /*end new*/
 
@@ -167,6 +169,7 @@ main {
   margin-left: 4%;
   margin-bottom: 10px;
   color: rgb(172, 170, 170);
+  text-decoration: none;
   cursor: pointer;
 }
 .limitTextHeight {

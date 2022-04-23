@@ -32,6 +32,9 @@
                 <input class="image-display" type="image" alt="Choose an image" src="{{src}}" (click)="Image.click()" (click)="$event.preventDefault()" />
                 <mat-hint class="image-hint" *ngIf="(image && image.invalid) || uploading" >{{imageHint}}</mat-hint><br />
             </div>
+
+            <!-- Image Error -->
+            <span *ngIf="imageError"><br/><mat-error >Image is too large(can't be larger than 10MB)</mat-error></span>
             
             <!-- Text Field -->
             <mat-form-field class="l-form-field" >
@@ -45,7 +48,7 @@
             <br/><br *ngIf="text && text.touched && text.invalid" />
 
             <!-- Button -->
-            <button mat-button [style]="reviewParams.invalid?'color: rgb(100,100,100);background-color: rgb(200, 200, 200);':'color: white;background-color: rgb(88, 99, 255);'" form="add-review" [disabled]="reviewParams.invalid" type="submit">
+            <button mat-button form="add-review" [disabled]="reviewParams.invalid || uploading" type="submit">
                 Add
             </button>
 

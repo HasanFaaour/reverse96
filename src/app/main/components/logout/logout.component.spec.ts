@@ -13,7 +13,9 @@ describe('LogoutComponent', () => {
 
   beforeEach(async () => {
     hStub = {
-      logout: () => { }
+      logout: () => {
+        return of([]);
+       }
     };
     rStub = {
       navigate: (s:any) => {  }
@@ -33,10 +35,6 @@ describe('LogoutComponent', () => {
   });
 
   it('should create', () => {
-    
-    TestBed.inject(Router);
-    TestBed.inject(HttpRequestService);
-    //TestBed.inject(ActivatedRoute);
     expect(component).toBeTruthy();
   });
 });

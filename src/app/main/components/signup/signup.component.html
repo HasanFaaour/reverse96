@@ -1,11 +1,12 @@
 <!-- Signup form -->
 <div class="container">
 
-    <div class="log-img" > <img src="assets/images/signup.jpg" > </div>
-
     <mat-card class="signup-card" *ngIf="submittedEmail == '@,,'" >
+
         <mat-label class="signup-label" > Create an account </mat-label>
-        <mat-card-content title="Sign-up">
+
+        <mat-card-content class = "signup-content">
+
             <form id="sign-up" [formGroup] = "signupCredentials" (ngSubmit)="submit()">
                 
                 <!-- Name input -->
@@ -74,7 +75,7 @@
                 <br/><br *ngIf="address && address.touched && address.invalid"/>
 
                 <!-- Button -->
-                <button mat-button [disabled] = "this.signupCredentials.invalid" form="sign-up" type = "submit" > Submit </button>
+                <button mat-button [disabled] = "signupCredentials.invalid || processing" form="sign-up" type = "submit" > Submit </button>
 
                 <!-- Link to login -->
                 <a class="link" routerLink="../login" >Already have an account?</a>
@@ -104,7 +105,7 @@
                 <br/><br *ngIf="code && code.touched && code.invalid" />
 
                 <!-- Button -->
-                <button mat-button [disabled]="codeGroup.invalid" form="vE" type="submit" >Validate</button>
+                <button mat-button [disabled]="codeGroup.invalid || processing" form="vE" type="submit" >Validate</button>
 
                 <!-- Messages -->
                 <br/>
@@ -114,4 +115,7 @@
             </form>
         </mat-card-content>
     </mat-card>
+
+    <div class="log-img" > <img src="assets/images/signup.jpg" > </div>
+
 </div>

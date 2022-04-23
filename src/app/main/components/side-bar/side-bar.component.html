@@ -5,4 +5,5 @@
     <a ><mat-icon>notifications_none</mat-icon></a>
     <a routerLink="/map-reviws" routerLinkActive="active" *ngIf="isLogin"><mat-icon>add_location</mat-icon></a>
     <a *ngIf="isLogin"><mat-icon>person</mat-icon></a>
+    <div class="user-image" *ngIf="isLogin">{{firstCharName}}</div>
 </div>

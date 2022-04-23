@@ -17,19 +17,21 @@ export class AddReviewComponent implements OnInit {
   constructor(private router: Router, private request: HttpRequestService) { }
 
 
- 
-
-
-  
   locationName : string = "Examplary Location";
   src:any = 'assets/images/choose-image-picture-illustration-512.webp';
 
+
+
   //Input from parent component
   @Input() locationID: string = '-5';
- // @Input() locationName: string = "No Location";
+
+  //**** */ @Input() locationName: string = "No Location";
 
   //Defining the logic variables
   userToken :string|null = null;
+
+  //****src:any = selectImageIcon;
+
   //src:any = selectImageIcon;
 
   errorStatus = false;
@@ -37,7 +39,7 @@ export class AddReviewComponent implements OnInit {
   imageHint = selectImageHint;
   uploading = false;
   uploadedPercent = 0;
-
+  imageError = false;
   //Defining Reactive Form
   reviewParams = new FormGroup({
     image: new FormControl(null ,Validators.required),
@@ -92,6 +94,7 @@ export class AddReviewComponent implements OnInit {
             return;
           }
           console.log("success!");
+          this.uploading = false;
           return;
         },
 
@@ -110,21 +113,33 @@ export class AddReviewComponent implements OnInit {
   //Checking if user has selected a valid image
   checkImage (selectedImage: any){
     this.errorStatus = false;
+    this.imageError = false;
+
     this.image?.setValue(selectedImage.files[0]);
+
     if (!this.image?.value){
       
+      //Display the default icon in the input
       this.src = selectImageIcon;
 
     }else{
-
-      //Display the selected image in the input
-      let reader = new FileReader();
-      reader.onload = (e) => {
-        this.src = reader.result;
+      if (this.image.value.size > 10 ** 7){
+        this.src = selectImageIcon;
+        this.imageError = true;
+        this.image.setValue(null);
         return;
       }
 
-      reader.readAsDataURL(this.image.value);
+      else{
+        //Display the selected image in the input
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          this.src = reader.result;
+          return;
+        }
+
+        reader.readAsDataURL(this.image.value);
+      }
     }
   }
 
