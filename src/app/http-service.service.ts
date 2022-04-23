@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BrowserTransferStateModule } from '@angular/platform-browser';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
@@ -56,11 +55,23 @@ export class HttpRequestService {
   //Defining the post request method for adding a review
   addReview (data: any): Observable<object> {
     let body = new FormData();
+    body.append('location',data.location);
     body.append('title', data.title);
     body.append('text', data.text);
-    body.append('image', data.image, data.image.name);
+    body.append('picture', data.image, data.image.name);
+    
+    let user = localStorage.getItem('userID');
+    if (!user){
+      let result = new Observable <object> ( (sub) => {
+        sub.error({message: "not logged in!"});
+      });
+      return result;
+    }
 
-    return this.hC.post(`${this.db}/api/reviews/add`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
+    console.log(user);
+    body.append('user', user);
+
+    return this.hC.post(`${this.db}/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
   }
 
 }
