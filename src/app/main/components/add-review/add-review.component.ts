@@ -16,24 +16,24 @@ export class AddReviewComponent implements OnInit {
 
   constructor(private router: Router, private request: HttpRequestService) { }
 
-<<<<<<< HEAD
+
   locationName : string = "Examplary Location";
   src:any = 'assets/images/choose-image-picture-illustration-512.webp';
 
-=======
->>>>>>> 1d64fc1a6e74c2c91d1b429053ec927df9438651
+
+
   //Input from parent component
   @Input() locationID: string = '-5';
- //**** */ @Input() locationName: string = "No Location";
+  //**** */ @Input() locationName: string = "No Location";
 
   //Defining the logic variables
   userToken :string|null = null;
-<<<<<<< HEAD
+
   //****src:any = selectImageIcon;
 
-=======
-  src:any = selectImageIcon;
->>>>>>> 1d64fc1a6e74c2c91d1b429053ec927df9438651
+
+  //src:any = selectImageIcon;
+
   errorStatus = false;
   errorMessage = "";
   imageHint = selectImageHint;

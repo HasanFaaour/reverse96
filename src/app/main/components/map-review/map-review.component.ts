@@ -34,12 +34,12 @@ export class MapReviewComponent implements AfterViewInit {
     this.getuserinformation();
   }
   
-  openDialog() {
+  addReview() {
     this.dlg = false;
   }
 
   toggle() {
-    this.drawer.toggle();
+    this.sidenav.toggle();
   }
 
   ngAfterViewInit(): void {
@@ -92,6 +92,7 @@ export class MapReviewComponent implements AfterViewInit {
   }); */
   marker.on('click',  (e: any) => {
     this.showReview = !this.showReview;
+    this.toggle();
   });
 
   marker.on('click',  (e: any) => {
