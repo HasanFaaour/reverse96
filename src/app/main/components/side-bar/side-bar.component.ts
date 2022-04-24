@@ -21,7 +21,7 @@ export class SideBarComponent implements OnInit {
       if(routerEvent.constructor.name == 'NavigationEnd') {
         if(localStorage.getItem('access')){
           this.isLogin = true;
-          this.firstCharName = localStorage.getItem('name')?.charAt(0).toUpperCase();
+          this.firstCharName = localStorage.getItem('username')?.charAt(0).toUpperCase();
           console.log(this.firstCharName);
         }else{
           this.isLogin = false;

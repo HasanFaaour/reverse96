@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class LocationsService {
+export class UserInfoService {
+
   userName: string = 'faaour';
   user = localStorage.getItem('username');
   baseUrl = "http://localhost:8000";

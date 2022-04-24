@@ -1,0 +1,61 @@
+<div class="userInfo">
+  <div class="title">
+    <div class="image"><img src="assets\images\profile-image.png" style="height: 100%; width: 100%;"></div>
+    <div class="name">
+        <p class="email">{{email}}</p>
+        <p class="username">{{username}}</p>
+    </div>
+    <button class="editprofile" (click)="editeProfile()" >Edit Profile</button>
+  </div>
+
+  <br>
+  <div class="container">
+    <form action="/action_page.php">
+    <div class="row">
+      <div class="col-25">
+        <label for="fname"> Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" [(ngModel)]="name" id="fname" name="firstname" [disabled]="isEnabled">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="lname">User Name</label>
+      </div>
+      <div class="col-75">
+        <input type="text" [(ngModel)]="username" id="lname" name="username" [disabled]="isEnabled">
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-25">
+          <label for="lname">Phone Number</label>
+        </div>
+        <div class="col-75">
+          <input type="text" [(ngModel)]="phone_number" id="lname" name="phone_number" [disabled]="isEnabled">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="lname">Email</label>
+        </div>
+        <div class="col-75">
+          <input type="text" [(ngModel)]="email" id="lname" name="email" [disabled]="isEnabled">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-25">
+          <label for="lname">Address</label>
+        </div>
+        <div class="col-75">
+          <input type="text" [(ngModel)]="address" id="lname" name="address" [disabled]="isEnabled">
+        </div>
+      </div>
+    <br>
+    <div *ngIf="!isEnabled" class="row">
+      <input type="submit" value="Submit">
+    </div>
+    </form>
+  </div>
+
+</div>

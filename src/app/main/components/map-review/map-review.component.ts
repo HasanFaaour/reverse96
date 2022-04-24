@@ -4,7 +4,7 @@ import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import * as L from 'leaflet';
 import { MatSidenav } from '@angular/material/sidenav';
 //import { MatDialog } from '@angular/material/dialog';
-import { AddReviewComponent } from '../add-review/add-review.component';
+/* import { AddReviewComponent } from '../add-review/add-review.component'; */
 import { LocationsService } from '../../services/locations.service';
 
 @Component({
@@ -12,12 +12,14 @@ import { LocationsService } from '../../services/locations.service';
   templateUrl: './map-review.component.html',
   styleUrls: ['./map-review.component.css']
 })
+
+
 export class MapReviewComponent implements AfterViewInit {
   @ViewChild('drawer')
   sidenav!: MatSidenav;
   list : any;
   showReview = false;
-  @ViewChild('sidenav') drawer!: MatSidenav;
+
  
 
   message: string = '';
@@ -27,15 +29,16 @@ export class MapReviewComponent implements AfterViewInit {
   lata!: string;
   lnga: any;
   latlng = L.latLng(50.5, 30.5);
-  dlg = true;
+  showAddReview = true;
   hol: string = "hol";
+ 
 
-  constructor(/* public dialog: MatDialog ,*/ private locationSer: LocationsService) { 
+  constructor(private locationSer: LocationsService) { 
     this.getuserinformation();
   }
   
   addReview() {
-    this.dlg = false;
+    this.showAddReview = false;
   }
 
   toggle() {
@@ -72,7 +75,6 @@ export class MapReviewComponent implements AfterViewInit {
     this.getCurrentPosition().subscribe((position: any) => {
       this.map.flyTo([position.latitude, position.longitude], 5);
       
-    
     const icon = L.icon({
       iconUrl: 'assets/images/marker.png',
       shadowUrl: 'assets/images/shadow.png',
@@ -87,9 +89,7 @@ export class MapReviewComponent implements AfterViewInit {
         autoPan: true
     }).addTo(this.map);
   
- /*  marker.on('dragend', function (e) {
-  updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
-  }); */
+ 
   marker.on('click',  (e: any) => {
     this.showReview = !this.showReview;
     this.toggle();
@@ -97,32 +97,26 @@ export class MapReviewComponent implements AfterViewInit {
 
   marker.on('click',  (e: any) => {
     marker.setLatLng(e.latlng);
-    updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
+    /* updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng); 
+    console.log(marker.getLatLng().lat.toString());*/
   });
 
-  /* this.map.on('click',  (e: any) => {
-  marker.setLatLng(e.latlng);
+  this.map.on('click',  (e: any) => {
+    if(this.showReview ){
+      this.showReview = !this.showReview;
+      this.toggle();
+    }
+  });
   
-  updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
-  }); */
-  
-  const updateLatLng = (lat: any,lng: any) => {
-   // this.latitude.nativeElement.innerHTML = '1111';
-    console.log(marker.getLatLng().lat.toString());
-    this.message = 'Ya Hosien Salam';
-    //this.showReview = !this.showReview;
-    //document.getElementById('latitude').value = marker.getLatLng().lat;
-    //document.getElementById('longitude').value = marker.getLatLng().lng;
-  }
 
-  const provider = new OpenStreetMapProvider();
+ /*  const provider = new OpenStreetMapProvider();
   const searchControl  = GeoSearchControl({
     style: 'bar',
     provider: provider,
     showMarker: true,
     marker: marker, // use custom marker, not working
-  });
-  //this.map.addControl(searchControl);
+  }); */
+  
 });
 }
 
@@ -130,16 +124,21 @@ export class MapReviewComponent implements AfterViewInit {
   }
 
   getuserinformation() : void {
-    this.locationSer.getUserInfo().subscribe(
-      (data) => {
-        //console.log(Object.values(data)[0]);
+    //this.processing = true;
+    this.locationSer.getUserInfo().subscribe({
+      next: (data) => {
+        this.list = data;
+        console.log(this.list.name);
         this.list = Object.values(data)[0];
-        console.log(this.list);
+        console.log(this.list.name);
       },
-      (error) => {
-        console.log(error);
+      error: (err) => {
+        //this.processing = false;
+        console.log(err);
       }
-    )
+   
+    });
+  
   }
 
 }

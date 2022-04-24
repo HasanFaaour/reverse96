@@ -36,8 +36,15 @@ describe('MapReviewComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should dlg is true', () => {
-    //expect(component.addReview()).toBeFalse();
-    expect(component.hol).toBe("hol");
+  it('should count showAddReview as false', () => {
+    component.addReview();
+    expect(component.showAddReview).toBeFalse();
+  });
+
+  it('should count showAddReview as false (when click on map)', () => {
+    
+    //component.showAddReview = true;
+    component.map.on();
+    expect(component.showAddReview).toBeFalse();
   });
 });
