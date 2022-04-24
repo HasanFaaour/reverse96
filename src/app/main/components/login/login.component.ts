@@ -92,6 +92,7 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('refresh',Object.values(response)[1]);
           localStorage.setItem('name',Object.values(response)[2]);
           localStorage.setItem('username',Object.values(response)[3]);
+          localStorage.setItem('userID',Object.values(response)[4]);
 
           //redirecting to homepage
           this.router.navigate(['home']);

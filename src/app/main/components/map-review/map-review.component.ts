@@ -38,7 +38,7 @@ export class MapReviewComponent implements AfterViewInit {
   }
   
   addReview() {
-    this.showAddReview = false;
+    this.dlg = !this.dlg;
   }
 
   toggle() {
@@ -71,7 +71,7 @@ export class MapReviewComponent implements AfterViewInit {
       'zoom': 12,
       'layers': [this.tileLayer]
     });
-    
+
     this.getCurrentPosition().subscribe((position: any) => {
       this.map.flyTo([position.latitude, position.longitude], 5);
       

@@ -10,7 +10,7 @@ describe('TopNavComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ RouterTestingModule , MatMenuModule , MatMenu ],
+      imports: [ RouterTestingModule , MatMenuModule],
       declarations: [ TopNavComponent ]
     })
     .compileComponents();
