@@ -1,5 +1,9 @@
-import { DebugElement, NgModule } from '@angular/core';
+
+
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { DebugElement, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule, MatHint } from '@angular/material/form-field';
@@ -9,6 +13,7 @@ import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Observable, of, Subscriber } from 'rxjs';
 import { HttpRequestService } from 'src/app/http-service.service';
+
 
 import { AddReviewComponent } from './add-review.component';
 
@@ -37,8 +42,10 @@ describe('AddReviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+
       declarations: [ AddReviewComponent ],
       providers: [{provide: Router, useValue: routerStub}, {provide: HttpRequestService, useValue: httpStub}]
+
     })
     .compileComponents();
   });

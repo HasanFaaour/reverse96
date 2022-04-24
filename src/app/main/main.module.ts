@@ -30,6 +30,7 @@ import { AppComponent } from '../app.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule} from '@angular/material/dialog';
+import { UserInfoComponent } from './components/user-info/user-info.component';
 
 const routes: Routes = [
   {
@@ -65,6 +66,10 @@ const routes: Routes = [
       {
         path: 'reviews/add',
         component: AddReviewComponent
+      },
+      {
+        path: 'userInfo',
+        component: UserInfoComponent
       }
     ],
   },
@@ -82,7 +87,8 @@ const routes: Routes = [
     LogoutComponent,
     AddReviewComponent,
     ComponentsComponent,
-    MapReviewComponent
+    MapReviewComponent,
+    UserInfoComponent
   ],
   entryComponents: [AddReviewComponent],
   imports: [
