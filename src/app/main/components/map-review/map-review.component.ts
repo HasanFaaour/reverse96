@@ -38,7 +38,7 @@ export class MapReviewComponent implements AfterViewInit {
   }
   
   addReview() {
-    this.dlg = !this.dlg;
+    this.showAddReview = !this.showAddReview;
   }
 
   toggle() {
@@ -72,7 +72,7 @@ export class MapReviewComponent implements AfterViewInit {
       'layers': [this.tileLayer]
     });
 
-    this.getCurrentPosition().subscribe((position: any) => {
+      this.getCurrentPosition().subscribe((position: any) => {
       this.map.flyTo([position.latitude, position.longitude], 5);
       
     const icon = L.icon({

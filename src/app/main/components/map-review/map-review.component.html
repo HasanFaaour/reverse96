@@ -24,7 +24,7 @@
 
         <button class="addReview" (click)="addReview()">add review</button>
         <!-- <button mat-raised-button (click)="openDialog()">Pick one</button> -->
-        <app-add-review *ngIf="!dlg" [locationID]="'1'"></app-add-review>
+        <app-add-review *ngIf="!showAddReview" [locationID]="'1'"></app-add-review>
 
       </div>
     </div>

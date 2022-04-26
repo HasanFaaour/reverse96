@@ -42,7 +42,7 @@
 
                 <!-- Error messages -->
                 <br/><br/>
-                <mat-error *ngIf="problemStatus > 0">
+                <mat-error class="final-error" *ngIf="problemStatus > 0">
                     {{problem}} 
                     <a *ngIf="problemStatus == 1" routerLink = './forgot?email={{usermail?.value}}'>Forgot your password?</a>
                     <a *ngIf="problemStatus == 2" routerLink = '../signup'>Don't have an account?</a>

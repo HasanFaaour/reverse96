@@ -117,7 +117,7 @@ export class AddReviewComponent implements OnInit {
             this.successStatus = true;  
             
             //Done
-            sub.unsubscribe();
+            /*sub.unsubscribe();*/
             return;
           }
         },
@@ -129,12 +129,27 @@ export class AddReviewComponent implements OnInit {
           this.uploading = false;
           console.log("failure!");
           
+          let er = response.error;
+          //Invalid location id
+          if ('location' in er) {
+            this.errorMessage = "There was a problem identifying the location, please contact support if the problem persists."
+            this.errorStatus = true;
+            /*sub.unsubscribe();*/
+            return;
+          }
+
           //Show error
           this.errorMessage = "Something went wrong!";
           this.errorStatus = true;
+          /*sub.unsubscribe();*/
+          return;
 
-        } 
-      })
+        },
+        complete: () => {
+          sub.unsubscribe();
+        }
+      });
+
       return;
     }
   }
