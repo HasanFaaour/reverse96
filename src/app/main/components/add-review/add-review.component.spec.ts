@@ -1,14 +1,5 @@
-
-
-import { HttpClientModule } from '@angular/common/http';
+import { DebugElement} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { DebugElement, NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule, MatHint } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Observable, of, Subscriber } from 'rxjs';
@@ -21,15 +12,15 @@ describe('AddReviewComponent', () => {
   let component: AddReviewComponent;
   let fixture: ComponentFixture<AddReviewComponent>;
   let routerStub = {navigate: (param: any) => {} };
-  let message = "";
+  let message = {};
   let httpStub = {addReview:(data: any) => {
     payload = data;
-    return new Observable((sub: Subscriber<any>) => {
-    if (message.includes("next")) {
-      sub.next(message);
+    return new Observable<object>((observer: Subscriber<any>) => {
+    if ('next' in message) {
+      observer.next(message);
     }
-    else {
-      sub.error(message);
+    else if ('error' in message) {
+      observer.error(message);
     }
     })
   }};
@@ -105,7 +96,7 @@ describe('AddReviewComponent', () => {
       expect(component.reviewParams.valid).toBeTrue();
 
       let button = dom.querySelector('button');
-      // expect(button.disabled).toBeFalse();
+      /*expect(button.disabled).toBeFalse();*/
 
     }
 
@@ -152,7 +143,7 @@ describe('AddReviewComponent', () => {
       expect(component.reviewParams.valid).toBeTrue();
 
       let button = dom.querySelector('button');
-      // expect(button.disabled).toBeFalse();
+      /*expect(button.disabled).toBeFalse();*/
 
     }
   });
@@ -206,7 +197,7 @@ describe('AddReviewComponent', () => {
     expect(component.reviewParams.valid).toBeTrue();
 
     let button = dom.querySelector('button');
-    // expect(button.disabled).toBeFalse();
+    /*expect(button.disabled).toBeFalse();*/
 
   });
 
@@ -218,36 +209,56 @@ describe('AddReviewComponent', () => {
     expect(component.reviewParams.valid).toBeTrue();
 
     let button = de.query(By.css('button')).nativeElement;
-    // expect(button.disabled).toBeFalse();
+    /*expect(button.disabled).toBeFalse();*/
 
   });
 
+  /*
   it('(Logic - Dom) should resize the text area when typing in it', () => {
     let textArea = de.query(By.css('#text-field')).nativeElement; 
     textArea.value = 'Something';
     component.checkEntry();
     
-    // expect(textArea.style.height).toBe('130px');
-    // expect(component.text?.value).toBe('Something');
+    
+    expect(textArea.style.height).toBe('130px');
+    expect(component.text?.value).toBe('Something');
+    
 
   });
 
+  */
+
   it('(Requests: Fail) should show error message if it recieves unexpected error', () => {
     //Signal to our stub to throw an error when it's subscribed to
-    message = "error: No indication of the problem";
+    message = {error: {notSpecified: "No indication of the problem"}};
 
     //Submit
     component.submit();
 
-    //Expect the flags to indicate that there was an unespected error
+    //Expect the flags to indicate that there was an unexpected error
     expect(component.errorStatus).toBeTrue();
     expect(component.errorMessage).toContain("went wrong");
 
   });
 
+  
+  it("(Request: Fail) should show proper error if location id isn't valid", () => {
+    //Signal to our stub to throw an error containing location when it's subscribed to
+    message = {error: {location: "bad location id"}};
+    
+    //Submit
+    component.submit();
+
+    //Expect the flags to indicate that there was an error about location
+    expect(component.errorStatus).toBeTrue();
+    expect(component.errorMessage).toContain("location");
+  })
+
+  
+
 it("(Requests: Success) shouldn't show any error message if it recieves a successful resutl", () => {
     //Signal to our stub to return a successful response
-    message = "next: Success!";
+    message = {next: {message: "Success!"}};
 
     //Submit
     component.submit();
@@ -264,12 +275,12 @@ it("(Requests: Success) shouldn't show any error message if it recieves a succes
     component.text?.setValue(validText);
 
     //Signal to our stub to return a successful response
-    message = "next";
+    message = {next: {message: "next"}};
 
     //Submit
     component.submit();
 
-    //Expect the data (saved in payload) to be contain the previously set values
+    //Expect the data (saved in payload) to be the same as the previously set values
     expect(payload.title).toBe(validTitle);
     expect(payload.image).toBe(validImage);
     expect(payload.text).toBe(validText);
