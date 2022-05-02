@@ -3,6 +3,7 @@ import { HttpRequestService } from '../../../http-service.service';
 import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 
 //Creating a Custom Validator For Username or Email Field
@@ -58,7 +59,7 @@ export class LoginComponent implements OnInit {
   problem = "Wrong username or password! Please try again.";
   token = "N/A";
   processing = false;
-
+  sub = new Subscription();
 
   //Defining Reactive Forms
   loginCredentials = new FormGroup({
@@ -80,7 +81,7 @@ export class LoginComponent implements OnInit {
   //Defining the submit method to handle the request
    submit ():void{
      this.processing = true;
-    let sub = this.request.login(this.loginCredentials.value).subscribe({
+    this.sub = this.request.login(this.loginCredentials.value).subscribe({
       //Handling the response in case of a successful request
       next: (response) =>{
         this.processing = false;
@@ -104,7 +105,7 @@ export class LoginComponent implements OnInit {
           console.log("wrong!");
           this.problemStatus = 1;
         }
-        sub.unsubscribe();
+        this.sub.unsubscribe();
       },
 
       //Handling the response in case of an unsuccessful request
@@ -117,7 +118,7 @@ export class LoginComponent implements OnInit {
           if (response['error']['message'] == "invalid username or email"){
             this.problem = `${this.userEnteredEmail ? "Email address" : "Username"} doesn't exist.`;
             this.problemStatus = 2;
-            sub.unsubscribe();
+            this.sub.unsubscribe();
             return;
 
           }
@@ -126,7 +127,7 @@ export class LoginComponent implements OnInit {
           if (response['error']['message'] == "wrong password"){
             this.problem = "Wrong username or password! Please try again.";
             this.problemStatus = 1;
-            sub.unsubscribe();
+            this.sub.unsubscribe();
             return;
 
           }
@@ -134,7 +135,7 @@ export class LoginComponent implements OnInit {
           //Account is not activated
           if (response['error']['message'] == "validate your email"){
             this.router.navigate(['../signup',{email: this.usermail?.value}]);
-            sub.unsubscribe();
+            this.sub.unsubscribe();
             return; 
           }
         }
@@ -142,9 +143,14 @@ export class LoginComponent implements OnInit {
         //None of the above / Unexpected Error
         this.problem = "Something unexpected happened. Please try again later.";
         this.problemStatus = 3;
-        sub.unsubscribe;
+        this.sub.unsubscribe;
         return;
         
+      },
+
+      complete: () => {
+        this.sub.unsubscribe();
+        return;
       }
     });
    }
