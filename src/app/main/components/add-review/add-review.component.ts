@@ -29,7 +29,7 @@ export class AddReviewComponent implements OnInit {
   uploading = false;
   uploadedPercent = 0;
   imageError = false;
-  formReset: any;
+  /* formReset: any; */
   successStatus = false;
   cropImage : any;
   sub = new Subscription();
@@ -56,7 +56,7 @@ export class AddReviewComponent implements OnInit {
 
     this.reviewParams.get('location')?.setValue(this.locationID);
     
-    this.formReset = document.getElementById("reset-button");
+    /*this.formReset = document.getElementById("reset-button")? document.getElementById("reset-button"): {click: () => {}}; */
 
   }
 
@@ -90,7 +90,7 @@ export class AddReviewComponent implements OnInit {
           //Progress report event
           if (response.type == HttpEventType.UploadProgress){
 
-            //Update the processbar
+            //Update the process
             this.uploadedPercent = 100 * response.loaded / response.total;
             this.imageHint = `Uploaded: ${this.uploadedPercent}%`;
 
@@ -106,14 +106,14 @@ export class AddReviewComponent implements OnInit {
           //Sucessfully done event
           if (response.type == HttpEventType.Response) {
             console.log("success!");
-
+            /*
             //Reset the form (except location id)
             this.formReset.click();
             this.reviewParams.get('location')?.setValue(this.locationID);
             this.uploading = false;
             this.imageHint = selectImageHint;
             this.imageDisplay = selectImageIcon;
-
+            */
             
             //✓ Congratualations Message
             this.successStatus = true;  

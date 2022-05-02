@@ -1,7 +1,7 @@
-<mat-card >
+<mat-card [ngClass]="{'fade-away': successStatus}" >
     <mat-card-content >
 
-        <form id="add-review" [formGroup]="reviewParams" (ngSubmit)="submit()" >
+        <form *ngIf="!successStatus" id="add-review" [formGroup]="reviewParams" (ngSubmit)="submit()" >
 
             <!-- Location Name-->
             <mat-form-field class="s-form-field" >
