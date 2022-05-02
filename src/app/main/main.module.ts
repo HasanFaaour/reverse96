@@ -32,6 +32,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule} from '@angular/material/dialog';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 
+import { NgxPhotoEditorModule } from 'ngx-photo-editor';
 const routes: Routes = [
   {
     path: '',
@@ -106,7 +107,8 @@ const routes: Routes = [
     MatInputModule,
     MatMenuModule,
     MatDialogModule,
-    FormsModule
+    FormsModule,
+    NgxPhotoEditorModule
   ],
 })
 export class MainModule { }

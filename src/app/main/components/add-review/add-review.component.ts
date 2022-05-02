@@ -31,6 +31,8 @@ export class AddReviewComponent implements OnInit {
   imageError = false;
   formReset: any;
   successStatus = false;
+  cropImage : any;
+  sub = new Subscription();
   
   //Defining Reactive Form
   reviewParams = new FormGroup({
@@ -155,11 +157,37 @@ export class AddReviewComponent implements OnInit {
   }
 
   //Checking if user has selected a valid image
-  checkImage (selectedImage: any){
+  checkImage (selectedImage: any, mode = 'select'){
+
+    //Hide the errors
     this.errorStatus = false;
     this.imageError = false;
 
-    this.image?.setValue(selectedImage.files[0]);
+    //Image Crop Event
+    if (mode == 'crop'){
+
+      //Validate cropped image's size
+      if (selectedImage.file.size <= 10 ** 7) {
+
+        //Valid
+        this.image?.setValue(selectedImage.file);
+        this.imageDisplay = selectedImage.base64;
+      }
+      
+      else {
+
+        //Invalid
+        this.imageDisplay = selectImageIcon;
+        this.imageError = true;
+      }
+
+      return;
+    }
+
+    //Image Select Event
+    this.cropImage = selectedImage;
+    this.image?.setValue(selectedImage.target.files[0]);
+    this.imageDisplay = "";
 
     if (!this.image?.value){
       
@@ -167,14 +195,21 @@ export class AddReviewComponent implements OnInit {
       this.imageDisplay = selectImageIcon;
       this.imageHint = selectImageHint;
 
-    }else{
+    }
+    
+    else{
+
+      //Validate Selected image's size
       if (this.image.value.size > 10 ** 7){
+
+        //Invalid -> Show error + Display default icon
         this.imageDisplay = selectImageIcon;
         this.imageError = true;
         this.image.setValue(null);
         return;
       }
 
+      //Valid
       else{
         //Display the selected image in the input
         let reader = new FileReader();
