@@ -2,6 +2,7 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { HttpRequestService } from 'src/app/http-service.service';
 
 const selectImageIcon = 'assets/images/icons8-add-image-48.png';
@@ -45,13 +46,14 @@ export class AddReviewComponent implements OnInit {
   ngOnInit(): void {
     //Checking if the user is logged in
     this.userToken = localStorage.getItem('access');
-    if (this.userToken){
+    if (this.userToken && localStorage.getItem('userID')){
       console.log("Adding Review");
     }else{
 
-      //Deny access if not logged in 
-      console.log("Can't add review, not logged in.");
-      this.router.navigate(['../../home']);
+      //Deny access if not properly logged in 
+      console.log("Can't add review, not logged in properly.");
+      alert("Authentication problem. Pleas login to your account again.")
+      this.router.navigate(['logout']);
     }
 
     this.reviewParams.get('location')?.setValue(this.locationID);
@@ -82,7 +84,7 @@ export class AddReviewComponent implements OnInit {
       this.uploadedPercent = 0;
       this.imageHint = `Uploaded: ${this.uploadedPercent}%`;
 
-      let sub = this.request.addReview(this.reviewParams.value).subscribe({
+      this.sub = this.request.addReview(this.reviewParams.value).subscribe({
 
         //Response
         next: (response:any) => {
@@ -119,7 +121,7 @@ export class AddReviewComponent implements OnInit {
             this.successStatus = true;  
             
             //Done
-            /*sub.unsubscribe();*/
+            this.sub.unsubscribe();
             return;
           }
         },
@@ -127,28 +129,41 @@ export class AddReviewComponent implements OnInit {
         //Error
         error: (response:any) => {
 
-          //Unexpected error
           this.uploading = false;
           console.log("failure!");
           
-          let er = response.error;
-          //Invalid location id
-          if ('location' in er) {
-            this.errorMessage = "There was a problem identifying the location, please contact support if the problem persists."
+          //API doesn't exist
+          if ( response.status == 404) {
+            this.errorMessage = "Feature unavailable, Please try again later";
             this.errorStatus = true;
-            /*sub.unsubscribe();*/
+            this.sub.unsubscribe();
             return;
+          } 
+
+          //Bad request
+          else if (response.status == 400) {
+            if (typeof(response) == 'object' && 'error' in response) {
+              let er = response.error;
+
+              //Invalid location id
+              if (typeof(er) == 'object' && 'location' in er) {
+                this.errorMessage = "There was a problem identifying the location, please contact support if the problem persists."
+                this.errorStatus = true;
+                this.sub.unsubscribe();
+                return;
+              }
+            }
           }
 
-          //Show error
-          this.errorMessage = "Something went wrong!";
+          //None of the above / Unexpected error
+          this.errorMessage = `Something went wrong! (${response.status})`;
           this.errorStatus = true;
-          /*sub.unsubscribe();*/
+          this.sub.unsubscribe();
           return;
 
         },
         complete: () => {
-          sub.unsubscribe();
+          this.sub.unsubscribe();
         }
       });
 
