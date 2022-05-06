@@ -7,7 +7,7 @@
     <div *ngIf="showReview" class="reviews">
 
       <div class="image">
-       <!--  <img src="assets\images\location-review.png" style="height: 100%; width: 100%;"/> -->
+        <img src="assets\images\computer.jpg" style="height: 100%; width: 100%;"/> 
       </div>
       <p class="placeName">Khiam</p>
       <div class="contianer">
@@ -21,7 +21,6 @@
         <br>
         <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">room</mat-icon>Tehran-tehran pars- iust</a>
         <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">phone</mat-icon>+989371811432</a>
-
         <button class="addReview" (click)="addReview()">add review</button>
         <!-- <button mat-raised-button (click)="openDialog()">Pick one</button> -->
         <app-add-review *ngIf="!dlg" [locationID]="'1'"></app-add-review>
@@ -32,7 +31,10 @@
   </mat-drawer>
 
   <div class="example-sidenav-content">
-    <div id="map"></div>
+    <div id="map">
+      <a (click)="openDialog()" id="refreshButton"><img src="assets\images\sidebar\add.png"></a>
+    </div>
+    
   </div>  
 
 </mat-drawer-container>

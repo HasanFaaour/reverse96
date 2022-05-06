@@ -37,10 +37,7 @@
     border: 1px solid #ddd;
     border-radius: 8px;
 }
-/* .name p {
-    margin-top: 0px;
-    padding: 0px;
-} */
+
 .email {
     font-size: 28;
 }
@@ -108,4 +105,19 @@
     content: "";
     display: table;
     clear: both;
+  }
+
+  @media screen and (max-width: 800px) {
+
+    .userInfo {
+      margin-left: 40px; 
+      margin-top: 50px;
+   }
+   .editprofile {
+      margin-left: 40%;
+      margin-top: 5px;
+   }
+   .image{
+     margin-left: 20px;
+   }
   }

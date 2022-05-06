@@ -31,6 +31,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule} from '@angular/material/dialog';
 import { UserInfoComponent } from './components/user-info/user-info.component';
+import { AddPlaceComponent } from './components/add-place/add-place.component';
 
 const routes: Routes = [
   {
@@ -70,6 +71,10 @@ const routes: Routes = [
       {
         path: 'userInfo',
         component: UserInfoComponent
+      },
+      {
+        path: 'map',
+        component: AddPlaceComponent
       }
     ],
   },
@@ -88,9 +93,10 @@ const routes: Routes = [
     AddReviewComponent,
     ComponentsComponent,
     MapReviewComponent,
-    UserInfoComponent
+    UserInfoComponent,
+    AddPlaceComponent
   ],
-  entryComponents: [AddReviewComponent],
+  entryComponents: [AddPlaceComponent],
   imports: [
     CommonModule,
     MatIconModule,
