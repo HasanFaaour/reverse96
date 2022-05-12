@@ -13,8 +13,10 @@ export class HomeComponent implements OnInit {
   }
   
   list: any[] = [
-    {name: "dalan" , image: "assets/images/khiam.jpg" , likes: 200 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
-    {name: "dalan" , image: "assets/images/gilan.jpg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false} 
+    {name: "dalan" , image: "assets/images/restoran.jpg" , likes: 200 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
+    {name: "dalan" , image: "assets/images/restoran3.jpg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false},
+    {name: "dalan" , image: "assets/images/sea.jpg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
+    {name: "dalan" , image: "assets/images/restoran2.jpeg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false}  
   ];
   searchList: any[] = [];
   

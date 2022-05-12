@@ -1,9 +1,12 @@
 <mat-progress-bar *ngIf="show" mode="indeterminate"></mat-progress-bar>
 <div class = "sidenav" >
-    <a routerLink="/home" routerLinkActive="active"><span class="ico"><mat-icon class="icon-1">home</mat-icon></span></a>
-    <a ><span class="sid-ico"><mat-icon>favorite_border</mat-icon></span></a>
-    <a ><mat-icon>notifications_none</mat-icon></a>
-    <a routerLink="/map-reviws" routerLinkActive="active" *ngIf="isLogin"><mat-icon>add_location</mat-icon></a>
-    <a *ngIf="isLogin" routerLink="/userInfo"><mat-icon>person</mat-icon></a>
-    <div class="user-image" *ngIf="isLogin"><img src="assets\images\profile-image.png" style="width: 100%; height: 100%;" ></div>
+    <!-- <div class="search-border"><input name="name" type="search"  class="search-box" placeholder="search..."></div> -->
+    <!-- <div class="logo" routerLink="/home"><img src="assets\images\sidebar\logo.png" style="width: 30px; height: 30px; margin-right: 15px; margin-bottom: 4px;">LogoNme</div>   -->
+    <a routerLink="/home" routerLinkActive="active"><img src="assets\images\sidebar\home.png"><span class="ico"></span>Home</a>
+    <a ><span class="sid-ico"><mat-icon>favorite_border</mat-icon></span>Favorites</a>
+    <a routerLink="/map"><img src="assets\images\sidebar\bell.png" >Notifications</a>
+    <a routerLink="/map-reviws" routerLinkActive="active" *ngIf="isLogin"><img src="assets\images\sidebar\map.png" ><span class="ic"></span>Map</a>
+    <a *ngIf="isLogin" routerLink="/userInfo"><img src="assets\images\sidebar\person_1.png" ><span class="ic">Profile</span></a>
+    <a ><img src="assets\images\sidebar\message.png" ><span class="ic">Message</span></a>
+   
 </div>
