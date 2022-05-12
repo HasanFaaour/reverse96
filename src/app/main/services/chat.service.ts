@@ -43,7 +43,7 @@ export class ChatService {
 
       }
       return;
-    })
+    });
   }
 
   create (username: string, guyName: string): Observable<any> {

@@ -258,30 +258,5 @@ export class ChatComponent implements OnInit {
     });
   }
 
-  changeChat (chat: any): void {
-    // let guyId = chat.link;
-    // if (guyId) {
-    //   this.userInfo.getUserInfo(guyId).subscribe({
-    //     next: (response) => {
-    //       this.guyName = Object.values(response)[0]['username'];
-    //       this.guyImage = `${this.chatService.server}${Object.values(response)[0]['picture']}`;
-    //       this.contactList = [];
-    //       console.log(fakeContacts);
-    //       this.authenticateUser();
-    //     },
-
-    //     error: (response) => {
-    //       alert('Invalid guy id! (' + response.status + ')');
-    //       this.router.navigate(['home']);
-    //     },
-
-    //     complete: () => {
-    //       return;
-    //     }
-    //   });
-    // } 
-    this.router.navigateByUrl(`message/${chat.link}`);
-    
-  }
-
+  
 }
