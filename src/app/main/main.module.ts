@@ -112,6 +112,7 @@ const routes: Routes = [
     MatInputModule,
     MatMenuModule,
     MatDialogModule,
+    ReactiveFormsModule,
     FormsModule
   ],
 })

@@ -1,12 +1,24 @@
 <div class="dialog">
-    <h2>Place details</h2>
+    <h2>Add Place</h2>
     <p>
-        Provide some information about this place. If this place is 
-        added to Maps, it will appear publicly.
+        Provide some information about this place. If this place is added to Maps, it will appear publicly.
     </p>
-    <input class="name" type="text">
-    <input class="location" type="text">
-    <div id="map"></div>
-  
+
+    <form [formGroup]="form" (ngSubmit)="submitForm()">
+        <div class="form-group input-group-lg">
+            <input class="form-control" placeholder="Name" formControlName="name">
+        </div>
+        <h2>place photo</h2>
+        <p>Add helpful photos like storefronts, notices, or signs</p>
+        <div class="form-group">
+            <div class="add-img-icon" (click)="Image.click()"><mat-icon>add</mat-icon>
+               <!-- <span class="add-photo">Add Photos</span>  -->
+            </div>
+            <input #Image class="image-input" type="file" name="image" accept="image/*" (change)="uploadFile($event)">
+        </div>
+        <div class="form-group">
+            <button class="button">Add Location</button>
+        </div>
+    </form>
 </div>
 <!-- <div id="map"></div> -->

@@ -1,110 +1,87 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { AfterViewInit, Component, Inject, OnInit, Optional } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable, Subscriber } from 'rxjs';
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
-import * as L from 'leaflet';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { LocationsService } from '../../services/locations.service';
 
 @Component({
   selector: 'app-add-place',
   templateUrl: './add-place.component.html',
   styleUrls: ['./add-place.component.css']
 })
-export class AddPlaceComponent implements AfterViewInit {
+export class AddPlaceComponent implements OnInit {
+  form: FormGroup;
+  fromMapReviewComponent!: any;
+  fromDialog!: string;
 
-  tileLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> Contributors'
-    });
-    map: any;
-    lata!: string;
-    lnga: any;
-    latlng = L.latLng(50.5, 30.5);
-
-    marker = L.marker(this.latlng,{
-      icon: L.icon({
-        iconUrl: 'assets/images/marker-icon.png',
-        shadowUrl: 'assets/images/shadow.png',
-        //iconSize: [24,36],
-        popupAnchor: [13, 0],
-      }),
-        draggable: true,
-        autoPan: true
-    });
-    public ngAfterViewInit(): void {
-      this.loadMap();
-    }
-     
-    private getCurrentPosition(): any {
-      return new Observable((observer: Subscriber<any>) => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position: any) => {
-            observer.next({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            });
-            observer.complete();
-          });
-        } else {
-          observer.error();
-        }
-      });
-    }
-
-    private loadMap(): void {
-      this.map = new L.Map('map', {
-        'center': this.latlng,
-        'zoom': 12,
-        'layers': [this.tileLayer]
-      });
-      
-      this.getCurrentPosition().subscribe((position: any) => {
-        this.map.flyTo([position.latitude, position.longitude], 5);
-        
-      
-      const icon = L.icon({
-        iconUrl: 'assets/images/marker-icon.png',
-        //shadowUrl: 'assets/images/shadow.png',
-        iconSize: [24,36],
-        iconAnchor: [12,36],
-        popupAnchor: [13, 0],
-      });
-
-      const marker = L.marker([position.latitude, position.longitude],{
-          icon,
-          draggable: true,
-          autoPan: true
-      }).addTo(this.map);
+  constructor(private formBuilder: FormBuilder, private locSer: LocationsService,
+              public dialogRef: MatDialogRef<AddPlaceComponent>,
+              @Optional() @Inject(MAT_DIALOG_DATA) public data: any)
+  {
+    this.fromMapReviewComponent = data.pageValue;
     
-    marker.on('dragend', function (e) {
-    updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
+    this.form = this.formBuilder.group({
+      name: [''],
+      picture: [''],
     });
-    
-
-    marker.bindPopup('<p>Ya hosien salam<br />This is a nice popup.</p>').openPopup();
-
-    this.map.on('click', function (e: any) {
-    marker.setLatLng(e.latlng);
-    updateLatLng(marker.getLatLng().lat, marker.getLatLng().lng);
-    });
-    
-    const updateLatLng = (lat: any,lng: any) => {
-     // this.latitude.nativeElement.innerHTML = '1111';
-      console.log(marker.getLatLng().lat.toString());
-      //document.getElementById('latitude').value = marker.getLatLng().lat;
-      //document.getElementById('longitude').value = marker.getLatLng().lng;
-    }
-  
-    const provider = new OpenStreetMapProvider();
-    const searchControl  = GeoSearchControl({
-      style: 'bar',
-      provider: provider,
-      showMarker: true,
-      marker: marker, // use custom marker, not working
-    });
-    this.map.addControl(searchControl);
-  });
   }
 
   ngOnInit(): void {
+    
   }
 
+  uploadFile(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      console.log(file);
+      this.form.get('picture')!.setValue(file);
+     /*  this.form.patchValue({
+        image: file,
+      }); */
+    //  this.form.get('image')!.updateValueAndValidity();
+    }
+  }
+
+  submitForm() {
+    const formData = new FormData();
+    formData.append('name', this.form.get('name')!.value);
+    formData.append('latt', parseFloat(this.fromMapReviewComponent.lat).toFixed(9));
+    formData.append('long', parseFloat(this.fromMapReviewComponent.lng).toFixed(9));
+    formData.append('picture', this.form.get('picture')!.value , this.form.get('picture')!.value.name);
+    console.log("latt and long:" + parseFloat(this.fromMapReviewComponent.lat).toFixed(9)+
+    "  "+parseFloat(this.fromMapReviewComponent.lng).toFixed(9));
+    this.closeDialog();
+    this.addLocation(formData);
+    this.getLocations();
+    this.getLocations();
+  }
+
+  closeDialog() {
+    this.dialogRef.close({ event: 'close', data: this.fromDialog });
+  }
+
+  addLocation(model: any) : void {
+    this.locSer.addPlace(model).subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  getLocations() : void {
+    this.locSer.getMapLocations(this.fromMapReviewComponent.corners).subscribe({
+      next: (data) => {
+        //this.locations = Object.values(data)[0];
+        console.log(data);
+        //this.list = Object.values(data)[0];
+        //console.log(this.list.name);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
 }

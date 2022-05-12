@@ -13,6 +13,10 @@
     width: 100%;
 }
 
+.add-place-button:disabled {
+    color: rgb(90, 90, 90);
+}
+/*------------------reviews--------------------*/
 .reviews {
     width: 100%;
     height: 100%;
@@ -20,21 +24,36 @@
     overflow-y: scroll;
     border: 1px solid #ddd;
 }
-
+.top-reviews {
+    width: 100%;
+    height: 35px;
+    border-bottom: 1px solid rgb(121, 120, 120);
+    margin-bottom: 10px;
+}
+.top-reviews a {
+    display: block;
+    margin-top: 15px;
+    margin-left: 15px;
+    cursor: pointer;
+    font-size: 15px;
+}
 .contianer a {
     display: block;
-    margin-left: 20px;
+    margin-left: 10%;
     margin-top: 10px;
+}
+.rate {
+    margin-left: 6%;
 }
 .rate a {
     display: inline-block;
-    margin-left: 20px;
+    margin-left: 10px;
     margin-top: 0px;
 }
 .addReview {
     width: 100px;
     height: 30px;
-    margin-left: 20px;
+    margin-left: 10%;
     margin-top: 20px;
     text-decoration: none;
     background-color: white;
@@ -43,18 +62,19 @@
     border-radius: 7px;
     cursor: pointer;
 }
+
 .reviews p {
-    margin-left: 23px;
+    margin-left: 10%;
     margin-top: 10px;
 }
-.image {
-    width: 100%;
+.reviews .image {
+    width: 80%;
     height: 200px;
+    margin-left: 10%;
+    border-radius: 10px;
     background-color: #ddd;
 }
-br {
-    color: #ddd;
-}
+/*----------------end reviews------------------*/
 
 .example-container {
    position: absolute;  
@@ -62,24 +82,27 @@ br {
    left: 21%;
    width: 79%;
    height: 88%;
-  }
-  
-  .example-sidenav-content {
+}
+ 
+.example-sidenav-content {
     position: absolute;
     display: flex;
     height: 100%;
     width: 100%;
     align-items: center;
     justify-content: center;
-  }
+}
   
-  .example-sidenav {
+.example-sidenav {
     width: 33.3%;
+    min-width: 5%;
     padding: 0px;
-  }
+}
+.example-sidenav.menu-close {
+    width: 40px;
+}
 
-
-  @media screen and (max-width: 800px) {
+@media screen and (max-width: 800px) {
     .example-container {
         position: absolute;  
         width: 100%;
@@ -95,9 +118,9 @@ br {
     .example-sidenav {
         width: 50%;
     }
-  }  
+}  
 
-  #refreshButton {
+#refreshButton {
     position: absolute;
     top: 85%;
     left: 1%;
@@ -106,4 +129,43 @@ br {
     background-color: white;
     border: 1px solid rgb(126, 125, 125);
     border-radius: 10px;
-  }
+}
+
+.list-reviews-container {
+    width: 95%;
+    height: 60px;
+    margin-top: 25px;
+    margin-left: 15px;
+    display: inline-block;
+}
+.list-reviews-container .description {
+    margin-left: 20px;
+    margin-top: 10px;
+    float: left;
+}
+.list-reviews-container img {
+    width: 85px;
+    height: 85px;
+    float: left;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    border-radius: 10px;
+}
+.description p {
+    margin-bottom: 0px;
+    padding-top: 0px;
+}
+.description .rate {
+    text-decoration: none;
+    font-size: 15px;
+    vertical-align: middle;
+    margin-left: 0px;
+    top: 3px;
+    display: flex;
+}
+.description .mat-icon {
+    font-size: 16px;
+    color:  rgb(253, 224, 60);
+    vertical-align: middle;
+}

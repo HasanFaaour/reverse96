@@ -98,6 +98,16 @@
     height: 60px;
     display: inline-block;
   }
+  .title2 .name {
+    margin-left: 20px;
+    margin-top: 0px;
+    display: inline-block;
+    vertical-align: middle;
+    top: 3px;
+}
+.title2 img {
+  border-radius: 100px;
+}
   .right-side .image {
     width: 45px;
     height: 45px;
@@ -109,16 +119,7 @@
 }
 
 
-.title2 .name {
-    margin-left: 20px;
-    margin-top: 0px;
-    display: inline-block;
-    vertical-align: middle;
-    top: 3px;
-}
-.title2 img {
-  border-radius: 100px;
-}
+
 .name p {
   margin-bottom: 0px;
   padding-top: 0px;

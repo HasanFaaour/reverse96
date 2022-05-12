@@ -16,9 +16,8 @@ export class UserInfoService {
 
   getUserInfo(): Observable<any> {
     this.userName = localStorage.getItem('username');
-    //return this.http.get(this.baseUrl +'/api/public-profile/username', {headers : this.httpHeaders});
     if(this.userName){
-      return this.http.get<any>(`${this.baseUrl}/api/public-profile/${this.userName}`/* ,{headers:{"Content-Type":"application/json"}} */);
+      return this.http.get<any>(`${this.baseUrl}/api/public-profile/${this.userName}`);
     }
     else{
       return new Observable( (sub) => {
@@ -28,6 +27,5 @@ export class UserInfoService {
       })
     }
     
-    //return this.http.post(`${this.baseUrl}/api/login`,{headers:{"Content-Type":"application/json"},  responseType: 'json'});
   }
 }
