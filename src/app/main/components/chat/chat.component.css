@@ -1,5 +1,5 @@
 .container {
-    margin-left: 180px;
+    margin-left: 22%;
     margin-top: 85px;
     float: left;
 }
@@ -7,10 +7,10 @@
 .chat-list-area {
     position: fixed;
     top: 80px;
-    left: 170px;
+    left: 22%;
     /* right: 440px; */
     bottom: 10px;
-    width: 380px;
+    width: 24%;
     height: auto;
     /* border-bottom: #555 solid 1px; */
     /* background-color: rgba(0, 0, 255, .1); */
@@ -113,8 +113,8 @@ a.disabled {
     position: fixed;
     top: 80px;
     bottom: 60px;
-    left: 560px;
-    right: 15px;
+    left: 47%;
+    right: 1%;
     /* border: 1px black solid; */
     width: auto;
     height: auto;
@@ -193,6 +193,12 @@ a.disabled {
     width: max-content;
     /* border: 1px black solid; */
     /* align-items: center; */
+    max-width: 35%;
+    /* overflow-x: scroll; */
+}
+
+.chat-message::-webkit-scrollbar {
+    display: none;
 }
 
 .inner-text::-webkit-scrollbar {
@@ -200,14 +206,18 @@ a.disabled {
 }
 
 .me .inner-text{
-    margin: 5px 15px 8px 5px;
-    max-width: 300px;
+    margin-top : 5px;
+    margin-bottom:  8px;
+    margin-left:  8px;
+    margin-right:  7px;
     overflow-x: scroll;
 }
 
 .them .inner-text {
-    margin: 5px 5px 8px 15px;
-    max-width: 300px;
+    margin-top : 5px;
+    margin-bottom:  8px;
+    margin-left:  7px;
+    margin-right:  8px;
     overflow-x: scroll;
 }
 
@@ -215,10 +225,13 @@ a.disabled {
     float: left;
     display: flex;
     margin-top: auto;
-    margin-right: 6px;
-    margin-left: 6px;
+    margin-right: 3px;
+    margin-left: 3px;
     color: gray;
     font-size:xx-small;
+    min-width: 40px;
+    /* border: darkcyan 1px solid; */
+    justify-content: center;
 }
 
 .chat-message:first-of-type {
@@ -291,7 +304,7 @@ a.disabled {
 .text-field {
     position: fixed;
     bottom: 10px;
-    left: 560px;
+    left: 47%;
     right: 15px;
     width: auto;
     height: 40px;
@@ -319,4 +332,19 @@ a.disabled {
     bottom: 10px;
     right: 25px;
     color: rgb(88, 99, 255);
+}
+
+@media screen and (max-width: 800px) {
+    .chat-list-area {
+        left: 0;
+        width: 30%;
+    }
+
+    .chat-box {
+        left: 31%;
+    }
+
+    .text-field {
+        left: 31%;
+    }
 }

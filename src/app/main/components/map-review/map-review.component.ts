@@ -76,7 +76,7 @@ export class MapReviewComponent implements AfterViewInit {
   }
   
   addReview() {
-    this.showAddReview = !this.showAddReview;
+    this.dlg = !this.dlg;
   }
   toggle() {
     this.sidenav.toggle();
