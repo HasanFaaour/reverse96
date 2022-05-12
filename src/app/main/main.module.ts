@@ -30,9 +30,12 @@ import { AppComponent } from '../app.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatListModule} from '@angular/material/list';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { AddPlaceComponent } from './components/add-place/add-place.component';
 
+import { NgxPhotoEditorModule } from 'ngx-photo-editor';
+import { ChatComponent } from './components/chat/chat.component';
 const routes: Routes = [
   {
     path: '',
@@ -73,6 +76,10 @@ const routes: Routes = [
         component: UserInfoComponent
       },
       {
+        path: 'message/:guyId',
+        component: ChatComponent
+      },
+      {
         path: 'map',
         component: AddPlaceComponent
       }
@@ -92,6 +99,7 @@ const routes: Routes = [
     LogoutComponent,
     AddReviewComponent,
     ComponentsComponent,
+    ChatComponent,
     MapReviewComponent,
     UserInfoComponent,
     AddPlaceComponent
@@ -112,6 +120,9 @@ const routes: Routes = [
     MatInputModule,
     MatMenuModule,
     MatDialogModule,
+    MatListModule,
+    FormsModule,
+    NgxPhotoEditorModule,
     ReactiveFormsModule,
     FormsModule
   ],

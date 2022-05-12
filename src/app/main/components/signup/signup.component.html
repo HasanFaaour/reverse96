@@ -87,10 +87,10 @@
     </mat-card>
 
     <!-- Email verification form -->
-    <mat-card class="validation-card" *ngIf="submittedEmail != '@,,' "  >
+    <mat-card class="validation-card" *ngIf="submittedEmail != '@,,'"  >
         <mat-card-content>
-            <mat-label>Please enter the code you received at your email address ({{submittedEmail}}).</mat-label>
-            <form id = "vE" [formGroup]="codeGroup" (ngSubmit)="validate()">
+            <mat-label *ngIf="validateStatus != 1" >Please enter the code you received at your email address ({{submittedEmail}}).</mat-label>
+            <form id = "vE" [formGroup]="codeGroup" (ngSubmit)="validate()" *ngIf="validateStatus != 1">
 
                 <!-- Code input -->
                 <mat-form-field >
@@ -109,10 +109,10 @@
 
                 <!-- Messages -->
                 <br/>
-                <mat-label class="success-message" *ngIf="validateStatus == 1" >{{validateMessage}}<a routerLink="../login">login to your account.</a> </mat-label>
                 <mat-error *ngIf="validateStatus > 1" >{{validateMessage}} </mat-error>
                 
             </form>
+            <mat-label class="success-message" *ngIf="validateStatus == 1" >{{validateMessage}}<a routerLink="../login">login to your account.</a> </mat-label>
         </mat-card-content>
     </mat-card>
 

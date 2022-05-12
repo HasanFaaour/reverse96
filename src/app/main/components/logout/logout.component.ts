@@ -16,6 +16,7 @@ export class LogoutComponent implements OnInit {
     //Make sure the user is logged in (redirect otherwise)
     if (!localStorage.getItem('refresh')){
       console.log("Not logged in!");
+      localStorage.clear();
       this.router.navigate(['../login']);
       return;
     }

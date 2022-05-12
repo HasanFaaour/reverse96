@@ -14,18 +14,10 @@ export class UserInfoService {
 
   constructor(private http: HttpClient) { }
 
-  getUserInfo(): Observable<any> {
-    this.userName = localStorage.getItem('username');
-    if(this.userName){
-      return this.http.get<any>(`${this.baseUrl}/api/public-profile/${this.userName}`);
+  getUserInfo(userId = ""): Observable<object> {
+    if (userId){
+      return this.http.get(`${this.baseUrl}/api/public-profile/${userId}`);
     }
-    else{
-      return new Observable( (sub) => {
-         sub.error({message: "not logged in"});
-         sub.complete();
-         return;
-      })
-    }
-    
+    return this.http.get(`${this.baseUrl}/api/get-user-detail` ,{headers:{"Content-Type":"application/json",'authorization':`Bearer ${localStorage.getItem('access')}`}});
   }
 }
