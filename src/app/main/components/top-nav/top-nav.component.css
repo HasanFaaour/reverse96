@@ -6,6 +6,7 @@
     left: 0px;
     border: 1px solid #ddd;
     background-color: white;
+    z-index: 3;
   }
   
   .top-nav a {

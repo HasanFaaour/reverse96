@@ -14,9 +14,13 @@ export class UserInfoService {
 
   constructor(private http: HttpClient) { }
 
-  getUserInfo(): Observable<object> {
+  getUserInfo(userId = ""): Observable<object> {
+    if (userId){
+      console.log('IF');
+      return this.http.get(`${this.baseUrl}/api/public-profile/${userId}`);
+    }
     //return this.http.get(this.baseUrl +'/api/public-profile/username', {headers : this.httpHeaders});
-    return this.http.get(`${this.baseUrl}/api/public-profile/${this.userName}`/* ,{headers:{"Content-Type":"application/json"}} */);
+    return this.http.get(`${this.baseUrl}/api/get-user-detail` ,{headers:{"Content-Type":"application/json",'authorization':`Bearer ${localStorage.getItem('access')}`}});
     //return this.http.post(`${this.baseUrl}/api/login`,{headers:{"Content-Type":"application/json"},  responseType: 'json'});
   }
 }
