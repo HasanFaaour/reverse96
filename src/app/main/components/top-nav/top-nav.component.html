@@ -18,8 +18,12 @@
         <button mat-menu-item>notifications</button>
         <button mat-menu-item>profile</button>
       </mat-menu>
-    <a *ngIf="!isLogin" routerLink="/login" class="login">log in</a>
-    <a *ngIf="isLogin" (click)="onLogout()" class="login"><mat-icon style="color: red;">logout</mat-icon></a>
-    <a href="#"><mat-icon style="color: rgb(65, 64, 64);">settings</mat-icon></a>
-    <input name="name" [(ngModel)]="name" type="search"  class="search-box" placeholder="search...">
+      <a style="color: rgb(80, 223, 248); margin-left: 2.5%;" class="logo" routerLink="/home"><img src="assets\images\sidebar\logo.png" style="width: 30px; height: 30px; margin-right: 15px; margin-bottom: 4px;">LogoNme</a>  
+      <div class="search-border">
+        <mat-icon>search</mat-icon>
+        <input name="name" type="search"  class="search-box" placeholder="search...">
+      </div>
+      <a *ngIf="!isLogin" routerLink="/login" class="login">log in</a>
+      <a *ngIf="isLogin" (click)="onLogout()" class="login"><mat-icon style="color: red;">logout</mat-icon></a>
+      <!-- <input name="name" [(ngModel)]="name" type="search"  class="search-box" placeholder="search..."> -->
 </div>

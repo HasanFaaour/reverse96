@@ -3,7 +3,8 @@
     width: 100%;
     position: fixed;
     top: 0px;
-    left: 0px;
+    left: 0%;
+    border-left: 1px solid white;
     border: 1px solid #ddd;
     background-color: white;
   }
@@ -22,11 +23,55 @@
     visibility: hidden;
   }
 
+  .top-nav .logo {
+    margin-top: 8px;
+    margin-left: 11%;
+    color: rgb(104, 232, 255);
+    font-size: 20px;
+    font-weight: 500;
+    float: left;
+  }
+
+  .search-border {
+    width: 26%;
+    height: 34px;
+    border: 1px solid #ddd ;
+    background-color: rgb(248, 247, 247);
+    border-radius: 8px;
+    margin-left: 16%;
+    margin-top: 12px;
+    display: inline-block;
+  }
+  .search-box {
+    width: 86%;
+    height: 100%;
+    margin-bottom: 10px;
+    margin-left: 1px;
+    display: block;
+    background-color: rgb(248, 247, 247);
+    border: none;
+    border-radius: 8px;
+    padding-left: 15px;
+    float: left;
+  } 
+  *:focus {
+    outline: none;
+  }
+  mat-icon {
+    font-size: 22px;
+    float: left;
+    color: rgb(168, 167, 167);
+    margin-left: 8px;
+    margin-top: 6px;
+    vertical-align: middle;
+    top: 3px;
+    cursor: pointer;
+  }
   .top-nav .login {
-    margin-right: 140px;
+    margin-right: 50px;
   }
   
-  .top-nav .search-box {
+  /* .top-nav .search-box {
     width: 30%;
     height: 30px;
     display: inline-block;
@@ -37,7 +82,7 @@
     border: none;
     border-radius: 8px;
     padding-left: 15px;
-  }
+  } */
   
   .top-nav .logo {
     font-size: 25px;
