@@ -1,8 +1,8 @@
 <div class="blank-1"></div>
 <div *ngFor="let item of list; let i = index;" class="place-card">
-  <div class="title">Dalan bhshti</div>
+  <div class="title">{{item.title}}</div>
   <div class="place-image">
-    <img src={{item.image}} style="height: 100%; width: 100%; border-radius: 8px;">
+    <img [src]="item.picture" style="height: 100%; width: 100%; border-radius: 8px;">
   </div>
   <div class="icon-list">
     <a href="#"><mat-icon style="color: rgb(83, 81, 81); vertical-align: middle;">chat_bubble_outline</mat-icon></a>
@@ -13,9 +13,7 @@
   <div class="info">
     <p class="likes">{{item.likes}} likes </p>
     <div class="text-content" [ngClass]="{'limitTextHeight': !item.isReadMore }">
-      This is long text replaced with reading more/less link example in Angular application paragraph text shown here continue THis is long text replaced with read more/less link example in Angular application paragraph text shown here continue continue
-      This is long text replaced with reading more/less link example in Angular application paragraph text shown here continue THis is long text replaced with read more/less link example in Angular application paragraph text shown here continue
-      continue continue
+      {{item.text}}
     </div>
     <a class="view-more" (click)="showAllText(i)">
       {{ isReadMore ? 'view more': 'view less' }}

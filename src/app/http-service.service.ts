@@ -74,4 +74,12 @@ export class HttpRequestService {
     return this.hC.post(`${this.db}/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
   }
 
+  getReviews (mode: number): Observable<object> {
+    return this.hC.get(`${this.db}/api/get_reviews/${mode}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  }
+
+  get server():string {
+    return this.db;
+  }
+
 }

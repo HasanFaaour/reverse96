@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpRequestService } from 'src/app/http-service.service';
 
 @Component({
   selector: 'app-home',
@@ -9,15 +10,19 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
   name: string = 'dalan';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpRequestService) {
   }
   
-  list: any[] = [
+  list: any[] = [];
+
+  /*
     {name: "dalan" , image: "assets/images/restoran.jpg" , likes: 200 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
     {name: "dalan" , image: "assets/images/restoran3.jpg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false},
     {name: "dalan" , image: "assets/images/sea.jpg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
     {name: "dalan" , image: "assets/images/restoran2.jpeg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false}  
   ];
+  */
+
   searchList: any[] = [];
   
   isClicked: boolean = false;
@@ -63,6 +68,19 @@ export class HomeComponent implements OnInit {
     if (!localStorage.getItem('access')){
       console.log("Not logged in, redirecting to login page...");
       this.router.navigate(['../login']);
+    }
+    else {
+      this.http.getReviews(2).subscribe({
+        next: (response: any) => {
+          for (let review of response.message) {
+            console.log("review",review.id);
+            review.picture = `${this.http.server}${review.picture}`;
+            review.liked = false;
+            review.likes = review.liked_by.length;
+            this.list.push(review);
+          }
+        }
+      })
     }
   }
 
