@@ -30,10 +30,15 @@ fdescribe('ChatComponent', () => {
 
   let callBack: any;
   let signal : {type: string, response: any};
+  let createSignal : {type: string, response: any};
   let observableFromSignal = (signal: any) => {
     return new Observable<object>((observer: Subscriber<any>) => {
     if (signal.type == 'next') {
+      if (signal.response) {
       observer.next(signal.response);
+      }else {
+        observer.next(['empty']);
+      }
     }
     else if (signal.type == 'error') {
       observer.error(signal.response);
@@ -55,7 +60,7 @@ fdescribe('ChatComponent', () => {
     },
     create: (username: string, guyName: string) => {
       callBack += `create(${username},${guyName}) -`;
-      return observableFromSignal(signal);
+      return observableFromSignal(createSignal);
     },
     fetch: (chatId: number) => {
       callBack += `fetch(${chatId}) -`;
@@ -76,14 +81,17 @@ fdescribe('ChatComponent', () => {
 
   let user = "";
   let details = {error: false, username: "", picture: ""};
-  let userInfoStub = {getUserInfo: (userId: any) => {
+  let userInfoStub = {getUserInfo: (userId?: any) => {
     if (userId) {user = userId;}
     return new Observable((observer: Subscriber<any>) => {
       if (details.error) {
         observer.error([details]);
       }
-      else {        
+      else if(userId != "no more ") {
        observer.next([details]);
+      }
+      else {
+        observer.complete();
       }
       return;
     });
@@ -178,7 +186,7 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
     
   });
 
-  it ("(socket) should indicate an error if there is an error when getting the contacts", () => {
+  it ("(socket) should indicate a socket error if there is an error when getting the contacts", () => {
     //Signal user info service to return the expected info
     signal = {type: 'error', response: "error"};
 
@@ -205,7 +213,9 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
     component.username = "user";
     component.guyName = "guy";
     let contacts = [{name: "user", participants: ["user", "guy"]}, {name: "guy", participants: ["user", "guy"]},{name: "user guy", participants: ["user", "guy"]},{name: "guy user", participants: ["user", "guy"]},{name: "not guy @private user", participants: ["user", "guy"]},{name: "user @private not guy", participants: ["user", "guy"]}];
+    
     signal = {type: 'next', response: contacts};
+    createSignal = {type:'next', response: 'created'}
     details = {error: false, username: "user", picture: "pic"};
 
     callBack = "";
@@ -221,8 +231,10 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
     //Signal user info service to return the expected info
     component.username = "user";
     component.guyName = "guy";
-    let contacts = [{name: "user @private guy", participants: ["user", "guy"], id: 69}];
+    let contacts = [{name: "Monkey @private user", participants: ["Monkey","Lion"],id: 12},{name: "user @private guy", participants: ["user", "guy"], id: 69}];
+    
     signal = {type: 'next', response: contacts};
+    details = {error: true, username: "Monkey", picture: "Monkey.pic"};
 
     callBack = "";
 
@@ -230,6 +242,43 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
 
     expect(callBack).not.toContain("create");
     expect(callBack).toContain("connect(69)");
+   
+  });
+
+  it("(socket) add all the contacts to the list", () => {
+    component.username = "user";
+    component.guyName = "guy";
+    let contacts = [{name: "Monkey @private user", participants: ["Monkey","Lion"],id: 12},{name: "user @private guy", participants: ["user", "guy"], id: 69}, {name: "user @private Monkey", participants: ["user", "Monkey"], id: 32}, {name: "Lion @private guy", participants: ["Lion", "guy"], id: 51}, {name: "no more @private user", participants: ["no more", "user"], id: 14}];
+    
+    signal = {type: 'next', response: contacts};
+    details = {error: false, username: "un", picture: "pic"};
+
+    callBack = "";
+    component.contactList = [];
+
+    component.initiateChat();
+
+    //+4 for fake chats
+    expect(component.contactList.length).toBe(contacts.length-1);
+
+
+  });
+
+  it ("(socket) should indicate indicate an error, if creating a chat fails", () => {
+    //Signal user info service to return an error
+    component.username = "user";
+    component.guyName = "guy";
+
+    signal = {type: 'next', response: [{name: "user guy", id: 21}]};
+    createSignal = {type: 'error', response: 'error'};
+
+    component.socketError = false;
+    component.chatId = 5;
+
+    component.initiateChat();
+
+    expect(callBack).toContain("create");
+    expect(component.socketError).toBeTrue();
    
   });
 

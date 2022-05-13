@@ -76,6 +76,14 @@ const routes: Routes = [
         component: UserInfoComponent
       },
       {
+        path: 'userInfo/:username',
+        component: UserInfoComponent
+      },
+      {
+        path: 'message',
+        component: ChatComponent
+      },
+      {
         path: 'message/:guyId',
         component: ChatComponent
       },

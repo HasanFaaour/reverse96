@@ -6,17 +6,16 @@
 
 .chat-list-area {
     position: fixed;
-    top: 80px;
+    top: 140px;
     left: 22%;
-    /* right: 440px; */
     bottom: 10px;
     width: 24%;
     height: auto;
-    /* border-bottom: #555 solid 1px; */
-    /* background-color: rgba(0, 0, 255, .1); */
-    border-radius: 8px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
     overflow-y: scroll;
-    box-shadow: 0 0 4px 1px rgba(200, 200, 200, .5);
+    border-bottom: solid 1px rgba(200, 200, 200, .5);
+    box-shadow: -1px 0 1px 0 rgba(200, 200, 200, .5);
 }
 
 .chat-list-area::-webkit-scrollbar {
@@ -24,16 +23,17 @@
 }
 
 .chat-list-title {
-    /* margin-left: 0; */
-    /* margin-right: 0; */
-    /* border-radius: 18px; */
-    width: 100%;
+    left: 22%;
+    width: 24%;
     height: 60px;
+    top: 80px;
     text-align: center;
     padding-top: 20px;
     font-size: large;
     background-color: #555;
     color: white;
+    position: fixed;
+    border-top-left-radius: 8px;
 }
 
 a {
@@ -50,15 +50,8 @@ a.disabled {
 
 .chat-item {
     width: 100%;
-    height: 60px;
-    /* border: darksalmon 1px solid; */
-    /* margin-top: -3px; */
-    /* margin-bottom: none; */
-    padding-top: 0;
-    padding-bottom: 0;
-    /* margin-top: 20px; */
-    /* min-height: 80px; */
-    margin-left: 0;
+    height: 60px;padding-top: 0;
+    padding-bottom: 0;margin-left: 0;
     margin-right: 0;
 
 }
@@ -68,10 +61,7 @@ a.disabled {
     width: 48px;
     height: 48px;
     margin-top: 5px;
-    margin-bottom: 5px;
-    /* display: flex; */
-    /* border: #555 1px solid; */
-    
+    margin-bottom: 5px;    
 }
 
 .chat-img {
@@ -79,21 +69,15 @@ a.disabled {
     width: 100%;
     height: 100%;
     object-fit:cover;
-    /* border: #555 1px solid; */
 }
 
 .selected {
     background-color: #eee;
 }
 
-.chat-name {
-    /* max-width: 85%; */
-    /* margin-top: 20px; */
-    margin-left: 10px;
+.chat-name {margin-left: 10px;
     margin-bottom: 5px;
     height: 100%;
-    /* width: 100%;     */
-    /* padding-top: 15px; */
     display: flex;
     align-items: center;
     
@@ -104,7 +88,6 @@ a.disabled {
     margin-bottom: 10px;
     margin-left: 130px;
     margin-right: auto;
-    /* margin: auto; */
     color: rgb(88, 99, 255);
     background-color: white;
 }
@@ -112,41 +95,15 @@ a.disabled {
 .chat-box {
     position: fixed;
     top: 80px;
-    bottom: 60px;
-    left: 47%;
+    bottom: 50px;
+    left: 46%;
     right: 1%;
-    /* border: 1px black solid; */
     width: auto;
     height: auto;
     overflow-y: scroll;
-    /* background-color: rgba(195, 108, 15, .15); */
     background-color: rgba(180,180,180,0.4);
-    border-top-left-radius : 15px;
-    border-top-right-radius : 15px;
-    border-bottom-left-radius : 6px;
-    border-bottom-right-radius : 6px;
+    border-top-right-radius : 8px;
 }
-
-/*
-.chat-bubble {
-    display: flex; 
-
-}
-
- .avatar {
-    width: 48px;
-    height: 48px;
-    display: flex;
-}
-
-.my-image {
-    float: left;
-}
-
-.their-image {
-    float: right;
-}
-*/
 
 .avatar-image {
     border-radius: 50%;
@@ -166,7 +123,6 @@ a.disabled {
 }
 
 .avatar {
-    /* position: absolute; */
     width: 60px;
     height: 48px;
 }
@@ -188,17 +144,16 @@ a.disabled {
     display: flex;
     clear: both;
     margin-top: 5px;
-    /* min-height: 50px; */
-    /* min-width: 180px; */
     width: max-content;
-    /* border: 1px black solid; */
-    /* align-items: center; */
     max-width: 35%;
-    /* overflow-x: scroll; */
 }
 
 .chat-message::-webkit-scrollbar {
     display: none;
+}
+
+.chat-message:active {
+    box-shadow: 0 0 3px 0 rgba(128, 128, 128, .5);
 }
 
 .inner-text::-webkit-scrollbar {
@@ -230,7 +185,6 @@ a.disabled {
     color: gray;
     font-size:xx-small;
     min-width: 40px;
-    /* border: darkcyan 1px solid; */
     justify-content: center;
 }
 
@@ -240,16 +194,6 @@ a.disabled {
     margin-top: 25px;
 }
 
-/* 
-.me:first-of-type {
-    box-shadow: inset -1px 2px 3px 2px rgba(88, 99, 255,0.6), -2px 1px 1px 0px rgba(88, 99, 255,0.6);
-}
-
-.them:first-of-type {
-    box-shadow: inset 1px 2px 3px 2px rgba(88, 99, 255,0.6), 2px 1px 1px 0px rgba(88, 99, 255,0.6);
-} 
-*/
-
 .me {
     float: left;
     margin-left: 75px;
@@ -257,20 +201,17 @@ a.disabled {
     border-bottom-right-radius: 7px;
     border-top-right-radius: 7px;
     border-bottom-left-radius: 0;
-    /* box-shadow: inset -2px 0 3px 2px rgba(88, 99, 255,0.6), -2px 0 1px 0px rgba(88, 99, 255,0.6); */
     box-shadow: 1px 1px 2px 0 rgba(128, 128, 128, .5);
 }
 
 .them + .me {
     border-top-left-radius: 7px;
     margin-top: 25px;
-    /* box-shadow: inset -1px 2px 3px 2px rgba(88, 99, 255,0.6), -2px 1px 1px 0px rgba(88, 99, 255,0.6); */
 }
 
 .me.last {
     border-bottom-left-radius: 7px;
     margin-bottom: 10px;
-    /* box-shadow: inset -1px -2px 3px 2px rgba(88, 99, 255,0.6), -2px -1px 1px 0px rgba(88, 99, 255,0.6); */
 }
 
 .them {
@@ -280,20 +221,17 @@ a.disabled {
     border-bottom-left-radius: 7px;
     border-top-left-radius: 7px;
     border-bottom-right-radius: 0;
-    /* box-shadow: inset 2px 0 3px 2px rgba(88, 255, 99,0.6), 2px 0 1px 0px rgba(88, 255, 99,0.6); */
     box-shadow: -1px 1px 2px 0 rgba(128, 128, 128, .5);
 }
 
 .me + .them {
     border-top-right-radius: 7px;
     margin-top: 25px;
-    /* box-shadow: inset 1px 2px 3px 2px rgba(88, 255, 99,0.6), 2px 1px 1px 0px rgba(88, 255, 99,0.6); */
 }
 
 .them.last {
     border-bottom-right-radius: 7px;
     margin-bottom: 10px;
-    /* box-shadow: inset 1px -2px 3px 2px rgba(88, 255, 99,0.6), 2px -1px 1px 0px rgba(88, 255, 99,0.6); */
 }
 
 .text {
@@ -304,27 +242,26 @@ a.disabled {
 .text-field {
     position: fixed;
     bottom: 10px;
-    left: 47%;
+    left: 46%;
     right: 15px;
     width: auto;
     height: 40px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    /* border: 2px green solid;  */
-    border: none;
-    background-color: #f9f4f4;
+    border-bottom-right-radius: 6px;
+    border: 2px #eee solid;
     padding-left: 12px;
 }
 
 .text-field:focus {
-    outline: none;
+    outline: none #eee 1px;
+    border: solid #eee 2px;
+    box-shadow: #ddd 0 2px 4px 0;
+    /* background-color: rgb(250,250,250); */
 }
 
 .text-field:disabled {
-    background-color: #ddd;
-    color: #555;
+    background-color: #e9e9e9;
+    border: 2px #c8c8c8 solid;
+    /* color: #555; */
 }
 
 .button {

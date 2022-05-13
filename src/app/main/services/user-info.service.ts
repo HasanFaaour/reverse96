@@ -20,4 +20,8 @@ export class UserInfoService {
     }
     return this.http.get(`${this.baseUrl}/api/get-user-detail` ,{headers:{"Content-Type":"application/json",'authorization':`Bearer ${localStorage.getItem('access')}`}});
   }
+
+  get server(): string {
+    return this.baseUrl;
+  }
 }

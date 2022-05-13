@@ -22,7 +22,7 @@
                 </div>
 
                 <!-- Text -->
-                <div mat-list-item class="chat-name" >{{chat.name}}</div>
+                <div class="chat-name" >{{chat.name}}</div>
 
                 <!-- Divider -->
                 <mat-divider></mat-divider>
@@ -46,7 +46,7 @@
             <div class="date" *ngIf="message.sender != username">{{message.date | date: 'shortTime'}}</div>    
             <div class="inner-text">{{message.message}}</div>
             <div class="date" *ngIf="message.sender == username">{{message.date | date: 'shortTime'}}</div>
-            <div class="avatar" *ngIf="(i == 0 || message.sender != messageList[i-1].sender) && message.sender != username" ><img [src]="guyImage" class="avatar-image" /></div>
+            <div class="avatar" *ngIf="(i == 0 || message.sender != messageList[i-1].sender) && message.sender != username" ><a [routerLink]="'../../userInfo/'+guyName" ><img [src]="guyImage" class="avatar-image" /></a></div>
         </div>
     </div>
 
@@ -54,7 +54,7 @@
     <form>
 
         <!-- Field -->
-        <input name="message" type="text" [(ngModel)]="newMessage" class="text-field" [placeholder]="socketError?'Connection to server failed.':'Type here...'" [disabled]="socketError"/>
+        <input name="message" type="text" [(ngModel)]="newMessage" class="text-field" [placeholder]="socketError?'Connection to server failed.':guyName?'Type here...':'Select a chat from the left menu to start messaging. Have Fun :D'" [disabled]="socketError || !guyName"/>
 
         <!-- Button -->
         <button mat-icon-button #Send [disabled]="!newMessage || socketError" (click)="sendMessage()" class="button">

@@ -5,8 +5,6 @@ import { delay } from 'rxjs';
 import { ChatService } from '../../services/chat.service';
 import { UserInfoService } from '../../services/user-info.service';
 
-//const fakeContacts: any[] = [{name: "Fake Chat Just For Display", id: 'fake', link: this.guyName}, {name: "Fake Chat Just For Display", id: 'fake', link: null},{name: "Fake Chat Just For Display", id: 'fake', link: null},{name: "Fake Chat Just For Display", id: 'fake', link: null}];
-
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -34,8 +32,7 @@ export class ChatComponent implements OnInit {
     let guyId = this.route.snapshot.paramMap.get('guyId');
     console.log('new guy:',guyId);
     if (!guyId){
-      alert('Invalid guy id!');
-      this.router.navigate(['home']);
+      this.authenticateUser();
     }
     else
     {
@@ -43,13 +40,13 @@ export class ChatComponent implements OnInit {
         next: (response) => {
           this.guyName = Object.values(response)[0]['username'];
           this.guyImage = `${this.chatService.server}${Object.values(response)[0]['picture']}`;
-          this.contactList = [{name: "Fake Chat Just For Display", id: 'fake', link: this.guyName}, {name: "Fake Chat Just For Display", id: 'fake', link: this.guyName}, {name: "Fake Chat Just For Display", id: 'fake', link: this.guyName}, {name: "Fake Chat Just For Display", id: 'fake', link: this.guyName}];
+          this.contactList = [];
           this.authenticateUser();
         },
 
         error: (response) => {
           alert('Invalid guy id! (' + response.status + ')');
-          this.router.navigate(['home']);
+          this.router.navigate(['message']);
         },
 
         complete: () => {
@@ -97,7 +94,7 @@ export class ChatComponent implements OnInit {
         for (let chat of chats) {
 
           //Check if the (private) chat already exists (previously created)
-          if (!chatExists && chat.name == `${this.username} @private ${this.guyName}` || chat.name == `${this.guyName} @private ${this.username}`) {
+          if (!chatExists && this.guyName && chat.name == `${this.username} @private ${this.guyName}` || chat.name == `${this.guyName} @private ${this.username}`) {
 
 
             //Add it to contact list and mark it 
@@ -154,7 +151,7 @@ export class ChatComponent implements OnInit {
         }
 
         //(private) Chat doesn't exist (isn't previously created)
-        if (!chatExists){
+        if (!chatExists && this.guyName){
 
           //Create the (private) chat
           this.chatService.create(this.username, this.guyName).subscribe({
