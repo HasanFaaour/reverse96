@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { HttpRequestService } from 'src/app/http-service.service';
+import { UserInfoService } from '../../services/user-info.service';
+
+export interface dlgURL {url:""};
+
 
 @Component({
   selector: 'app-home',
@@ -10,10 +15,14 @@ import { HttpRequestService } from 'src/app/http-service.service';
 export class HomeComponent implements OnInit {
   name: string = 'dalan';
 
-  constructor(private router: Router, private http: HttpRequestService) {
+  constructor(private router: Router, private http: HttpRequestService, private userInfo: UserInfoService, private dialog: MatDialog) {
   }
   
+  username = "";
+  userId : number = -5;
+
   list: any[] = [];
+  sideBarList:any[] = [];
 
   /*
     {name: "dalan" , image: "assets/images/restoran.jpg" , likes: 200 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
@@ -29,8 +38,9 @@ export class HomeComponent implements OnInit {
   enaColor: boolean = false;
   likeNum: number = 10;
   isReadMore = true;
-  status: any[] = [{isReadMore : false},
-                   {isReadMore : false}];
+  status: any[] = [{isReadMore : false},{isReadMore : false}];
+
+                
 
   showAllText(id : any) {
      this.list[id].isReadMore = ! this.list[id].isReadMore;
@@ -43,13 +53,23 @@ export class HomeComponent implements OnInit {
      this.isReadMore = !this.isReadMore
   }
 
-  onLike(i : any) {
-    this.list[i].liked = !this.list[i].liked;
-    this.list[i].enaColor = !this.list[i].enaColor;
-    if(this.list[i].enaColor == false)
-    this.list[i].likes = this.list[i].likes - 1;
-    else
-    this.list[i].likes = this.list[i].likes + 1;
+  onLike(item : any) {
+    item.liked = !item.liked;
+    let d = -1;
+    if (item.liked) {
+      d = 1;
+    }
+    item.likes += d;
+    this.http.likeReview(item.id).subscribe({
+      error: (error) => {
+        item.likes -= d;
+        item.liked = !item.liked;
+        if (error.status == 401) {
+          alert("Token expired. Please login again.");
+          this.router.navigate(['logout']);
+        }
+      }
+    })
   }
 
   /*for delete */
@@ -70,18 +90,76 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['../login']);
     }
     else {
-      this.http.getReviews(2).subscribe({
-        next: (response: any) => {
-          for (let review of response.message) {
-            console.log("review",review.id);
-            review.picture = `${this.http.server}${review.picture}`;
-            review.liked = false;
-            review.likes = review.liked_by.length;
-            this.list.push(review);
-          }
+
+      this.userInfo.getUserInfo().subscribe({
+        next: (response) => {
+          this.userId = Object.values(response)[0]['id'];
+          this.username = Object.values(response)[0]['username'];
+          this.getReviews();
+        },
+        error: (error) => {
+          alert (`Authentication problem (${error.status})`);
+          this.router.navigate(['logout']);
         }
-      })
+      });
+      
     }
+  }
+
+  getReviews():void {
+    this.http.getReviews(2).subscribe({
+      next: (response: any) => {
+        for (let review of response.message) {
+          review.picture = `${this.http.server}${review.picture}`;
+          review.liked = review.liked_by.includes(this.userId);
+          review.likes = review.liked_by.length;
+          this.list.push(review);
+        }
+      },
+      error: (error) => {
+        if (error.status == 401){
+          alert("Session expired. Please login again.");
+          this.router.navigate(['logout']);
+        }
+      }
+    });
+
+    this.http.getReviews(1).subscribe({
+      next: (response: any) => {
+        for (let review of response.message) {
+          console.log("review",review.id);
+          review.picture = `${this.http.server}${review.picture}`;
+          console.log(review.liked_by,this.userId);
+          review.liked = review.liked_by.includes(this.userId);
+          review.likes = review.liked_by.length;
+          this.sideBarList.push(review);
+        }
+      },
+      error: (error) => {
+        if (error.status == 401){
+          alert("Session expired. Please login again.");
+          this.router.navigate(['logout']);
+        }
+      }
+    });
+  }
+
+  addComent (item: any) {
+    if (!item.newComment){
+      console.log("ignored");
+      return;
+    }
+    this.http.addComent(item.id, item.newComment).subscribe({
+      next: (response) => {
+        item.newComment = "";
+      },
+      error: (error) => {
+        if (error.status == 401) {
+          alert("Token expired. Please login again.");
+          this.router.navigateByUrl('logout');
+        }
+      }
+    })
   }
 
   search() {
@@ -95,5 +173,25 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  display(url: string) {
+    this.dialog.open(BigImage, {data: {url:url}, panelClass: 'big-picture'});
+  //   @Component({
+  //     template: `<img src="'url'"/>`,
+  //     selector: 'dd',
+  //   })class bigDis {
+  //     img = url;
+  //   };
+  
+  //   this.dialog.open(bigDis);
+  // }
+  }
 
+}
+
+@Component({
+  selector: 'dialog-data-example-dialog',
+  template: '<div style="margin: auto;" ><img [src]="url.url" style="margin-left: 0; max-width: 100%; max-height: 100%; object-fit: fill" /></div>',
+})
+export class BigImage {
+  constructor(@Inject(MAT_DIALOG_DATA) public url: dlgURL) {}
 }
