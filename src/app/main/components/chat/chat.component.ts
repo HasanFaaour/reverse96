@@ -46,7 +46,7 @@ export class ChatComponent implements OnInit {
 
         error: (response) => {
           alert('Invalid guy id! (' + response.status + ')');
-          this.router.navigate(['home']);
+          this.router.navigate(['message']);
         },
 
         complete: () => {
