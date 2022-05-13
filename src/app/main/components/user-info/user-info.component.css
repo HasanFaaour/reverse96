@@ -1,8 +1,9 @@
 .userInfo {
-   margin-left: 180px; 
+   margin-left: 22%; 
    margin-top: 70px;
-   width: 84%;
+   width: 77%;
    height: 80%;
+   float: left;
 }
 
 .title {
@@ -28,14 +29,26 @@
     float: left;
 }
 .editprofile {
-    width: 100px;
-    height: 30px;
-    margin-top: 0px;
-    margin-left: 65%;
-    color: white;
-    background-color: rgb(64, 182, 99);
-    border: 1px solid #ddd;
-    border-radius: 8px;
+  float: right;
+  width: 100px;
+  height: 30px;
+  margin-top: 120px;
+  margin-right: 5%;
+  color: white;
+  background-color: rgb(64, 182, 99);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.send-message {
+  float: right;
+  height: 30px;
+  margin-top: 120px;
+  margin-right: 10px;
+  color: white;
+  background-color: rgb(64, 182, 99);
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
 .email {
@@ -114,9 +127,14 @@
       margin-top: 50px;
    }
    .editprofile {
-      margin-left: 40%;
-      margin-top: 5px;
+      margin-right: 1%;
+      margin-top: 55px;
    }
+
+   .send-message {
+     margin-top: 55px;
+   }
+
    .image{
      margin-left: 20px;
    }
