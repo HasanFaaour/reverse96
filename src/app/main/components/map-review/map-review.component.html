@@ -41,7 +41,7 @@
         <!-- <button mat-raised-button (click)="openDialog()">Pick one</button> -->
         <app-add-review *ngIf="!dlg" [locationID]="locId"></app-add-review>
       </div>
-      <div *ngFor="let r of ;" class="review" >
+      <div *ngFor="let r of reviews;" class="review" >
         <div class="description">
             <p class="title">{{r.title}}</p>
             <p class="text">{{r.text}}</p>
