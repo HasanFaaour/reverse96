@@ -1,28 +1,28 @@
-<div class="blank-1"></div>
+<mat-progress-bar class="connection-bar" mode="indeterminate" *ngIf="serverConnection == 'connecting'">Connecting to server</mat-progress-bar>
+<div class="connection-fail" *ngIf="serverConnection == 'lost' " >Connection to server failed.</div>
+<div class="blank-1" ></div>
 <div *ngFor="let item of list; let i = index;" class="place-card">
-  <div class="title">Dalan bhshti</div>
+  <div class="title">{{item.title}}</div><div class="author">By <a routerLink="../userInfo/{{item.username}}">{{item.username}}</a></div>
   <div class="place-image">
-    <img src={{item.image}} style="height: 100%; width: 100%; border-radius: 8px;">
+    <input type="image" (click)="display(item.picture)" [src]="item.picture" style="height: 100%; width: 100%; border-radius: 8px; object-fit: cover;">
   </div>
   <div class="icon-list">
     <a href="#"><mat-icon style="color: rgb(83, 81, 81); vertical-align: middle;">chat_bubble_outline</mat-icon></a>
     <a href="#" class="ico"><mat-icon style="color: rgb(88, 87, 87); vertical-align: middle; bottom: 3px;">share</mat-icon></a>
-    <a *ngIf ="!item.liked" (click)="onLike(i)" class="ico"><span class="fav"><mat-icon style="color: rgb(88, 87, 87); vertical-align: middle; bottom: 3px; cursor: pointer;">favorite_border</mat-icon></span></a>
-    <a *ngIf ="item.enaColor" (click)="onLike(i)"  class="ico"><span class="fav"><mat-icon style="color: rgb(252, 64, 64); vertical-align: middle; bottom: 3px;">favorite</mat-icon></span></a>
+    <a *ngIf ="!item.liked" (click)="onLike(item)" class="ico"><span class="fav"><mat-icon style="color: rgb(88, 87, 87); vertical-align: middle; bottom: 3px; cursor: pointer;">favorite_border</mat-icon></span></a>
+    <a *ngIf ="item.liked" (click)="onLike(item)"  class="ico"><span class="fav"><mat-icon style="color: rgb(252, 64, 64); vertical-align: middle; bottom: 3px;">favorite</mat-icon></span></a>
   </div>
   <div class="info">
     <p class="likes">{{item.likes}} likes </p>
     <div class="text-content" [ngClass]="{'limitTextHeight': !item.isReadMore }">
-      This is long text replaced with reading more/less link example in Angular application paragraph text shown here continue THis is long text replaced with read more/less link example in Angular application paragraph text shown here continue continue
-      This is long text replaced with reading more/less link example in Angular application paragraph text shown here continue THis is long text replaced with read more/less link example in Angular application paragraph text shown here continue
-      continue continue
+      {{item.text}}
     </div>
     <a class="view-more" (click)="showAllText(i)">
       {{ isReadMore ? 'view more': 'view less' }}
     </a>
     <div class="input-container">
-    <input type="text" class="add-comment" placeholder="add a comment" >
-    <a><mat-icon>add</mat-icon></a>
+    <input type="text" class="add-comment" placeholder="add a comment" [(ngModel)]="item.newComment"  >
+    <a (click)="addComent(item)" ><mat-icon>add</mat-icon></a>
   </div>
   </div>
 </div>
@@ -32,28 +32,14 @@
 
 <div class="right-side">
     <h2 class="fav-title">Suggestions For You</h2>
-    <div class="title2">
-      <div class="image"><img src="assets\images\pr5.jpg" style="height: 100%; width: 100%;"></div>
+    <div class="title2" *ngFor="let item of sideBarList">
+      <div class="image"><img [src]="item.picture" style="height: 100%; width: 100%;"></div>
       <div class="name">
-          <p class="email">1abo1995ali@gmail.comm</p>
-          <p class="username">HasanFaaour</p>
+          <p class="email">{{item.title}}</p>
+          <p class="username">location{{item.location}}</p>
       </div>
+      <mat-divider></mat-divider>
     </div>
-    <div class="title2">
-      <div class="image"><img src="assets\images\pr9.png" style="height: 100%; width: 100%;"></div>
-      <div class="name">
-          <p class="email">1abo1995ali@gmail.comm</p>
-          <p class="username">HasanFaaour</p>
-      </div>
-    </div>
-    <div class="title2">
-      <div class="image"><img src="assets\images\pro6.png" style="height: 100%; width: 100%;"></div>
-      <div class="name">
-          <p class="email">1abo1995ali@gmail.comm</p>
-          <p class="username">HasanFaaour</p>
-      </div>
-    </div>
-    
     
 </div>
 <div class="company">2022 from revers96</div>

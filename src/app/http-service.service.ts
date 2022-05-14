@@ -74,4 +74,20 @@ export class HttpRequestService {
     return this.hC.post(`${this.db}/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
   }
 
+  getReviews (mode: number): Observable<object> {
+    return this.hC.get(`${this.db}/api/get_reviews/${mode}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  }
+
+  likeReview (reviewId: number): Observable<object> {
+    return this.hC.post(`${this.db}/api/add_user_like/${reviewId}`,{},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  }
+
+  addComent (reviewId: number, text: string): Observable<object> {
+    return this.hC.post(`${this.db}/api/add_user_comment/${reviewId}`,{comment_text: text},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  }
+
+  get server():string {
+    return this.db;
+  }
+
 }

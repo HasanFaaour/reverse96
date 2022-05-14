@@ -160,6 +160,7 @@ export class ChatComponent implements OnInit {
             next: (response: object) => {
               
               this.chatId = Object.values(response)[0];
+              this.contactList.push({name: this.guyName, participants: "yes", image: this.guyImage});
               this.connectToSocket();
             },
 

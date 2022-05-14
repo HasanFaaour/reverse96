@@ -1,3 +1,15 @@
+.connection-bar {
+  margin-left: 21%;
+  margin-top: 71px;
+  width: 79%;
+  /* height: 50px; */
+}
+
+.connection-fail {
+  margin-top: 80px;
+  margin-left: 45%;
+  color: gray;
+}
 
 .blank-1 {
   height: 55px;
@@ -35,6 +47,24 @@
 .title {
   margin-left: 3%;
   margin-top: 10px;
+}
+
+.author {
+  position: absolute;
+  float: right;
+  margin-left: 22px;
+  font-size: small;
+  /* margin-right: 20px; */
+  margin-top: -3px;
+
+}
+
+.author a {
+  text-decoration: solid;
+}
+
+.author a:hover {
+  text-decoration: underline;
 }
 
   .place-image {
