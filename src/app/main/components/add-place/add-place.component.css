@@ -47,3 +47,10 @@ p {
 h2 {
     margin-bottom: 0px;
 }
+
+.message {
+    color: rgb(190, 62, 73);
+    width: 300px;
+    height: 40px;
+    padding: 13px;
+}

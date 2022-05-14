@@ -31,11 +31,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatListModule} from '@angular/material/list';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { AddPlaceComponent } from './components/add-place/add-place.component';
 
 import { NgxPhotoEditorModule } from 'ngx-photo-editor';
 import { ChatComponent } from './components/chat/chat.component';
+import { NgbAlertModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 const routes: Routes = [
   {
     path: '',
@@ -131,6 +133,9 @@ const routes: Routes = [
     MatListModule,
     FormsModule,
     NgxPhotoEditorModule,
+    MatProgressSpinnerModule,
+    NgbPaginationModule,
+    NgbAlertModule,
     ReactiveFormsModule,
     FormsModule
   ],

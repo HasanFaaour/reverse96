@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, Injector, ComponentFactoryResolver } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, Injector, ComponentFactoryResolver, Input } from '@angular/core';
 import { Observable, Subscriber } from 'rxjs';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import * as L from 'leaflet';
@@ -8,6 +8,9 @@ import { LocationsService } from '../../services/locations.service';
 import { AddReviewComponent } from '../add-review/add-review.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPlaceComponent } from '../add-place/add-place.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import { bottom } from '@popperjs/core';
+import {NgbAlertConfig} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-map-review',
@@ -16,7 +19,7 @@ import { AddPlaceComponent } from '../add-place/add-place.component';
 })
 
 
-export class MapReviewComponent implements AfterViewInit {
+export class MapReviewComponent implements AfterViewInit  {
   @ViewChild('drawer')
   sidenav!: MatSidenav;
   showReview = false;
@@ -24,6 +27,7 @@ export class MapReviewComponent implements AfterViewInit {
   sidebarOpen = true;
   isMarkerCreated = false;
   isEnabled = true;
+  showAlert = false;
 
   locId: string = '';
   baseUrl = "http://localhost:8000";
@@ -34,7 +38,7 @@ export class MapReviewComponent implements AfterViewInit {
   lat: any;
   lng: any;
   latlng = L.latLng(35.741552, 51.507297);
-  dlg = true;;
+  dlg = true;list: unknown;
   pendding: boolean | undefined;
   useInfSer: any;
   image: any;
@@ -47,13 +51,17 @@ export class MapReviewComponent implements AfterViewInit {
   coordinates: any = [];
  
   component = this.resolver.resolveComponentFactory(AddReviewComponent).create(this.injector);
-
+  @Input() public alerts: Array<string> = [];
   constructor(private locationSer: LocationsService,
               private injector: Injector,
               private resolver : ComponentFactoryResolver,
-              public dialog: MatDialog ) 
+              public dialog: MatDialog ,
+              alertConfig: NgbAlertConfig
+            ) 
   { 
     //this.getLocations();
+    alertConfig.type = 'success';
+    alertConfig.dismissible = false;
   }
   
   addReview() {
@@ -72,19 +80,23 @@ export class MapReviewComponent implements AfterViewInit {
     this.loadMap();
     this.toggle();
   }
+  
 
   openDialog() {
     this.getLocations();
     const dialogRef = this.dialog.open(AddPlaceComponent, {
-      width:'390px', height: '420px',
+      width:'420px', height: '450px',
       data: { pageValue: this.sendValue }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
       this.dialogValue = result.data;
       if(this.dialogValue === 'y'){
-        console.log("ya ali");
         this.getLocations();
+        this.showAlert = true;
+        setTimeout(()=> {
+          this.showAlert = false;
+        },5000) 
       }
     });
   }
@@ -182,7 +194,6 @@ export class MapReviewComponent implements AfterViewInit {
     });
   }
 
-
   clikOnLocation(id: number){
     for(let i of this.locations){
       if(id === i.id){
@@ -202,7 +213,7 @@ export class MapReviewComponent implements AfterViewInit {
   private createIcon() {
     const icon = L.icon({
       iconUrl: 'assets/images/marker.png',
-      shadowUrl: 'assets/images/shadow.png',
+      //shadowUrl: 'assets/images/shadow.png',
       iconSize: [30,36],
       iconAnchor: [12,36],
       popupAnchor: [3, -30],

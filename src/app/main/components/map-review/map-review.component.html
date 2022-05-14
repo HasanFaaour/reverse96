@@ -1,6 +1,11 @@
 <!--div [ngStyle]="{'width' : showReview ? '59%' : '86%'}" class="map-reviews">
   <div id="map"></div>
 </div-->
+<div *ngIf="showAlert" class="alert">
+  <ngb-alert>
+    Place added successfully 
+  </ngb-alert>
+</div>
 
 <mat-drawer-container class="example-container" autosize>
   <mat-drawer #drawer class="example-sidenav" mode="side" position="end">
@@ -8,9 +13,9 @@
       <div *ngFor="let l of locations; let i = index" (click)=clikOnLocation(l.id) class="list-reviews-container" >
         <div class="image"><img [src]="l.picture" ></div>
         <div class="description">
-            <p class="email">{{l.name}}</p>
-            <p class="comments">{{l.no_of_likes}} likes</p>
-            <p class="comments">{{l.no_of_reviews}} reviews</p>
+            <div class="email">{{l.name}}</div>
+            <div class="comments"><span class="ic">{{l.no_of_likes}} likes</span><!-- <mat-icon>thumb_up_off_alt</mat-icon> --></div>
+            <div class="comments"><span class="ic" >{{l.no_of_reviews}} reviews</span><!-- <mat-icon>remove_red_eye</mat-icon> --></div>
             <!-- <div class="rate"><span>4.5</span> <mat-icon >star</mat-icon></div> -->
         </div>
       </div>
@@ -40,14 +45,14 @@
         <button class="addReview" (click)="addReview()">add review</button>
         <app-add-review *ngIf="!dlg" [locationID]="locId"></app-add-review>
       </div>
-      <div *ngFor="let r of ;" class="review" >
+      <div *ngFor="let r of reviews;" class="review" >
         <div class="description">
             <p class="title">{{r.title}}</p>
             <p class="text">{{r.text}}</p>
             <!-- <p class="comments">{{l.no_of_reviews}} reviews</p> -->
         </div>
         <div class="image"><img [src]="r.picture" style="width: 100%; height: 100%; border-radius: 10px;"></div>
-        <div class="like"><span>{{r.liked_by.length}}</span> <mat-icon >favorite_border</mat-icon></div>
+        <div class="like"><span>{{r.liked_by.length}} likes</span> <!-- <mat-icon >favorite_border</mat-icon> --></div>
       </div>
     </div>
 
