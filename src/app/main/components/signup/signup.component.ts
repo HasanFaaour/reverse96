@@ -97,7 +97,7 @@ export class SignupComponent implements OnInit {
         }
 
         else {
-          this.signupMessage = "Something went wrong";
+          this.signupMessage = `Something went wrong. Please contact support.`;
         }
 
         sub.unsubscribe();

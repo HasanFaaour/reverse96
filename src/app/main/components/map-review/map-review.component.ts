@@ -57,7 +57,7 @@ export class MapReviewComponent implements AfterViewInit {
   }
   
   addReview() {
-    this.dlg = !this.dlg;
+    this.showAddReview = !this.showAddReview;
   }
   toggle() {
     this.sidenav.toggle();
@@ -198,6 +198,7 @@ export class MapReviewComponent implements AfterViewInit {
     this.showReviewList = false
   }
 
+  
   private createIcon() {
     const icon = L.icon({
       iconUrl: 'assets/images/marker.png',
