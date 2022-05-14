@@ -1,4 +1,6 @@
-<div class="blank-1"></div>
+<mat-progress-bar class="connection-bar" mode="indeterminate" *ngIf="serverConnection == 'connecting'">Connecting to server</mat-progress-bar>
+<div class="connection-fail" *ngIf="serverConnection == 'lost' " >Connection to server failed.</div>
+<div class="blank-1" ></div>
 <div *ngFor="let item of list; let i = index;" class="place-card">
   <div class="title">{{item.title}}</div><div class="author">By <a routerLink="../userInfo/{{item.username}}">{{item.username}}</a></div>
   <div class="place-image">

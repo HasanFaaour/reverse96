@@ -23,6 +23,8 @@ export class HomeComponent implements OnInit {
 
   list: any[] = [];
   sideBarList:any[] = [];
+  
+  serverConnection = 'connecting';
 
   /*
     {name: "dalan" , image: "assets/images/restoran.jpg" , likes: 200 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
@@ -98,6 +100,7 @@ export class HomeComponent implements OnInit {
           this.getReviews();
         },
         error: (error) => {
+          this.serverConnection = 'lost';
           alert (`Authentication problem (${error.status})`);
           this.router.navigate(['logout']);
         }
@@ -110,6 +113,7 @@ export class HomeComponent implements OnInit {
     this.http.getReviews(2).subscribe({
       next: (response: any) => {
         for (let review of response.message) {
+          this.serverConnection = "connected"
           review.picture = `${this.http.server}${review.picture}`;
           review.liked = review.liked_by.includes(this.userId);
           review.likes = review.liked_by.length;
@@ -117,6 +121,7 @@ export class HomeComponent implements OnInit {
         }
       },
       error: (error) => {
+        this.serverConnection = 'lost';
         if (error.status == 401){
           alert("Session expired. Please login again.");
           this.router.navigate(['logout']);
