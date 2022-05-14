@@ -176,7 +176,7 @@ export class MapReviewComponent implements AfterViewInit  {
     });
   }
   
-<<<<<<< HEAD
+
   getReviews(id: any) {
     this.locationSer.getReviewById(id).subscribe({
       next: (data) => {  
@@ -195,8 +195,6 @@ export class MapReviewComponent implements AfterViewInit  {
     });
   }
 
-=======
->>>>>>> 9bf8d458a443e0deeca6d6542bfddbb62d123c81
   clikOnLocation(id: number){
     for(let i of this.locations){
       if(id === i.id){
