@@ -16,6 +16,41 @@
 .add-place-button:disabled {
     color: rgb(90, 90, 90);
 }
+/*--------style one review---------*/
+.review {
+    width: 100%;
+    height: 500px;
+}
+
+.review .image {
+  margin-top: 10px;
+}
+.img {
+    border-radius: 10px;
+}
+.review .like {
+    vertical-align: middle;
+    margin-top: 10px;
+    margin-left: 30px;
+    top: 3px;
+    display: flex;
+}
+.review .title {
+    font-size: 15px;
+     color: rgb(61, 61, 61);
+    font-weight: 500;
+}
+.review .text {
+    font-size: 13px;
+     color: rgb(85, 85, 85);
+}
+.review .mat-icon {
+    font-size: 16px;
+    margin-left: 5px;
+    color:  rgb(70, 70, 69);
+    vertical-align: middle;
+}
+
 /*------------------reviews--------------------*/
 .reviews {
     width: 100%;
@@ -62,7 +97,6 @@
     border-radius: 7px;
     cursor: pointer;
 }
-
 .reviews p {
     margin-left: 10%;
     margin-top: 10px;
@@ -74,6 +108,7 @@
     border-radius: 10px;
     background-color: #ddd;
 }
+
 /*----------------end reviews------------------*/
 
 .example-container {

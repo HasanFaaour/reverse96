@@ -12,7 +12,7 @@ import { LocationsService } from '../../services/locations.service';
 export class AddPlaceComponent implements OnInit {
   form: FormGroup;
   fromMapReviewComponent!: any;
-  fromDialog!: string;
+  fromDialog: string = 'n';
 
   constructor(private formBuilder: FormBuilder, private locSer: LocationsService,
               public dialogRef: MatDialogRef<AddPlaceComponent>,
@@ -45,15 +45,15 @@ export class AddPlaceComponent implements OnInit {
   submitForm() {
     const formData = new FormData();
     formData.append('name', this.form.get('name')!.value);
-    formData.append('latt', parseFloat(this.fromMapReviewComponent.lat).toFixed(9));
-    formData.append('long', parseFloat(this.fromMapReviewComponent.lng).toFixed(9));
+    formData.append('latt', this.fromMapReviewComponent.lat);
+    formData.append('long', this.fromMapReviewComponent.lng);
     formData.append('picture', this.form.get('picture')!.value , this.form.get('picture')!.value.name);
     console.log("latt and long:" + parseFloat(this.fromMapReviewComponent.lat).toFixed(9)+
     "  "+parseFloat(this.fromMapReviewComponent.lng).toFixed(9));
+    this.fromDialog = 'y';
     this.closeDialog();
     this.addLocation(formData);
-    this.getLocations();
-    this.getLocations();
+   
   }
 
   closeDialog() {
@@ -71,17 +71,5 @@ export class AddPlaceComponent implements OnInit {
     });
   }
 
-  getLocations() : void {
-    this.locSer.getMapLocations(this.fromMapReviewComponent.corners).subscribe({
-      next: (data) => {
-        //this.locations = Object.values(data)[0];
-        console.log(data);
-        //this.list = Object.values(data)[0];
-        //console.log(this.list.name);
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
-  }
+
 }

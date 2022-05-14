@@ -5,12 +5,13 @@
 <mat-drawer-container class="example-container" autosize>
   <mat-drawer #drawer class="example-sidenav" mode="side" position="end">
     <div *ngIf="showReviewList" class="listReview">
-      <div *ngFor="let r of reviews;"  class="list-reviews-container" >
-        <div class="image"><img src={{r.img}} ></div>
+      <div *ngFor="let l of locations; let i = index" (click)=clikOnLocation(l.id) class="list-reviews-container" >
+        <div class="image"><img [src]="l.picture" ></div>
         <div class="description">
-            <p class="email">{{r.name}}</p>
-            <p class="comments">230 comments</p>
-            <div class="rate"><span>4.5</span> <mat-icon >star</mat-icon></div>
+            <p class="email">{{l.name}}</p>
+            <p class="comments">{{l.no_of_likes}} likes</p>
+            <p class="comments">{{l.no_of_reviews}} reviews</p>
+            <!-- <div class="rate"><span>4.5</span> <mat-icon >star</mat-icon></div> -->
         </div>
       </div>
     </div>
@@ -19,34 +20,45 @@
         <a (click)="showReviewsList()">Top reviews</a>
       </div>
       <div class="image">
-        <img src="assets\images\computer.jpg" style="height: 100%; width: 100%; border-radius: 10px;"/> 
+        <img [src]= "location.picture" style="height: 100%; width: 100%; border-radius: 10px;"/> 
       </div>
-      <p class="placeName">Khiam</p>
+      <p class="placeName">{{location.name}}</p>
       <div  class="contianer">
         <div class="rate">
-          <a><mat-icon style="color: rgb(253, 224, 60); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
-          <a><mat-icon style="color: rgb(253, 224, 60); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
-          <a><mat-icon style="color: rgb(253, 224, 60); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
-          <a><mat-icon style="color: rgb(253, 224, 60); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
-          <a><mat-icon style="color: rgb(253, 224, 60); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
+          <!-- rgb(253, 224, 60) -->
+          <a><mat-icon style="color: rgb(180, 180, 180); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
+          <a><mat-icon style="color: rgb(180, 180, 180); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
+          <a><mat-icon style="color: rgb(180, 180, 180); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
+          <a><mat-icon style="color: rgb(180, 180, 180); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
+          <a><mat-icon style="color: rgb(180, 180, 180); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
         </div>
         <br>
-        <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">room</mat-icon>Tehran-tehran pars- iust</a>
-        <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">phone</mat-icon>+989371811432</a>
+        <p class="comments">{{location.no_of_likes}} likes</p>
+        <p class="comments">{{location.no_of_reviews}} reviews</p>
+       <!--  <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">room</mat-icon>Tehran-tehran pars- iust</a>
+        <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">phone</mat-icon>+989371811432</a> -->
         <button class="addReview" (click)="addReview()">add review</button>
-        <!-- <button mat-raised-button (click)="openDialog()">Pick one</button> -->
-        <app-add-review *ngIf="!dlg" [locationID]="'1'" class="add-review"></app-add-review>
-
+        <app-add-review *ngIf="!dlg" [locationID]="locId"></app-add-review>
+      </div>
+      <div *ngFor="let r of ;" class="review" >
+        <div class="description">
+            <p class="title">{{r.title}}</p>
+            <p class="text">{{r.text}}</p>
+            <!-- <p class="comments">{{l.no_of_reviews}} reviews</p> -->
+        </div>
+        <div class="image"><img [src]="r.picture" style="width: 100%; height: 100%; border-radius: 10px;"></div>
+        <div class="like"><span>{{r.liked_by.length}}</span> <mat-icon >favorite_border</mat-icon></div>
       </div>
     </div>
+
     
+
   </mat-drawer>
 
   <div class="example-sidenav-content">
     <div id="map">
-      <img [src]= "image" alt="">
       <button class="add-place-button" (click)="openDialog()" id="refreshButton" [disabled]="isEnabled">
-        <mat-icon>add</mat-icon>
+        <mat-icon>add_location</mat-icon>
       </button>
     </div>
     
