@@ -1,4 +1,12 @@
-mat-card{
+mat-card.fade-away {
+    animation: fadeAway 3s;
+    position: absolute;
+    opacity: 0;
+    cursor:default;
+    z-index: -5;
+}
+
+mat-card {
     position: relative;
     float:left;
     margin-top: 15px;
@@ -80,3 +88,19 @@ mat-card{
                 color: royalblue;
             }
 
+@keyframes fadeAway {
+    0% {
+        opacity: 1;
+        position: relative;
+    }
+    90% {
+        opacity: 1;
+    }
+    99% {
+        position: relative;
+    }
+    100% {
+        opacity: 0;
+        position: absolute;
+    }
+}

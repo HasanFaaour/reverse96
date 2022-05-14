@@ -204,3 +204,8 @@
     color:  rgb(253, 224, 60);
     vertical-align: middle;
 }
+
+.add-review {
+    display: flex;
+    
+}

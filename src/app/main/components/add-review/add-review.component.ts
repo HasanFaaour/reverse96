@@ -2,6 +2,7 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { HttpRequestService } from 'src/app/http-service.service';
 
 const selectImageIcon = 'assets/images/icons8-add-image-48.png';
@@ -29,8 +30,10 @@ export class AddReviewComponent implements OnInit {
   uploading = false;
   uploadedPercent = 0;
   imageError = false;
-  formReset: any;
+  /* formReset: any; */
   successStatus = false;
+  cropImage : any;
+  sub = new Subscription();
   
   //Defining Reactive Form
   reviewParams = new FormGroup({
@@ -43,18 +46,19 @@ export class AddReviewComponent implements OnInit {
   ngOnInit(): void {
     //Checking if the user is logged in
     this.userToken = localStorage.getItem('access');
-    if (this.userToken){
+    if (this.userToken && localStorage.getItem('userID')){
       console.log("Adding Review");
     }else{
 
-      //Deny access if not logged in 
-      console.log("Can't add review, not logged in.");
-      this.router.navigate(['../../home']);
+      //Deny access if not properly logged in 
+      console.log("Can't add review, not logged in properly.");
+      alert("Authentication problem. Pleas login to your account again.")
+      this.router.navigate(['logout']);
     }
 
     this.reviewParams.get('location')?.setValue(this.locationID);
     
-    this.formReset = document.getElementById("reset-button");
+    /*this.formReset = document.getElementById("reset-button")? document.getElementById("reset-button"): {click: () => {}}; */
 
   }
 
@@ -80,7 +84,7 @@ export class AddReviewComponent implements OnInit {
       this.uploadedPercent = 0;
       this.imageHint = `Uploaded: ${this.uploadedPercent}%`;
 
-      let sub = this.request.addReview(this.reviewParams.value).subscribe({
+      this.sub = this.request.addReview(this.reviewParams.value).subscribe({
 
         //Response
         next: (response:any) => {
@@ -88,7 +92,7 @@ export class AddReviewComponent implements OnInit {
           //Progress report event
           if (response.type == HttpEventType.UploadProgress){
 
-            //Update the processbar
+            //Update the process
             this.uploadedPercent = 100 * response.loaded / response.total;
             this.imageHint = `Uploaded: ${this.uploadedPercent}%`;
 
@@ -104,20 +108,20 @@ export class AddReviewComponent implements OnInit {
           //Sucessfully done event
           if (response.type == HttpEventType.Response) {
             console.log("success!");
-
+            /*
             //Reset the form (except location id)
             this.formReset.click();
             this.reviewParams.get('location')?.setValue(this.locationID);
             this.uploading = false;
             this.imageHint = selectImageHint;
             this.imageDisplay = selectImageIcon;
-
+            */
             
             //✓ Congratualations Message
             this.successStatus = true;  
             
             //Done
-            /*sub.unsubscribe();*/
+            this.sub.unsubscribe();
             return;
           }
         },
@@ -125,28 +129,41 @@ export class AddReviewComponent implements OnInit {
         //Error
         error: (response:any) => {
 
-          //Unexpected error
           this.uploading = false;
           console.log("failure!");
           
-          let er = response.error;
-          //Invalid location id
-          if ('location' in er) {
-            this.errorMessage = "There was a problem identifying the location, please contact support if the problem persists."
+          //API doesn't exist
+          if ( response.status == 404) {
+            this.errorMessage = "Feature unavailable, Please try again later";
             this.errorStatus = true;
-            /*sub.unsubscribe();*/
+            this.sub.unsubscribe();
             return;
+          } 
+
+          //Bad request
+          else if (response.status == 400) {
+            if (typeof(response) == 'object' && 'error' in response) {
+              let er = response.error;
+
+              //Invalid location id
+              if (typeof(er) == 'object' && 'location' in er) {
+                this.errorMessage = "There was a problem identifying the location, please contact support if the problem persists."
+                this.errorStatus = true;
+                this.sub.unsubscribe();
+                return;
+              }
+            }
           }
 
-          //Show error
-          this.errorMessage = "Something went wrong!";
+          //None of the above / Unexpected error
+          this.errorMessage = `Something went wrong! (${response.status})`;
           this.errorStatus = true;
-          /*sub.unsubscribe();*/
+          this.sub.unsubscribe();
           return;
 
         },
         complete: () => {
-          sub.unsubscribe();
+          this.sub.unsubscribe();
         }
       });
 
@@ -155,11 +172,37 @@ export class AddReviewComponent implements OnInit {
   }
 
   //Checking if user has selected a valid image
-  checkImage (selectedImage: any){
+  checkImage (selectedImage: any, mode = 'select'){
+
+    //Hide the errors
     this.errorStatus = false;
     this.imageError = false;
 
-    this.image?.setValue(selectedImage.files[0]);
+    //Image Crop Event
+    if (mode == 'crop'){
+
+      //Validate cropped image's size
+      if (selectedImage.file.size <= 10 ** 7) {
+
+        //Valid
+        this.image?.setValue(selectedImage.file);
+        this.imageDisplay = selectedImage.base64;
+      }
+      
+      else {
+
+        //Invalid
+        this.imageDisplay = selectImageIcon;
+        this.imageError = true;
+      }
+
+      return;
+    }
+
+    //Image Select Event
+    this.cropImage = selectedImage;
+    this.image?.setValue(selectedImage.target.files[0]);
+    this.imageDisplay = "";
 
     if (!this.image?.value){
       
@@ -167,14 +210,21 @@ export class AddReviewComponent implements OnInit {
       this.imageDisplay = selectImageIcon;
       this.imageHint = selectImageHint;
 
-    }else{
+    }
+    
+    else{
+
+      //Validate Selected image's size
       if (this.image.value.size > 10 ** 7){
+
+        //Invalid -> Show error + Display default icon
         this.imageDisplay = selectImageIcon;
         this.imageError = true;
         this.image.setValue(null);
         return;
       }
 
+      //Valid
       else{
         //Display the selected image in the input
         let reader = new FileReader();

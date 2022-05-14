@@ -38,7 +38,6 @@
        <!--  <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">room</mat-icon>Tehran-tehran pars- iust</a>
         <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">phone</mat-icon>+989371811432</a> -->
         <button class="addReview" (click)="addReview()">add review</button>
-        <!-- <button mat-raised-button (click)="openDialog()">Pick one</button> -->
         <app-add-review *ngIf="!dlg" [locationID]="locId"></app-add-review>
       </div>
       <div *ngFor="let r of reviews;" class="review" >

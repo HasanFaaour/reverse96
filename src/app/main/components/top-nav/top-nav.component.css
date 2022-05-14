@@ -7,6 +7,7 @@
     border-left: 1px solid white;
     border: 1px solid #ddd;
     background-color: white;
+    z-index: 3;
   }
   
   .top-nav a {

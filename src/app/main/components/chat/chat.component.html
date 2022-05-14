@@ -1,0 +1,69 @@
+<div class="container">
+
+    <!-- Chats List Area -->
+    <div class="chat-list-area">
+
+        <!-- Title (Chats) -->
+        <label class="chat-list-title" >Chats</label>
+
+        <!-- List -->
+        <mat-action-list class="chat-list" *ngFor="let chat of contactList" >
+
+            <!-- Item -->
+            <a href="../../message/{{chat.link}}" [class]="chat.participants == 'yes'?'disabled':''" >
+            <button mat-list-item class="chat-item" [disabled]="chat.participants == 'yes'" >
+
+                <!-- Image Area -->
+                <div class="chat-image"  >
+
+                    <!-- Image -->
+                    <img class="chat-img" [src]="chat.image? chat.image:'assets/images/profile-image.png'" />
+
+                </div>
+
+                <!-- Text -->
+                <div class="chat-name" >{{chat.name}}</div>
+
+                <!-- Divider -->
+                <mat-divider></mat-divider>
+
+            </button>
+            </a>
+
+        </mat-action-list>
+
+        <!-- Add More Button -->
+        <button class="add-more" mat-button>Add more</button>
+
+    </div>
+
+    <!-- Messages Box -->
+    <div class="chat-box" id="chat-box">
+
+        <!-- Single Message -->
+        <div  *ngFor="let message of messageList; let i = index" [ngClass]="{'chat-message':true, 'me':message.sender == username, 'them': message.sender != username, 'last': i == messageList.length-1 || message.sender != messageList[i+1].sender}" class="chat-message" >
+            <div class="avatar" *ngIf="(i == 0 || message.sender != messageList[i-1].sender) && message.sender == username" ><img [src]="userImage" class="avatar-image" /></div>
+            <div class="date" *ngIf="message.sender != username">{{message.date | date: 'shortTime'}}</div>    
+            <div class="inner-text">{{message.message}}</div>
+            <div class="date" *ngIf="message.sender == username">{{message.date | date: 'shortTime'}}</div>
+            <div class="avatar" *ngIf="(i == 0 || message.sender != messageList[i-1].sender) && message.sender != username" ><a [routerLink]="'../../userInfo/'+guyName" ><img [src]="guyImage" class="avatar-image" /></a></div>
+        </div>
+    </div>
+
+    <!-- Input -->
+    <form>
+
+        <!-- Field -->
+        <input name="message" type="text" [(ngModel)]="newMessage" class="text-field" [placeholder]="socketError?'Connection to server failed.':guyName?'Type here...':'Select a chat from the left menu to start messaging. Have Fun :D'" [disabled]="socketError || !guyName"/>
+
+        <!-- Button -->
+        <button mat-icon-button #Send [disabled]="!newMessage || socketError" (click)="sendMessage()" class="button">
+
+            <!-- Button Icon -->
+            <mat-icon >send</mat-icon>
+
+        </button>
+
+    </form>
+
+</div>
