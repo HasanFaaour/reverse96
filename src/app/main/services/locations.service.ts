@@ -12,8 +12,8 @@ export class LocationsService {
   
   constructor(private http: HttpClient) { }
   
-  getMapLocations(model: any): Observable<object> {
-    return this.http.post(`${this.baseUrl}/api/get_map_locations`, 
+  getMapLocations(model: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/get_map_location_reviews`, 
            model, {headers:{"Content-Type":"application/json"}, 
            responseType: 'json'});
   }
@@ -23,6 +23,12 @@ export class LocationsService {
     console.log("access" +localStorage.getItem('access'));
     return this.http.post(`${this.baseUrl}/api/add_location`, 
            model, { headers:{'authorization':`Bearer ${localStorage.getItem('access')}`}});
+  }
+
+  getReviewById(id: any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/api/get_location_reviews/${id}`,
+    {headers:{"Content-Type":"application/json"}, 
+    responseType: 'json'} );
   }
 
 }
