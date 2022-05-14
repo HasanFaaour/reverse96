@@ -37,6 +37,24 @@
   margin-top: 10px;
 }
 
+.author {
+  position: absolute;
+  float: right;
+  margin-left: 22px;
+  font-size: small;
+  /* margin-right: 20px; */
+  margin-top: -3px;
+
+}
+
+.author a {
+  text-decoration: solid;
+}
+
+.author a:hover {
+  text-decoration: underline;
+}
+
   .place-image {
     background-color: rgb(225, 225, 226);
     margin-left: 4%;
