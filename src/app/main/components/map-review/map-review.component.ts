@@ -164,25 +164,6 @@ export class MapReviewComponent implements AfterViewInit {
     });
   }
   
-  getReviews(id: any) {
-    this.locationSer.getReviewById(id).subscribe({
-      next: (data) => {  
-        console.log("ya aba abd allah");
-        console.log(data);
-        this.reviews = data.message;
-        for(let review of this.reviews){
-          review.picture = `${this.baseUrl}${review.picture}`;
-          console.log(this.reviews);
-        }
-        console.log(this.reviews);
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
-  }
-
-
   clikOnLocation(id: number){
     for(let i of this.locations){
       if(id === i.id){
@@ -198,7 +179,6 @@ export class MapReviewComponent implements AfterViewInit {
     this.showReviewList = false
   }
 
-  
   private createIcon() {
     const icon = L.icon({
       iconUrl: 'assets/images/marker.png',
