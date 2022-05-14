@@ -38,13 +38,13 @@ describe('MapReviewComponent', () => {
 
   it('should count showAddReview as false', () => {
     component.addReview();
-    expect(component.showAddReview).toBeFalse();
+    expect(component.dlg).toBeFalse();
   });
 
   it('should count showAddReview as false (when click on map)', () => {
     
     //component.showAddReview = true;
     component.map.on();
-    expect(component.showAddReview).toBeFalse();
+    expect(component.dlg).toBeFalse();
   });
 });

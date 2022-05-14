@@ -35,7 +35,7 @@ export class HttpRequestService {
 
   //Defining the logout post request method
   logout(rToken: string|null):Observable<object>{
-    return this.hC.post(`${this.db}/api/logout`,{refresh: rToken},{ headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
+    return this.hC.post(`${this.db}/api/logout`,{refresh: rToken},{ headers:{"Content-Type":"application/json","authorization":`Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
   }
 
   //Defining the refresh post request method (Errors not handled)
@@ -59,7 +59,7 @@ export class HttpRequestService {
     body.append('title', data.title);
     body.append('text', data.text);
     body.append('picture', data.image, data.image.name);
-    
+    /*
     let user = localStorage.getItem('userID');
     if (!user){
       let result = new Observable <object> ( (sub) => {
@@ -70,7 +70,7 @@ export class HttpRequestService {
 
     console.log(user);
     body.append('user', user);
-
+    */
     return this.hC.post(`${this.db}/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
   }
 
