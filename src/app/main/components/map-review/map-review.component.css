@@ -16,6 +16,8 @@
 .add-place-button:disabled {
     color: rgb(90, 90, 90);
 }
+
+
 /*--------style one review---------*/
 .review {
     width: 100%;
@@ -52,13 +54,22 @@
     vertical-align: middle;
 }
 
-/*------------------reviews--------------------*/
+/*------------------list of reviews--------------------*/
+
+/* .listReview {
+    width: 90%;
+    border: 1px solid red;
+    float: left;
+    margin-left: 30px;
+} */
 .reviews {
-    width: 100%;
+    width: 90%;
     height: 100%;
     margin-left: 0px;
     overflow-y: scroll;
     border: 1px solid #ddd;
+   /*  float: left;/* new*/
+   /*  margin-left: 30px; */
 }
 .top-reviews {
     width: 100%;
@@ -110,8 +121,8 @@
     background-color: #ddd;
 }
 
-/*----------------end reviews------------------*/
 
+/*-----------------sidebar--------------------*/
 .example-container {
    position: absolute;  
    top: 70px;
@@ -136,6 +147,50 @@
 }
 .example-sidenav.menu-close {
     width: 40px;
+}
+.sidebar-button-open {
+    width: 30px;
+    height: 50px;
+    background-color: white;
+    position: fixed;
+    top: 50%;
+    right: 0px;
+    z-index: 500;
+    border: 1px solid #ddd;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+.sidebar-button-open mat-icon {/* new*/
+    font-size: 24px;
+    margin-top: 13px;
+    margin-left: 4px;
+    color: rgb(71, 71, 71);
+}
+/* .close-sidebar-button {
+    width: 30px;
+    height: 50px;
+    position: fixed;
+    top: 50%;
+   
+    float: left;
+} */
+.sidebar-button-close {
+    width: 30px;
+    height: 50px;
+    background-color: white;
+    position: fixed;
+    top: 50%;
+    right: 26%;
+    z-index: 500;
+    border: 1px solid #ddd;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+.sidebar-button-close mat-icon {
+    font-size: 24px;
+    margin-top: 13px;
+    margin-left: 4px;
+    color: rgb(71, 71, 71);
 }
 
 @media screen and (max-width: 800px) {

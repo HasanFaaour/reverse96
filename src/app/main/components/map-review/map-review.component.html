@@ -9,6 +9,7 @@
 
 <mat-drawer-container class="example-container" autosize>
   <mat-drawer #drawer class="example-sidenav" mode="side" position="end">
+   <!--  <div class="close-sidebar-button"></div> -->
     <div *ngIf="showReviewList" class="listReview">
       <div *ngFor="let l of locations; let i = index" (click)=clikOnLocation(l.id) class="list-reviews-container" >
         <div class="image"><img [src]="l.picture" ></div>
@@ -20,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="showReview" class="reviews">
+    <div *ngIf="showLocationDetail" class="reviews">
       <div class="top-reviews">
         <a (click)="showReviewsList()">Top reviews</a>
       </div>
@@ -65,6 +66,12 @@
       <button class="add-place-button" (click)="openDialog()" id="refreshButton" [disabled]="isEnabled">
         <mat-icon>add_location</mat-icon>
       </button>
+      <div class="sidebar-button-close" (click)="hideButton()" *ngIf="!sideBarbuttonCloseClicked" >
+        <mat-icon>add</mat-icon>
+      </div>
+      <div class="sidebar-button-open" (click)="openSidebare()">
+         <mat-icon>add</mat-icon>
+      </div>
     </div>
     
   </div>  

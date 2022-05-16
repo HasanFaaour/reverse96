@@ -22,12 +22,13 @@ import {NgbAlertConfig} from '@ng-bootstrap/ng-bootstrap';
 export class MapReviewComponent implements AfterViewInit  {
   @ViewChild('drawer')
   sidenav!: MatSidenav;
-  showReview = false;
+  showLocationDetail = false;
   showReviewList = true;
   sidebarOpen = true;
   isMarkerCreated = false;
   isEnabled = true;
   showAlert = false;
+  sideBarbuttonCloseClicked = false;
 
   locId: string = '';
   baseUrl = "http://localhost:8000";
@@ -73,7 +74,7 @@ export class MapReviewComponent implements AfterViewInit  {
 
   showReviewsList() {
     this.showReviewList = true;
-    this.showReview = false;
+    this.showLocationDetail = false;
   }
 
   ngAfterViewInit(): void {
@@ -81,6 +82,17 @@ export class MapReviewComponent implements AfterViewInit  {
     this.toggle();
   }
   
+  hideButton() {
+    this.sideBarbuttonCloseClicked = true;
+  }
+
+  openSidebare() {
+    this.toggle();
+    this.sidebarOpen = true;
+    //this.sideBarbuttonCloseClicked = false;
+    this.sidebarOpen = !this.sidebarOpen;
+    this.sideBarbuttonCloseClicked = false;
+  }
 
   openDialog() {
     this.getLocations();
@@ -129,7 +141,7 @@ export class MapReviewComponent implements AfterViewInit  {
       this.isMarkerCreated = !this.isMarkerCreated;
       console.log(this.sidebarOpen);
       if(this.sidebarOpen){
-         this.showReview = !this.showReview;
+         //(new) this.showLocationDetail= !this.showLocationDetail;
          this.sidebarOpen = !this.sidebarOpen;
          this.isEnabled = true;
          this.toggle();
@@ -206,7 +218,7 @@ export class MapReviewComponent implements AfterViewInit  {
         }
       }
     }  
-    this.showReview = true;
+    this.showLocationDetail = true;
     this.showReviewList = false
   }
 
@@ -233,7 +245,7 @@ export class MapReviewComponent implements AfterViewInit  {
 
   private onClickMarker(marker: any) {
     marker.on('click',  (e: any) => {
-      this.showReview = true;
+      this.showLocationDetail = true;
       this.showReviewList = false
       const lat = marker.getLatLng().lat;
       const lng = marker.getLatLng().lng;
