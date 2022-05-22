@@ -79,19 +79,28 @@ export class MapReviewComponent implements AfterViewInit  {
 
   ngAfterViewInit(): void {
     this.loadMap();
-    this.toggle();
+    this.toggle(); 
   }
   
   hideButton() {
+    this.sidebarOpen = false;
     this.sideBarbuttonCloseClicked = true;
+    this.isMarkerCreated = true;
+    this.toggle();
   }
 
   openSidebare() {
     this.toggle();
-    this.sidebarOpen = true;
+    this.sidebarOpen = false;// bar aks shod shon click mishe to map v to button
+    this.showLocationDetail = false;
+    this.showReviewList = true;
     //this.sideBarbuttonCloseClicked = false;
-    this.sidebarOpen = !this.sidebarOpen;
-    this.sideBarbuttonCloseClicked = false;
+    //this.sidebarOpen = !this.sidebarOpen;
+    this.isMarkerCreated = true;
+    setTimeout(()=> {
+      this.sideBarbuttonCloseClicked = false;
+    },250) 
+    
   }
 
   openDialog() {
@@ -114,8 +123,8 @@ export class MapReviewComponent implements AfterViewInit  {
   }
 
   private loadMap(): void {
-    //this.map = new L.Map('map').locate({setView: true, maxZoom: 16});
-    this.map = new L.Map('map').setView(this.latlng , 14);
+    this.map = new L.Map('map').locate({setView: true, maxZoom: 15});
+    //this.map = new L.Map('map').setView(this.latlng , 14);
     this.map.on('load', (event: any) => {   
       const corners = event.target.getBounds();
       const northeast = corners.getNorthEast();
@@ -138,14 +147,21 @@ export class MapReviewComponent implements AfterViewInit  {
     
     
     this.map.on('click',  (e: any) => {
-      this.isMarkerCreated = !this.isMarkerCreated;
+      //new ---this.isMarkerCreated = !this.isMarkerCreated;
       console.log(this.sidebarOpen);
       if(this.sidebarOpen){
          //(new) this.showLocationDetail= !this.showLocationDetail;
          this.sidebarOpen = !this.sidebarOpen;
          this.isEnabled = true;
+         this.sideBarbuttonCloseClicked = true;
          this.toggle();
+         if(this.isMarkerCreated ){
+          this.map.removeLayer(this.marker);
+          this.isEnabled = true;
+         }
+         
       } else{
+        this.isMarkerCreated = !this.isMarkerCreated;//new---
         if(this.isMarkerCreated){
           const icon = this.createIcon();
           this.marker = L.marker(e.latlng ,{icon,draggable: false,autoPan: true
@@ -252,7 +268,9 @@ export class MapReviewComponent implements AfterViewInit  {
      /*  if(this.isMarkerCreated){
         this.map.removeLayer(this.marker);
       } */
-      this.isEnabled= true;
+      if(!this.isMarkerCreated){
+        this.isEnabled= true;
+      }
       for(let i of this.locations){
         if(lat === i.latt && lng === i.long){
           this.location = i;
@@ -263,8 +281,11 @@ export class MapReviewComponent implements AfterViewInit  {
           }
         }
       }
-      if(!this.sidebarOpen){
-        this.sidebarOpen = !this.sidebarOpen;
+      if(!this.sidebarOpen && this.sideBarbuttonCloseClicked){
+        this.sidebarOpen = true;
+        setTimeout(()=> {
+          this.sideBarbuttonCloseClicked = false;
+        },250) 
         this.toggle();
       }
     });

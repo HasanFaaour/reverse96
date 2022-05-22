@@ -14,15 +14,21 @@
 }
 
 .add-place-button:disabled {
-    color: rgb(90, 90, 90);
+    color: rgb(161, 160, 160);
 }
+.add-place-button:enabled {
+    color: rgb(69, 173, 241);
+}
+.add-place-button mat-icon {
 
+}
 
 /*--------style one review---------*/
 .review {
     width: 100%;
     height: auto;
     margin-bottom: 10px;
+    
 }
 
 .review .image {
@@ -63,7 +69,7 @@
     margin-left: 30px;
 } */
 .reviews {
-    width: 90%;
+    width: 100%;
     height: 100%;
     margin-left: 0px;
     overflow-y: scroll;
@@ -166,13 +172,18 @@
     margin-left: 4px;
     color: rgb(71, 71, 71);
 }
-/* .close-sidebar-button {
+/*. close-sidebar-button {
     width: 30px;
     height: 50px;
     position: fixed;
     top: 50%;
-   
+    border: 1px solid red;
     float: left;
+}
+.close-sidebar-button mat-icon {
+    font-size: 24px;
+    margin-top: 13px;
+    margin-left: 4px;
 } */
 .sidebar-button-close {
     width: 30px;
@@ -184,8 +195,8 @@
     z-index: 500;
     border: 1px solid #ddd;
     border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
 }
+
 .sidebar-button-close mat-icon {
     font-size: 24px;
     margin-top: 13px;
@@ -214,8 +225,10 @@
 #refreshButton {
     position: absolute;
     top: 85%;
-    left: 1%;
-    padding: 10px;
+    left: 1.5%;
+    padding-top: 5px;
+    width: 40px;
+    height: 40px;
     z-index: 500;
     background-color: white;
     border: 1px solid rgb(126, 125, 125);
@@ -223,12 +236,16 @@
 }
 
 .list-reviews-container {
-    width: 95%;
-    height: 60px;
-    margin-top: 25px;
-    margin-left: 15px;
+    width: 100%;
+    height: 100px;
+    margin-top: 0px;
+    margin-left: 0px;
     cursor: pointer;
     display: inline-block;
+    border-bottom: 1px solid #ddd;
+}
+.list-reviews-container:hover {
+    background-color: rgb(236, 235, 235);
 }
 .list-review:hover {
     background-color: #ddd;
@@ -243,8 +260,8 @@
     height: 85px;
     float: left;
     border: 1px solid #ddd;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    margin-top: 6px;
+    margin-left: 20px;
     border-radius: 10px;
 }
 .description .ic {
