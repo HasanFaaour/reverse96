@@ -296,6 +296,22 @@
     display: flex;
 }
 
+/*---------empty-locations-list-------*/
+
+.empty-locations-list{
+    margin-top: 30px;
+    margin-left: 20px;
+}
+.empty-locations-list img {
+    margin-top: 30%;
+    margin-left: 17%;
+}
+.empty-locations-list p {
+    width: 80%;
+    text-align: center;
+    margin-left: 20px;
+}
+
 .alert {
     width: 400px;
     height: 50px;

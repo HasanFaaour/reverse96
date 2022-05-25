@@ -1,6 +1,6 @@
 .sidenav {
     height: 100%;
-    width: 21%;
+    width: 22%;
     position: fixed;
     z-index: 0;
     top: 0%;
@@ -22,9 +22,6 @@
     display: block;
     padding-left: 12%;
     z-index: 2;
-  }
-  .sidenav a:hover {
-    
   }
   .search-border {
     width: 80%;
@@ -60,8 +57,10 @@
     font-weight: 500;
   }
   .sidenav .ic {
+    display: inline-block;
     vertical-align: middle;
     top: 3px;
+   /*  margin: 6px; */
   }
   .sidenav img {
     width: 23px;
@@ -97,22 +96,32 @@
 }
 .sidenav a:hover {
   color: rgb(97, 195, 252);
-  background-color: rgb(245, 245, 245);
+ /*  background-color: rgb(245, 245, 245); */
+}
+.sidenav img:hover {
+  width: 26px;
+  height: 26px;
+  margin-right: 19px; 
 }
 
 @media screen and (max-width: 800px) {
   .sidenav {
-    visibility: hidden;
+    width: 60px;
+    padding-top: 15%;
   }
   .sidenav a {
-    margin-left: 0px;
+    margin-left: 10px;
+    width: 60px;
+  }
+  .sidenav .ic {
+    visibility:hidden;
   }
   
 }
 
 @media screen and (max-width: 600px){
   .sidenav {
-    visibility: hidden;
+    width: 60px;
   }
 }
 

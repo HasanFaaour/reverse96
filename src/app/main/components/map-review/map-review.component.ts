@@ -3,13 +3,11 @@ import { Observable, Subscriber } from 'rxjs';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import * as L from 'leaflet';
 import { MatSidenav } from '@angular/material/sidenav';
-/* import { AddReviewComponent } from '../add-review/add-review.component'; */
 import { LocationsService } from '../../services/locations.service';
 import { AddReviewComponent } from '../add-review/add-review.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPlaceComponent } from '../add-place/add-place.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import { bottom } from '@popperjs/core';
 import {NgbAlertConfig} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -29,6 +27,7 @@ export class MapReviewComponent implements AfterViewInit  {
   isEnabled = true;
   showAlert = false;
   sideBarbuttonCloseClicked = false;
+  locationsIsEmpty = false;
 
   locId: string = '';
   baseUrl = "http://localhost:8000";
@@ -63,6 +62,7 @@ export class MapReviewComponent implements AfterViewInit  {
     //this.getLocations();
     alertConfig.type = 'success';
     alertConfig.dismissible = false;
+    
   }
   
   addReview() {
@@ -99,7 +99,7 @@ export class MapReviewComponent implements AfterViewInit  {
     this.isMarkerCreated = true;
     setTimeout(()=> {
       this.sideBarbuttonCloseClicked = false;
-    },250) 
+    },220) 
     
   }
 
@@ -125,7 +125,7 @@ export class MapReviewComponent implements AfterViewInit  {
   private loadMap(): void {
     this.map = new L.Map('map').locate({setView: true, maxZoom: 15});
     //this.map = new L.Map('map').setView(this.latlng , 14);
-    this.map.on('load', (event: any) => {   
+   /*  this.map.on('load', (event: any) => {   
       const corners = event.target.getBounds();
       const northeast = corners.getNorthEast();
       const southwest = corners.getSouthWest();
@@ -134,10 +134,10 @@ export class MapReviewComponent implements AfterViewInit  {
          northeast.lat,northeast.lng]
       ;
       this.getLocations();
-    });
+    }); */
     this.makCirOnCurPos();
     this.addTileLayer();
-    const icon = this.createIcon();
+    const icon = this.createIcon("marker.png");
    
     this.getCorners();
     //
@@ -163,7 +163,7 @@ export class MapReviewComponent implements AfterViewInit  {
       } else{
         this.isMarkerCreated = !this.isMarkerCreated;//new---
         if(this.isMarkerCreated){
-          const icon = this.createIcon();
+          const icon = this.createIcon("marker-icon.png");
           this.marker = L.marker(e.latlng ,{icon,draggable: false,autoPan: true
           }).addTo(this.map);
           this.map.addLayer(this.marker);
@@ -196,7 +196,14 @@ export class MapReviewComponent implements AfterViewInit  {
           this.coordinates.push({lat: +location.latt, lon: +location.long});
         }
         this.markerFilter();
-        console.log(this.locations);
+        console.log("locations: " +this.locations);
+        //console.log("location: " +this.location.name);
+        if(this.locations.length > 0){
+          this.locationsIsEmpty = false;
+        }else{
+          this.locationsIsEmpty = true;
+        }
+        console.log();
       },
       error: (err) => {
         console.log(err);
@@ -208,14 +215,10 @@ export class MapReviewComponent implements AfterViewInit  {
   getReviews(id: any) {
     this.locationSer.getReviewById(id).subscribe({
       next: (data) => {  
-        console.log("ya aba abd allah");
-        console.log(data);
         this.reviews = data.message;
         for(let review of this.reviews){
           review.picture = `${this.baseUrl}${review.picture}`;
-          console.log(this.reviews);
         }
-        console.log(this.reviews);
       },
       error: (err) => {
         console.log(err);
@@ -223,25 +226,28 @@ export class MapReviewComponent implements AfterViewInit  {
     });
   }
 
-  clikOnLocation(id: number){
+  clikOnLocation(loc: any){
     for(let i of this.locations){
-      if(id === i.id){
-        this.location = i;
+      if(loc.latt === i.latt && loc.long === i.long){
+        this.location = loc;
         this.locId = i.id;
         this.reviews = i.reviews;
         for(let review of this.reviews){
           review.picture = `${this.baseUrl}${review.picture}`;
         }
+      
       }
     }  
     this.showLocationDetail = true;
     this.showReviewList = false
+    this.map.setView([this.location.latt , this.location.long], 17);
   }
 
-  private createIcon() {
+  private createIcon(iconName: any) {
     const icon = L.icon({
-      iconUrl: 'assets/images/marker.png',
+      iconUrl: `assets/images/${iconName}`,
       //shadowUrl: 'assets/images/shadow.png',
+      //shadowSize: [30,20],
       iconSize: [30,36],
       iconAnchor: [12,36],
       popupAnchor: [3, -30],
@@ -250,7 +256,7 @@ export class MapReviewComponent implements AfterViewInit  {
   }
 
   private createMarker(p : any) {
-    const icon = this.createIcon();
+    const icon = this.createIcon("marker.png");
     const marker = L.marker([p.lat, p.lon],{
       icon,
       draggable: false,
@@ -265,9 +271,6 @@ export class MapReviewComponent implements AfterViewInit  {
       this.showReviewList = false
       const lat = marker.getLatLng().lat;
       const lng = marker.getLatLng().lng;
-     /*  if(this.isMarkerCreated){
-        this.map.removeLayer(this.marker);
-      } */
       if(!this.isMarkerCreated){
         this.isEnabled= true;
       }
@@ -294,9 +297,28 @@ export class MapReviewComponent implements AfterViewInit  {
   private createPopup(p: any) {
     const popup = L.popup()
     popup.setLatLng([p.lat, p.lon])
-    popup.setContent('<h3 style="font-weight: 400;">location.name</h3>'
-                      +'<img src="./assets/images/computer.jpg" style="width:200px; height:150px; margin:0px">')
-    return popup;                  
+    const lat = p.lat;
+    const lng = p.lon;
+    for(let i of this.locations){
+      if(lat === i.latt && lng === i.long){
+        this.location = i;
+        this.locId = i.id.toString();
+        this.reviews = i.reviews;
+        for(let review of this.reviews){
+          review.picture = `${this.baseUrl}${review.picture}`;
+        }
+      }
+    }
+    popup.setContent(/* `<h3 style="font-weight: 400;"> ${ this.location.name }</h3>` */
+                      `<div style= "display: flex; width: 350px; height: 70px; margin-left: 0px;"> `
+                      +`<img src=${ this.location.picture } style="width:70px; height:70px; float:left margin:0px;">`
+                      + `<div style= "display: inline-block; width: 290px; height: 60px; margin: 0px; "> `
+                      + `<a style="font-size:18px; margin-top: 0px; margin-bottom: 0px; margin-left: 15px;  display: block;"> ${ this.location.name }</a>`
+                      + `<a style="font-size:14px; margin-top: 0px; margin-bottom: 0px; margin-left: 15px; display: block;"> ${this.location.no_of_likes }${" "}likes</a>`
+                      + `<h3 style="font-size:14px; margin-top: 0px; margin-bottom: 0px; margin-left: 15px; padding: 0px; display: block;"> ${ this.location.no_of_reviews }${" "}views</h3>`
+                      + `</div>` 
+                      + `</div>`)
+    return popup;               
   }
 
   private addTileLayer() {
@@ -345,8 +367,8 @@ export class MapReviewComponent implements AfterViewInit  {
     for(let l of this.coordinates){
       const marker = this.createMarker(l);
       this.onClickMarker(marker);
-     /*  const popup = this.createPopup(l);
-      this.markerMouseOver(marker, popup); */
+      const popup = this.createPopup(l);
+      this.markerMouseOver(marker, popup);
     }
   }
 }

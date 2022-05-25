@@ -11,7 +11,7 @@
   <mat-drawer #drawer class="example-sidenav" mode="side" position="end">
    <!--  <div class="close-sidebar-button"><mat-icon>add</mat-icon></div> -->
     <div *ngIf="showReviewList" class="listReview">
-      <div *ngFor="let l of locations; let i = index" (click)=clikOnLocation(l.id) class="list-reviews-container" >
+      <div *ngFor="let l of locations; let i = index" (click)=clikOnLocation(l) class="list-reviews-container" >
         <div class="image"><img [src]="l.picture" ></div>
         <div class="description">
             <div class="email">{{l.name}}</div>
@@ -56,7 +56,11 @@
         <div class="like"><span>{{r.liked_by.length}} likes</span> <!-- <mat-icon >favorite_border</mat-icon> --></div>
       </div>
     </div>
-
+    <div class="empty-locations-list" *ngIf="locationsIsEmpty">
+      <img src="assets/images/location-list-empty.jpg" style="width: 200px; height: 200px;">
+      <p>There is no place here<br>
+        Click on the map to add a new place</p>
+    </div>
     
 
   </mat-drawer>
