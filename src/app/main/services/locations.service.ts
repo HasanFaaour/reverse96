@@ -31,4 +31,10 @@ export class LocationsService {
     responseType: 'json'} );
   }
 
+  getTopReviews(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/api/get_reviews/${2}`,
+    {headers:{"Content-Type":"application/json"}, 
+    responseType: 'json'} );
+  }
+
 }

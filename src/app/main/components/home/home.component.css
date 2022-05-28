@@ -139,19 +139,36 @@
     border-radius: 10px;
   }
   .review-content {
-    margin-left: 20px;
-    margin-bottom: 15px;
+    padding: 13px;
+   /*  padding-bottom: 15px; */
     font-size: 14px;
-    color: rgb(92, 92, 92);
+  }
+  .review-content:hover {
+    background-color: rgb(240, 238, 238);
+    border-bottom: 1px solid #ddd ;
+    cursor: pointer;
+    
   }
   .review-content mat-icon {
-    font-size: 20px;
+    fill: 0;
+    vertical-align: middle;
+    margin-top: 2px;
+    font-size: 17px;
+    color: rgb(138, 137, 137);
     padding-right: 25px;
   }
   .review-content .name {
-    color: rgb(29, 29, 29);
+    margin-bottom: 3px;
     font-size: 16px;
     font-weight: 500;
+  }
+  .review-content .row {
+    margin-bottom: 3px;
+    height: 18px;
+  }
+  .review-content .row1 {
+    margin-bottom: 3px;
+    height: 18px;
   }
   .company {
     color: rgb(206, 205, 205);

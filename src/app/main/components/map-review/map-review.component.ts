@@ -35,6 +35,9 @@ export class MapReviewComponent implements AfterViewInit  {
   dialogValue!: string;
   map: any;
   marker: any;
+  listmarkers: any[] = [];
+  layer: any;
+  markers = new L.FeatureGroup()
   lat: any;
   lng: any;
   latlng = L.latLng(35.741552, 51.507297);
@@ -59,7 +62,6 @@ export class MapReviewComponent implements AfterViewInit  {
               alertConfig: NgbAlertConfig
             ) 
   { 
-    //this.getLocations();
     alertConfig.type = 'success';
     alertConfig.dismissible = false;
     
@@ -94,8 +96,6 @@ export class MapReviewComponent implements AfterViewInit  {
     this.sidebarOpen = false;// bar aks shod shon click mishe to map v to button
     this.showLocationDetail = false;
     this.showReviewList = true;
-    //this.sideBarbuttonCloseClicked = false;
-    //this.sidebarOpen = !this.sidebarOpen;
     this.isMarkerCreated = true;
     setTimeout(()=> {
       this.sideBarbuttonCloseClicked = false;
@@ -106,7 +106,7 @@ export class MapReviewComponent implements AfterViewInit  {
   openDialog() {
     this.getLocations();
     const dialogRef = this.dialog.open(AddPlaceComponent, {
-      width:'420px', height: '450px',
+      width:'420px', height: 'auto',
       data: { pageValue: this.sendValue }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -124,17 +124,6 @@ export class MapReviewComponent implements AfterViewInit  {
 
   private loadMap(): void {
     this.map = new L.Map('map').locate({setView: true, maxZoom: 15});
-    //this.map = new L.Map('map').setView(this.latlng , 14);
-   /*  this.map.on('load', (event: any) => {   
-      const corners = event.target.getBounds();
-      const northeast = corners.getNorthEast();
-      const southwest = corners.getSouthWest();
-      this.latLngCorners.coordinates =
-        [southwest.lat,southwest.lng,
-         northeast.lat,northeast.lng]
-      ;
-      this.getLocations();
-    }); */
     this.makCirOnCurPos();
     this.addTileLayer();
     const icon = this.createIcon("marker.png");
@@ -188,6 +177,13 @@ export class MapReviewComponent implements AfterViewInit  {
     this.locationSer.getMapLocations(this.latLngCorners).subscribe({
       next: (data) => {  
         this.locations = data.message;
+        /* this.markers.clearLayers(); */
+        console.log("length"+ this.listmarkers.length)
+        for(let l of this.listmarkers){
+          this.map.removeLayer(l.m);
+        }
+        this.listmarkers = [];
+        this.coordinates = [];
         for(let location of this.locations){
           console.log(location.name);
           location.picture = `${this.baseUrl}${location.picture}`;
@@ -197,13 +193,11 @@ export class MapReviewComponent implements AfterViewInit  {
         }
         this.markerFilter();
         console.log("locations: " +this.locations);
-        //console.log("location: " +this.location.name);
         if(this.locations.length > 0){
           this.locationsIsEmpty = false;
         }else{
           this.locationsIsEmpty = true;
         }
-        console.log();
       },
       error: (err) => {
         console.log(err);
@@ -211,7 +205,6 @@ export class MapReviewComponent implements AfterViewInit  {
     });
   }
   
-
   getReviews(id: any) {
     this.locationSer.getReviewById(id).subscribe({
       next: (data) => {  
@@ -244,8 +237,15 @@ export class MapReviewComponent implements AfterViewInit  {
   }
 
   private createIcon(iconName: any) {
+ /*    const redMarker = L.ExtraMarkers.icon({
+      icon: 'fa-coffee',
+      markerColor: 'red',
+      shape: 'square',
+      prefix: 'fa'
+  }); */
     const icon = L.icon({
-      iconUrl: `assets/images/${iconName}`,
+      iconUrl: `https://api.geoapify.com/v1/icon?size=xx-large&type=awesome&color=red&icon=${iconName}&noWhiteCircle&apiKey=${"7dd41723aded464e911149b7f731f406"}`,
+     /*  iconUrl: `assets/images/${iconName}`, */
       //shadowUrl: 'assets/images/shadow.png',
       //shadowSize: [30,20],
       iconSize: [30,36],
@@ -256,12 +256,13 @@ export class MapReviewComponent implements AfterViewInit  {
   }
 
   private createMarker(p : any) {
-    const icon = this.createIcon("marker.png");
+    const icon = this.createIcon("coffee");
     const marker = L.marker([p.lat, p.lon],{
       icon,
       draggable: false,
       autoPan: true
     }).addTo(this.map);
+    this.listmarkers.push({m: marker});
     return marker;
   }
 
@@ -322,7 +323,7 @@ export class MapReviewComponent implements AfterViewInit  {
   }
 
   private addTileLayer() {
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    this.layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
   }
@@ -352,11 +353,11 @@ export class MapReviewComponent implements AfterViewInit  {
 
   makCirOnCurPos() {
     this.map.on('locationfound', (e : any) => {
-      var circle = L.circle([e.latitude, e.longitude], e.accuracy/2, {
-          weight: 1,
+      var circle = L.circle([e.latitude, e.longitude], e.accuracy/6, {
+          weight: 2,
           color: 'blue',
           fillColor: '#cacaca',
-          fillOpacity: 0.2
+          fillOpacity: 1
       });
       this.map.addLayer(circle);
     });
@@ -369,6 +370,8 @@ export class MapReviewComponent implements AfterViewInit  {
       this.onClickMarker(marker);
       const popup = this.createPopup(l);
       this.markerMouseOver(marker, popup);
+    /*   this.markers.addLayer(marker);
+      this.map.addLayer(this.markers); */
     }
   }
 }

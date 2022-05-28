@@ -32,33 +32,26 @@
 <div class="side"> 
   <div class="top-reviews">
     <h2 class="fav-title">Top Reviews</h2>
-    <div class="review-content">
-      <div class="name">Computer school</div>
-      <div class="username">200 likes</div>
-      <div class="username">2 reviews</div>
+    <div class="review-content" *ngFor="let review of topReviews">
+      <div class="name">IUST University</div>
+      <div class="row"><mat-icon>preview</mat-icon> 64 reviews</div>
+      <div class="row1"><!-- <mat-icon>thumb_up</mat-icon> --> 1200 likes</div>
     </div>
-    <div class="review-content">
-      <div class="name">Lale park</div>
-      <div class="username">250 likes</div>
-      <div class="username">5 reviews</div>
+    <div class="review-content" *ngFor="let review of topReviews">
+      <div class="name">Lale Park</div>
+      <div class="row"><mat-icon>preview</mat-icon> 14 reviews</div>
+      <div class="row1"><!-- <mat-icon>thumb_up</mat-icon> --> 139 likes</div>
     </div>
-    <div class="review-content">
-      <div class="name">Computer school</div>
-      <div class="username">200 likes</div>
-      <div class="username">3 reviews</div>
+    <div class="review-content" *ngFor="let review of topReviews">
+      <div class="name">Sip Restorant</div>
+      <div class="row"><mat-icon>preview</mat-icon> 2 reviews</div>
+      <div class="row1"><!-- <mat-icon>thumb_up</mat-icon> --> 124 likes</div>
     </div>
-    <div class="review-content">
-      <div class="name">IUST university</div>
-      <div class="row"><mat-icon>preview</mat-icon> 1257 likes</div>
-      <div class="row">13 reviews</div>
+    <div class="review-content" *ngFor="let review of topReviews">
+      <div class="name">{{review.title}}</div>
+      <div class="row"><mat-icon>preview</mat-icon> 23 reviews</div>
+      <div class="row1"><!-- <mat-icon>thumb_up</mat-icon> --> {{review.liked_by.length}} likes</div>
     </div>
-   <!--  <div class="title2" *ngFor="let item of sideBarList">
-      <div class="image"><img [src]="item.picture" style="height: 100%; width: 100%;"></div>
-      <div class="name">
-          <p class="email">{{item.title}}</p>
-          <p class="username">location{{item.location}}</p>
-      </div>
-    </div> -->
   </div>
   
   <div class="right-side">

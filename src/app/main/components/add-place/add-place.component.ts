@@ -3,7 +3,11 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { Observable, Subscriber } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocationsService } from '../../services/locations.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+
+interface Food {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: 'app-add-place',
@@ -11,13 +15,34 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./add-place.component.css']
 })
 export class AddPlaceComponent implements OnInit {
+  foods: Food[] = [
+    {value: '0', viewValue: 'Steak'},
+    {value: '1', viewValue: 'Pizza'},
+    {value: '2', viewValue: 'Tacos'},
+    {value: '3', viewValue: 'Steak'},
+    {value: '4', viewValue: 'Pizza'},
+    {value: '2', viewValue: 'Tacos'},
+    {value: '0', viewValue: 'Steak'},
+    {value: '1', viewValue: 'Pizza'},
+    {value: '2', viewValue: 'Tacos'},
+    {value: '0', viewValue: 'Steak'},
+    {value: '1', viewValue: 'Pizza'},
+    {value: '2', viewValue: 'Tacos'},
+    {value: '0', viewValue: 'Steak'},
+    {value: '1', viewValue: 'Pizza'},
+    {value: '2', viewValue: 'Tacos'},
+    {value: '0', viewValue: 'Steak'},
+    {value: '1', viewValue: 'Pizza'},
+    {value: '2', viewValue: 'Tacos'}
+  ];
   form: FormGroup;
   fromMapReviewComponent!: any;
   fromDialog: string = 'n';
   showProg = false;
-  message: string = "ghgj";
+  message: string = "";
   name: any;
   invalude = false;
+  notification = false;
 
   constructor(private formBuilder: FormBuilder, private locSer: LocationsService,
               public dialogRef: MatDialogRef<AddPlaceComponent>,
@@ -27,6 +52,7 @@ export class AddPlaceComponent implements OnInit {
     
     this.form = this.formBuilder.group({
       name: ['', Validators.required],
+      category: ['', Validators.required],
       picture: ['' , Validators.required],
     });
   }
@@ -49,13 +75,14 @@ export class AddPlaceComponent implements OnInit {
     formData.append('name', this.form.get('name')!.value);
     formData.append('latt', this.fromMapReviewComponent.lat);
     formData.append('long', this.fromMapReviewComponent.lng);
+    
     if(this.form.get('picture')!.value){
       formData.append('picture', this.form.get('picture')!.value , this.form.get('picture')!.value.name);
     }else{
       this.invalude = true;
       this.message = "Please select a picture";
     }
-   
+    formData.append('category', this.form.get('category')!.value);
     console.log("latt and long:" + parseFloat(this.fromMapReviewComponent.lat).toFixed(9)+
     "  "+parseFloat(this.fromMapReviewComponent.lng).toFixed(9));      
     this.name = this.form.get('name')!.value;
@@ -64,10 +91,15 @@ export class AddPlaceComponent implements OnInit {
       this.invalude = true;
       this.message = "Field name cant be empty";
     }
+    if(!this.form.get('category')!.value){
+      this.invalude = true;
+      this.message = "Please select the category";
+    }
     if(!this.form.invalid){
       this.invalude = false;
       this.addLocation(formData); 
       this.fromDialog = 'y';
+      this.notification = true;
       this.closeDialog();
     }
     
@@ -76,7 +108,7 @@ export class AddPlaceComponent implements OnInit {
   closeDialog() {
     this.dialogRef.close({ event: 'close', data: this.fromDialog });
   }
-
+  
   addLocation(model: any) : void {
     this.locSer.addPlace(model).subscribe({
       next: (data) => {
