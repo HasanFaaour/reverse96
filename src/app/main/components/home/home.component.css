@@ -110,6 +110,7 @@
     position: fixed;
     float: right;
     z-index: 1;
+    overflow-y: hidden;
     top: 12%;
     right: 3%;
     background-color: rgba(221, 221, 221, 0.13);

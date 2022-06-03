@@ -180,8 +180,6 @@ export class HomeComponent implements OnInit {
 
   display(url: string) {
     this.dialog.open(BigImage, {data: {url:url}, panelClass: 'full-picture', maxWidth: '97vw', maxHeight: '99vh', backdropClass: 'full-picture-backdrop' });
-    let sb = document.getElementsByClassName('body::weblit-scrollbar').length;
-    console.log(sb);
   }
 
 }
