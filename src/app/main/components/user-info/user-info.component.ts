@@ -48,7 +48,7 @@ export class UserInfoComponent implements OnInit {
     this.isEnabled = false;
  }
 
-  getuserinformation() : void {
+  getUserinformation() : void {
     console.log("asking for",this.askedFor.username);
     
     this.useInfSer.getUserInfo(this.askedFor.username).subscribe({
@@ -150,13 +150,13 @@ export class UserInfoComponent implements OnInit {
         //...
         this.routeUsername = this.activatedRoute.snapshot.paramMap.get('username');
         if (this.routeUsername && this.routeUsername != this.user.username) {
-          console.log(this.routeUsername, '!=' , this.user.username);
           
           this.askedFor.username = this.routeUsername;      
-          this.getuserinformation();
+          this.getUserinformation();
         }
         else {
           this.askedFor = this.user;
+
           // Get The Reviews
           this.getReviews();
         }
