@@ -3,7 +3,7 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.big-picture .mat-dialog-container {
+.full-picture .mat-dialog-container {
     padding: 0!important;
     /* width: auto; */
     /* margin-top: 1%; */
@@ -11,4 +11,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     align-items: center;
     justify-content: center;
     display: flex;
+    width: auto;
+    overflow-y: hidden;
+    box-shadow: 0 0 0 100vw rgba(0, 0, 0, .85);
 }
