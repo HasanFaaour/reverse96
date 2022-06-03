@@ -6,7 +6,7 @@ import { UserInfoService } from '../../services/user-info.service';
 
 import { ChatComponent } from './chat.component';
 
-fdescribe('ChatComponent', () => {
+describe('ChatComponent', () => {
   let component: ChatComponent;
   let fixture: ComponentFixture<ChatComponent>;
   
@@ -140,7 +140,7 @@ fdescribe('ChatComponent', () => {
     
   });
 
-  it ("(authentication) should redirect to home if guy is invalid", () => {
+  it ("(authentication) should redirect to message if guy is invalid", () => {
     //Signal user info service to return an 
     details = {error: true, username: "expected username", picture: "expected picture"};
     param = "guy person";
@@ -150,7 +150,7 @@ fdescribe('ChatComponent', () => {
 
     component.ngOnInit();
     
-    expect(route).toContain('home');
+    expect(route).toContain('message');
     expect(user).toBe("guy person");
     
   });
@@ -162,7 +162,7 @@ fdescribe('ChatComponent', () => {
     route = "";
     user = "";
 
-    component.authenticateUser();
+    component.authenticateGuy();
     
     expect(component.username).toBe("expected username");
     expect(component.userImage).toBe("expected user picture");
@@ -179,7 +179,7 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
     route = "";
     user = "";
 
-    component.authenticateUser();
+    component.authenticateGuy();
 
     expect(route).toContain('logout');
     expect(user).toBeFalsy();
@@ -190,7 +190,7 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
     //Signal user info service to return the expected info
     signal = {type: 'error', response: "error"};
 
-    component.initiateChat();
+    component.getPrivateChat();
 
     expect(component.socketError).toBeTrue();
    
@@ -202,7 +202,7 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
 
     component.socketError = false;
 
-    component.initiateChat();
+    component.getPrivateChat();
 
     expect(component.socketError).toBeFalse();
    
@@ -220,7 +220,7 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
 
     callBack = "";
 
-    component.initiateChat();
+    component.getPrivateChat();
 
     expect(callBack).toContain("create");
     expect(callBack).toContain("connect");
@@ -238,7 +238,7 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
 
     callBack = "";
 
-    component.initiateChat();
+    component.getPrivateChat();
 
     expect(callBack).not.toContain("create");
     expect(callBack).toContain("connect(69)");
@@ -256,7 +256,7 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
     callBack = "";
     component.contactList = [];
 
-    component.initiateChat();
+    component.getPrivateChat();
 
     //+4 for fake chats
     expect(component.contactList.length).toBe(contacts.length-1);
@@ -275,7 +275,7 @@ it ("(authentication) should logout if user credentials aren't valid", () => {
     component.socketError = false;
     component.chatId = 5;
 
-    component.initiateChat();
+    component.getPrivateChat();
 
     expect(callBack).toContain("create");
     expect(component.socketError).toBeTrue();
