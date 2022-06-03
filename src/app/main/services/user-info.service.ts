@@ -16,12 +16,20 @@ export class UserInfoService {
 
   getUserInfo(userId = ""): Observable<object> {
     if (userId){
-      return this.http.get(`${this.baseUrl}/api/public-profile/${userId}`);
+      return this.http.get(`${this.baseUrl}/api/public-profile/${userId}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}});
     }
-    return this.http.get(`${this.baseUrl}/api/get-user-detail` ,{headers:{"Content-Type":"application/json",'authorization':`Bearer ${localStorage.getItem('access')}`}});
+    return this.http.get(`${this.baseUrl}/api/get-user-detail` ,{headers:{'authorization':`Bearer ${localStorage.getItem('access')}`}});
+  }
+
+  
+
+  getUserReviews(userId: string): Observable<object> {
+
+    return this.http.get(`${this.baseUrl}/api/get_user_reviews/${userId}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}});
   }
 
   get server(): string {
     return this.baseUrl;
   }
+  
 }
