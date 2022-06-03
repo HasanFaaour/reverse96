@@ -74,10 +74,10 @@ describe('AddReviewComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it("(General) should log out if local storage doesn't contain 'userID' ", () => {
+  it("(General) should log out if local storage doesn't contain 'access' token ", () => {
 
-    //Make sure userID doesn't exist in local storage
-    localStorage.removeItem('userID');
+    //Make sure access doesn't exist in local storage
+    localStorage.removeItem('access');
 
     route = ""
     component.ngOnInit();
