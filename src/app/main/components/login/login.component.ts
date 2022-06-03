@@ -83,18 +83,15 @@ export class LoginComponent implements OnInit {
      this.processing = true;
     this.sub = this.request.login(this.loginCredentials.value).subscribe({
       //Handling the response in case of a successful request
-      next: (response) =>{
+      next: (response: any) =>{
         this.processing = false;
         
         if ("access" in response){
 
           //Saving the login information in local storage
-          localStorage.setItem('access',Object.values(response)[0]);
-          localStorage.setItem('refresh',Object.values(response)[1]);
-          localStorage.setItem('name',Object.values(response)[2]);
-          localStorage.setItem('username',Object.values(response)[3]);
-          localStorage.setItem('userID',Object.values(response)[4]);
-
+          localStorage.setItem('access', response.access); //Object.values(response)[0]);
+          localStorage.setItem('refresh', response.refresh); //Object.values(response)[1]);
+          
           //redirecting to homepage
           this.router.navigate(['home']);
   

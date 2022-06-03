@@ -1,10 +1,10 @@
 .container {
-    width: 75%;
+    width: 77%;
     min-height: 600px;
     border: 1px solid #ddd;
     border-radius: 10px;
     margin-top: 85px;
-    margin-left: 185px;
+    margin-left: 22%;
     margin-bottom: 1%;
     display: inline-block;
     box-shadow: 0 4px 8px 0 rgba(77, 76, 76, 0.116), 0 6px 20px 0 rgba(70, 70, 70, 0.096);
@@ -13,7 +13,7 @@
     .log-img {
         max-width: 40%;
         height: 600px;
-        margin-left: 10%;
+        margin-left: 5%;
         float: left;
         margin-top: 0;
     }
@@ -24,9 +24,9 @@
         }
 
     .mat-card {
-        margin-right: 10%; 
+        margin-right: 5%; 
         margin-top: 170px;
-        max-width: 45%;
+        width: 40%;
         min-height: 250px;
         float: right;
         box-shadow: none;
@@ -76,32 +76,86 @@
             }
 
 
-@media screen and (max-width: 800px) {
-    .container{
-        margin-left: 0;
-        margin-right: 0;
-        min-width: 100%;
-        
+@media screen and (max-width: 1215px) {
+    .mat-card {
+        width: 50%;
     }
 }
 
-@media screen and (max-width: 546px) {
-    .container {
-        min-width: 98%;
-        margin-left:1%;
-    }
+@media screen and (max-width: 991px) {
     .log-img {
-      max-width: 99%;
-      min-width: 400px;
-      margin-left: auto;
-      margin-top: 10px;
+        width: 35%;
+        margin-left: 1%;
     }
     .mat-card {
-        margin-top: 2%;
-        margin-left: auto;
-        max-width: 99%;
-        float: none;
-        width: 370px;
+        width: 60%;
+        margin-right: 1%;
+    }
+}
 
+@media screen and (max-width: 830px) {
+
+    .log-img {
+        clear: both;
+        max-width: none;
+        width: 98%;
+        margin-top: 10px;
+    }
+
+    img {
+        max-width: 100%;
+        width: 98%;
+    }
+
+    .mat-card {
+        float: left;
+        clear: both;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+
+    
+}
+
+
+@media screen and (max-width: 800px) {
+    .container{
+        margin-left: 5px;
+        margin-right: 5px;
+        min-width: 100%;
+    }
+
+    .mat-card {
+        float: right;
+        clear: none;
+        width: 60%;
+        margin-top: 170px;
+    }
+
+    .log-img {
+        clear: none;
+        width: 35%;
+    }
+}
+
+@media screen and (max-width: 630px) {
+    .log-img {
+        clear: both;
+        max-width: none;
+        width: 98%;
+        margin-top: 10px;
+    }
+
+    img {
+        max-width: 100%;
+        width: 98%;
+    }
+
+    .mat-card {
+        float: left;
+        clear: both;
+        width: 100%;
+        margin-top: 10px;
     }
 }
