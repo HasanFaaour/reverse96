@@ -7,7 +7,6 @@ import { LocationsService } from '../../services/locations.service';
 import { AddReviewComponent } from '../add-review/add-review.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPlaceComponent } from '../add-place/add-place.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgbAlertConfig} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -29,6 +28,8 @@ export class MapReviewComponent implements AfterViewInit  {
   sideBarbuttonCloseClicked = false;
   locationsIsEmpty = false;
 
+  iconName: string = '';
+  iconColor: string = '';
   locId: string = '';
   baseUrl = "http://localhost:8000";
   sendValue: any;
@@ -41,6 +42,8 @@ export class MapReviewComponent implements AfterViewInit  {
   lat: any;
   lng: any;
   latlng = L.latLng(35.741552, 51.507297);
+
+  slectedValue: number = 19;
   dlg = true;list: unknown;
   pendding: boolean | undefined;
   useInfSer: any;
@@ -50,8 +53,31 @@ export class MapReviewComponent implements AfterViewInit  {
   latLngCorners = { coordinates: [-3,-3,2,2]};
   reviews: any;
   locations: any;
+  popupContent: any;
+  filteredLocations: any = [];
   location: any;
   coordinates: any = [];
+  category: any[] = [
+    {id: 19 , color:"red", viewValue:"Cancel Filter", value: ""},
+    {id: 11 ,  color:"rgb(121, 120, 120)", viewValue:"Airport", value: "local_airport"},
+    {id: 15 ,  color:"rgb(230, 152, 78)", viewValue:"Buffet", value: "local_cafe"},
+    {id: 14 ,  color:"rgb(121, 120, 120)", viewValue:"Bus Station", value: "directions_bus"},
+    {id: 5 ,  color:"rgb(230, 152, 78)", viewValue:"Cafe", value: "local_cafe"},
+    {id: 2 ,  color:"rgb(121, 120, 120)", viewValue:"Cinama", value: "theaters"},
+    {id: 10 ,  color:"rgb(75, 133, 226)", viewValue:"Library", value: "school"},
+    {id: 9 ,  color:"rgb(243, 69, 69)", viewValue:"Mall", value: "local_mall"},
+    {id: 17 ,  color:"rgb(84, 204, 124)", viewValue:"Mosque", value: "mosque"},
+    {id: 1 ,  color:"rgb(60, 187, 102)", viewValue:"Park", value: "park"},
+   /*  {id: 0 , color:"rgb(243, 69, 69)", viewValue:"Place", value: "restaurant"}, */
+    {id: 3 , color:"rgb(243, 69, 69)", viewValue:"Restaurant", value: "restaurant"},
+    {id: 7 , color:"rgb(75, 133, 226)", viewValue:"School", value: "school"},
+    {id: 4 , color:"rgb(121, 120, 120)", viewValue:"Stadium", value: "stadium"},
+    {id: 8 , color:"red", viewValue:"Street", value: "local_mall"},
+    {id: 16 , color:"red", viewValue:"Store", value: "school"},
+    {id: 13 , color:"rgb(216, 152, 78)", viewValue:"Subway Station", value: "restaurant"},
+    {id: 12 , color:"rgb(216, 152, 78)e", viewValue:"Train Station", value: "train"},
+    {id: 6 , color:"rgb(75, 133, 226)", viewValue:"University", value: "school"},
+  ]
  
   component = this.resolver.resolveComponentFactory(AddReviewComponent).create(this.injector);
   @Input() public alerts: Array<string> = [];
@@ -72,6 +98,10 @@ export class MapReviewComponent implements AfterViewInit  {
   }
   toggle() {
     this.sidenav.toggle();
+  }
+  onSelect() {
+    this.getLocations();
+   console.log(this.slectedValue);
   }
 
   showReviewsList() {
@@ -110,7 +140,7 @@ export class MapReviewComponent implements AfterViewInit  {
       data: { pageValue: this.sendValue }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
+      if(result)
       this.dialogValue = result.data;
       if(this.dialogValue === 'y'){
         this.getLocations();
@@ -126,20 +156,17 @@ export class MapReviewComponent implements AfterViewInit  {
     this.map = new L.Map('map').locate({setView: true, maxZoom: 15});
     this.makCirOnCurPos();
     this.addTileLayer();
-    const icon = this.createIcon("marker.png");
+    const icon = this.createIcon("marker.png", "red");
    
     this.getCorners();
-    //
+    
     this.map.on('moveend', (event: any) => {   
       this.getLocations();
     });
     
-    
     this.map.on('click',  (e: any) => {
-      //new ---this.isMarkerCreated = !this.isMarkerCreated;
       console.log(this.sidebarOpen);
       if(this.sidebarOpen){
-         //(new) this.showLocationDetail= !this.showLocationDetail;
          this.sidebarOpen = !this.sidebarOpen;
          this.isEnabled = true;
          this.sideBarbuttonCloseClicked = true;
@@ -147,12 +174,11 @@ export class MapReviewComponent implements AfterViewInit  {
          if(this.isMarkerCreated ){
           this.map.removeLayer(this.marker);
           this.isEnabled = true;
-         }
-         
+        }
       } else{
         this.isMarkerCreated = !this.isMarkerCreated;//new---
         if(this.isMarkerCreated){
-          const icon = this.createIcon("marker-icon.png");
+          const icon = this.createIcon("place", "red");
           this.marker = L.marker(e.latlng ,{icon,draggable: false,autoPan: true
           }).addTo(this.map);
           this.map.addLayer(this.marker);
@@ -176,8 +202,19 @@ export class MapReviewComponent implements AfterViewInit  {
   getLocations() : void {
     this.locationSer.getMapLocations(this.latLngCorners).subscribe({
       next: (data) => {  
-        this.locations = data.message;
-        /* this.markers.clearLayers(); */
+        this.locations = [];
+        this.filteredLocations = data.message;
+        console.log(data);
+        if(this.slectedValue != 19){
+          for(let location of this.filteredLocations){
+            if(location.place_category == this.slectedValue ){
+              console.log("ya hosien");
+              this.locations.push(location);
+            }
+          }
+        }else{
+          this.locations = this.filteredLocations;
+        }
         console.log("length"+ this.listmarkers.length)
         for(let l of this.listmarkers){
           this.map.removeLayer(l.m);
@@ -185,14 +222,15 @@ export class MapReviewComponent implements AfterViewInit  {
         this.listmarkers = [];
         this.coordinates = [];
         for(let location of this.locations){
-          console.log(location.name);
           location.picture = `${this.baseUrl}${location.picture}`;
           location.latt = +location.latt;
           location.long = +location.long;
-          this.coordinates.push({lat: +location.latt, lon: +location.long});
+          this.coordinates.push({lat: +location.latt, lon: +location.long, cate: location.place_category});
         }
+        console.log(this.location);
         this.markerFilter();
-        console.log("locations: " +this.locations);
+        console.log(this.location);
+        console.log(data);
         if(this.locations.length > 0){
           this.locationsIsEmpty = false;
         }else{
@@ -222,29 +260,39 @@ export class MapReviewComponent implements AfterViewInit  {
   clikOnLocation(loc: any){
     for(let i of this.locations){
       if(loc.latt === i.latt && loc.long === i.long){
-        this.location = loc;
+        this.location = i;
+        console.log(this.location);
         this.locId = i.id;
+       // this.reviews = this.getReviews(i.id);
         this.reviews = i.reviews;
         for(let review of this.reviews){
           review.picture = `${this.baseUrl}${review.picture}`;
         }
-      
       }
     }  
+   
+    for(let marker of this.listmarkers){
+      console.log(typeof marker.m.getLatLng().lat.toString());
+      console.log(typeof this.location.latt.toString());
+      if(marker.m.getLatLng().lat == this.location.latt.toString() && marker.m.getLatLng().lng == this.location.long.toString()){
+        this.marker = marker;
+        marker.m.openPopup();
+      }
+    }
+    const icon1 = this.createIcon(this.iconName , "blue"); 
     this.showLocationDetail = true;
     this.showReviewList = false
     this.map.setView([this.location.latt , this.location.long], 17);
+    this.marker.m.setIcon(icon1);
+    setTimeout(()=> {
+      console.log("ya aba abd allah");
+    },3000)
+    console.log(this.location);
   }
 
-  private createIcon(iconName: any) {
- /*    const redMarker = L.ExtraMarkers.icon({
-      icon: 'fa-coffee',
-      markerColor: 'red',
-      shape: 'square',
-      prefix: 'fa'
-  }); */
+  private createIcon(iconName: any, iconColor: any) {
     const icon = L.icon({
-      iconUrl: `https://api.geoapify.com/v1/icon?size=xx-large&type=awesome&color=red&icon=${iconName}&noWhiteCircle&apiKey=${"7dd41723aded464e911149b7f731f406"}`,
+      iconUrl: `https://api.geoapify.com/v1/icon?size=xx-large&type=material&color=${iconColor}&icon=${iconName}&noWhiteCircle&apiKey=${"7dd41723aded464e911149b7f731f406"}`,
      /*  iconUrl: `assets/images/${iconName}`, */
       //shadowUrl: 'assets/images/shadow.png',
       //shadowSize: [30,20],
@@ -256,7 +304,14 @@ export class MapReviewComponent implements AfterViewInit  {
   }
 
   private createMarker(p : any) {
-    const icon = this.createIcon("coffee");
+    for(let c of this.category){
+      if(p.cate == c.id){
+        this.iconName = c.value;
+        this.iconColor = c.color;
+        console.log(c.value)
+      } 
+    }
+    const icon = this.createIcon(this.iconName, this.iconColor);
     const marker = L.marker([p.lat, p.lon],{
       icon,
       draggable: false,
@@ -302,7 +357,7 @@ export class MapReviewComponent implements AfterViewInit  {
     const lng = p.lon;
     for(let i of this.locations){
       if(lat === i.latt && lng === i.long){
-        this.location = i;
+        this.popupContent = i;
         this.locId = i.id.toString();
         this.reviews = i.reviews;
         for(let review of this.reviews){
@@ -310,13 +365,13 @@ export class MapReviewComponent implements AfterViewInit  {
         }
       }
     }
-    popup.setContent(/* `<h3 style="font-weight: 400;"> ${ this.location.name }</h3>` */
+    popup.setContent(
                       `<div style= "display: flex; width: 350px; height: 70px; margin-left: 0px;"> `
-                      +`<img src=${ this.location.picture } style="width:70px; height:70px; float:left margin:0px;">`
+                      +`<img src=${ this.popupContent.picture } style="width:70px; height:70px; float:left margin:0px;">`
                       + `<div style= "display: inline-block; width: 290px; height: 60px; margin: 0px; "> `
-                      + `<a style="font-size:18px; margin-top: 0px; margin-bottom: 0px; margin-left: 15px;  display: block;"> ${ this.location.name }</a>`
-                      + `<a style="font-size:14px; margin-top: 0px; margin-bottom: 0px; margin-left: 15px; display: block;"> ${this.location.no_of_likes }${" "}likes</a>`
-                      + `<h3 style="font-size:14px; margin-top: 0px; margin-bottom: 0px; margin-left: 15px; padding: 0px; display: block;"> ${ this.location.no_of_reviews }${" "}views</h3>`
+                      + `<a style="font-size:18px; margin-top: 0px; margin-bottom: 0px; margin-left: 15px;  display: block;"> ${ this.popupContent.name }</a>`
+                      + `<a style="font-size:14px; margin-top: 0px; margin-bottom: 0px; margin-left: 15px; display: block;"> ${this.popupContent.no_of_likes }${" "}likes</a>`
+                      + `<h3 style="font-size:14px; margin-top: 0px; margin-bottom: 0px; margin-left: 15px; padding: 0px; display: block;"> ${ this.popupContent.no_of_reviews }${" "}views</h3>`
                       + `</div>` 
                       + `</div>`)
     return popup;               
@@ -366,12 +421,11 @@ export class MapReviewComponent implements AfterViewInit  {
 
   markerFilter() {
     for(let l of this.coordinates){
+      console.log(l.cate);
       const marker = this.createMarker(l);
       this.onClickMarker(marker);
       const popup = this.createPopup(l);
       this.markerMouseOver(marker, popup);
-    /*   this.markers.addLayer(marker);
-      this.map.addLayer(this.markers); */
     }
   }
 }

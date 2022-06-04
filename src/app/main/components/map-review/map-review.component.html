@@ -9,6 +9,17 @@
   <mat-drawer #drawer class="example-sidenav" mode="side" position="end">
    <!--  <div class="close-sidebar-button"><mat-icon>add</mat-icon></div> -->
     <div *ngIf="showReviewList" class="listReview">
+      <div class="filter">
+        <!-- <input class="checkbox" type="checkbox" > -->
+        <mat-form-field appearance="fill" >
+          <mat-label>Select Category</mat-label>
+          <mat-select (selectionChange)="onSelect()" [(value)]="slectedValue"  >
+              <mat-option *ngFor="let c of category" [value]="c.id">
+                {{c.viewValue}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
       <div *ngFor="let l of locations; let i = index" (click)=clikOnLocation(l) class="list-reviews-container" >
         <div class="image"><img [src]="l.picture" ></div>
         <div class="description">
@@ -21,7 +32,7 @@
     </div>
     <div *ngIf="showLocationDetail" class="reviews">
       <div class="top-reviews">
-        <a (click)="showReviewsList()">Top reviews</a>
+        <a (click)="showReviewsList()">Top Locations</a>
       </div>
       <div class="image">
         <img [src]= "location.picture" style="height: 100%; width: 100%; border-radius: 10px;"/> 

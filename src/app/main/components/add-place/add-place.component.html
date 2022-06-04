@@ -1,4 +1,5 @@
 <div class="dialog">
+    <mat-progress-bar class="progres" mode="indeterminate" *ngIf="showProg">Connecting to server</mat-progress-bar>
     <h2>Add Place</h2>
     <p>
         Provide some information about this place. If this place is added to Maps, it will appear publicly.
@@ -11,8 +12,8 @@
         <div class="form-group">
             <mat-form-field appearance="fill" >
                 <mat-label>Select Category</mat-label>
-                <mat-select formControlName="category">
-                    <mat-option *ngFor="let food of foods" [value]="food.value">
+                <mat-select [(value)]="slectedValue" formControlName="category">
+                    <mat-option *ngFor="let food of category" [value]="food.id">
                       {{food.viewValue}}
                     </mat-option>
                 </mat-select>
@@ -21,13 +22,18 @@
         <h2>place photo</h2>
         <p>Add helpful photos like storefronts, notices, or signs</p>
         <div class="form-group">
-            <div class="add-img-icon" (click)="Image.click()"><mat-icon>add_a_photo</mat-icon>
+            <div class="add-img-icon" (click)="Image.click()"><mat-icon *ngIf="!disblyImage">add_a_photo</mat-icon>
+                <img *ngIf="disblyImage" class="image-display" [src]="imageSrc || 'http://placehold.it/180'" />
             </div>
             <input #Image class="image-input" type="file" name="image" accept="image/*" (change)="uploadFile($event)" formControlName="picture">
+           <!-- <div class="imageInfo">
+               <div>{{imageName}}</div>
+               <div class="butt">delete the image</div>
+           </div> -->
         </div>
         <div class="form-group">
             <div *ngIf="invalude" class="message">{{message}}</div>
-            <button class="button">Add Location</button>
+            <button class="button" >Add Location</button>
             <button class="cancel-button" (click)="closeDialog()">Cancel</button>
         </div>
     </form>
