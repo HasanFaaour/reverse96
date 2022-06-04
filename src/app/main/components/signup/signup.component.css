@@ -1,10 +1,10 @@
 .container {
-    width: 80%;
+    width: 77%;
     min-height: 500px;
     border: 1px solid #ddd;
     border-radius: 10px;
     margin-top: 85px;
-    margin-left: 185px;
+    margin-left: 22%;
     display: inline-block;
     box-shadow: 0 4px 8px 0 rgba(77, 76, 76, 0.116), 0 6px 20px 0 rgba(70, 70, 70, 0.096);
 }
