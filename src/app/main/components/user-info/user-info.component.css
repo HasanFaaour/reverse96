@@ -1,3 +1,284 @@
+.container {
+  position: absolute;
+  left: 22%;
+  top: 90px;
+  right: 1%;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  /* border: 1px blueviolet solid; */
+  display: block;
+  /* justify-content: center; */
+}
+
+  /* .user-info-card * {
+    border: 1px green solid;
+  } */
+
+  .user-info-card {
+    margin-left: 20px;
+    margin-right: auto;
+    margin-bottom: 10px;
+    width: 500px;
+    height: max-content;
+    background-color: rgb(237, 233, 195);
+    border-radius: 15px;
+    font-family: MV Boli;
+  }
+
+    .avatar {
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+    }
+
+    .actions {
+      display: flex;
+      margin-left: auto;
+      margin-right: 0;
+      width: max-content;
+      align-items: center;
+    }
+
+      .action-fab {
+        margin-left: auto;
+        margin-right: 10px;
+      }
+
+      .action-fab.blue {
+        background-color: rgb(88, 99, 255);
+      }
+
+      .action-fab.green {
+        background-color: rgb(64, 182, 99);
+      }
+
+      .action-fab.red {
+        background-color: rgb(221, 69, 69);
+      }
+
+      .follow .mat-icon {
+        margin-right: -4px;
+      }
+
+      /* .mat-card-content {
+      } */
+
+      small {
+        display: inline-flex;
+        width: min-content;
+        font-size: 9px;
+        color: #777;
+        cursor: pointer;
+      }
+
+  .reviews-area {
+    display: inline-block;
+    margin-left: 20px;
+    width: 100%;
+    height: auto;
+    overflow-wrap: normal;
+    /* border: 1px solid green; */
+    /* flex-direction: row; */
+    /* float: left; */
+  }
+/* 
+    .single-review * {
+      border: blue 1px solid;
+    } */
+
+    .single-review {
+      display: inline-block;
+      margin-right: 20px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 350px;
+      height: max-content;
+      background-color: rgb(238, 244, 252);
+      vertical-align: top;
+      /* overflow-y: scroll; */
+      /* border: 1px solid salmon; */
+      /* float: left; */
+      /* display: flex; */
+      /* overflow-wrap: normal; */
+      /* padding-bottom: 0; */
+    }
+
+    .single-review:hover {
+      box-shadow: 1px 0 4px 0 gray;
+    }
+
+      .review-header {
+        overflow-x: scroll;
+      }
+
+      
+      .review-header::-webkit-scrollbar {
+        display: none;
+      }
+
+        .review-title {
+          font-size: large;
+          /* overflow-x: hidden; */
+          /* width: max-content; */
+          /* overflow-y: scroll; */
+          /* max-height: 22px; */
+        }
+
+        .qq {
+          max-height: 22px;
+          width: max-content;
+          /* overflow-x: scroll; */
+        }
+
+      .place-image {
+        margin-bottom: 10px;
+        object-fit: cover;
+        cursor: pointer;
+      }
+
+      .review-image {
+        object-fit: cover;
+        height: 250px;
+        cursor: pointer;
+        /* width: auto; */
+        /* margin-left: 0; */
+        /* margin-right: 0%; */
+      }
+
+      .review-content {
+        display: flex;
+        animation: expand .2s;
+        min-height: 100px;
+        }
+
+        .review-text {
+          display: flex;
+          overflow-y: scroll;
+          margin-bottom: 5px;
+          width: 100%;
+          max-height: 100px;
+          height: max-content;
+          box-shadow: -3px -1px 2px -2px gray;
+          border-radius: 3px;
+          padding: 5px;
+          /* margin-top: 50px; */
+          /* flex-direction: column; */
+          /* border: blue 1px solid; */
+          /* border-radius: 2px; */
+        }
+
+        .review-text::-webkit-scrollbar {
+          width: 3px;
+        }
+
+        .review-text::-webkit-scrollbar-thumb {
+          background: #777;
+          border-radius: 3px;
+        }
+
+        .review-text::-webkit-scrollbar-track {
+          background: #ddd;
+        }
+
+        .review-text::-webkit-scrollbar:disabled {
+          display: none;
+        }
+
+        /* .review-text */
+
+        .review-actions-area {
+          /* display: flex; */
+          /* margin-left: auto; */
+          /* margin-right: -10px; */
+          margin-top: 0;
+        }
+
+          .review-action {
+            /* display: flex; */
+            margin-top: 0;
+            margin-left: 0;
+            margin-right: -2px;
+            /* margin-bottom: 0; */
+            /* margin-right: 5px; */
+            /* float: right; */
+          }
+
+            .review-action .unlike {
+              color: red;
+            }
+
+      /* .review-delete .mat-icon {
+        margin-bottom: -1px;
+      } */
+
+  .private {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    color: #888;
+  }
+
+.follow-item img{
+  margin-right: 10px;
+}
+
+@keyframes expand {
+  0% {
+    height: 0;
+    min-height: 0;
+    overflow-y: hidden;
+  }
+  100% {
+    min-height: 100px;
+    height: 100px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .container {
+    left: 1%;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
 .userInfo {
    margin-left: 22%; 
    margin-top: 70px;
@@ -11,9 +292,11 @@
     height: 170px;
     border-bottom: 1px solid #ddd;
 }
+*/
 /* .title div {
     display: inline-block;
 } */
+/*
 .image {
     width: 110px;
     height: 110px;
@@ -41,25 +324,31 @@
 }
 
 .send-message {
-  float: right;
-  height: 30px;
-  margin-top: 120px;
-  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  left: 40px;
+  top: 60px;
+  background-color: rgb(88, 99, 255);
   color: white;
-  background-color: rgb(64, 182, 99);
-  border: 1px solid #ddd;
-  border-radius: 8px;
 }
 
-.email {
-    font-size: 28;
+  .send-message .mat-icon {
+    display: flex;
+    justify-content: center;
+  }
+
+.fullname {
+    font-size: 14px;
+    color: #888;
 }
 .username {
     margin-top: 0px;
     font-weight: bold;
 }
 
-/*--------------------------container-------------------------------*/
+--------------------------container-------------------------------
 
 * {
     box-sizing: border-box;
@@ -113,7 +402,7 @@
     margin-top: 6px;
   }
   
-  /* Clear floats after the columns */
+   Clear floats after the columns 
   .row:after {
     content: "";
     display: table;
@@ -138,4 +427,4 @@
    .image{
      margin-left: 20px;
    }
-  }
+  } */

@@ -12,11 +12,12 @@
       </button>
     </div>
       <mat-menu #menu="matMenu" >
-        <button mat-menu-item>home</button>
-        <button mat-menu-item>add location</button>
-        <button mat-menu-item>favorite</button>
-        <button mat-menu-item>notifications</button>
-        <button mat-menu-item>profile</button>
+        <button mat-menu-item routerLink="/home" routerLinkActive="active" >Home</button>
+        <button mat-menu-item >favorite</button>
+        <button mat-menu-item >notifications</button>
+        <button mat-menu-item routerLink="/map-reviws" routerLinkActive="active" *ngIf="isLogin" >Map</button>
+        <button mat-menu-item routerLink="/user" routerLinkActive="active" >profile</button>
+        <a  href="message" style="text-decoration: none;" ><button mat-menu-item *ngIf="isLogin" >message</button></a>
       </mat-menu>
       <a style="color: rgb(80, 223, 248); margin-left: 2.5%;" class="logo" routerLink="/home"><img src="assets\images\sidebar\logo.png" style="width: 30px; height: 30px; margin-right: 15px; margin-bottom: 4px;">LogoName</a>  
       <div class="search-border">

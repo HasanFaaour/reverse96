@@ -17,6 +17,8 @@ import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { AddReviewComponent } from './components/add-review/add-review.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { NotificationComponent } from './components/notification/notification.component';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,16 +30,21 @@ import { ComponentsComponent } from './components/components.component';
 import { MapReviewComponent } from './components/map-review/map-review.component';
 import { AppComponent } from '../app.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatListModule} from '@angular/material/list';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatTabsModule} from '@angular/material/tabs'
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { AddPlaceComponent } from './components/add-place/add-place.component';
 
 import { NgxPhotoEditorModule } from 'ngx-photo-editor';
-import { ChatComponent } from './components/chat/chat.component';
+
 import { NgbAlertModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+
 const routes: Routes = [
   {
     path: '',
@@ -46,6 +53,14 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'home'
+      },
+      {
+        path: 'userInfo',
+        redirectTo: 'user'
+      },
+      {
+        path: 'userInfo/:username',
+        redirectTo: 'user/:username'
       },
       {
         path: 'home',
@@ -74,11 +89,11 @@ const routes: Routes = [
         component: AddReviewComponent
       },
       {
-        path: 'userInfo',
+        path: 'user',
         component: UserInfoComponent
       },
       {
-        path: 'userInfo/:username',
+        path: 'user/:username',
         component: UserInfoComponent
       },
       {
@@ -92,6 +107,10 @@ const routes: Routes = [
       {
         path: 'map',
         component: AddPlaceComponent
+      },
+      {
+        path: 'notifications',
+        component: NotificationComponent
       }
     ],
   },
@@ -112,7 +131,8 @@ const routes: Routes = [
     ChatComponent,
     MapReviewComponent,
     UserInfoComponent,
-    AddPlaceComponent
+    AddPlaceComponent,
+    NotificationComponent
   ],
   entryComponents: [AddPlaceComponent],
   imports: [
@@ -126,12 +146,17 @@ const routes: Routes = [
     MatRadioModule,
     ReactiveFormsModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatSidenavModule,
     MatInputModule,
     MatMenuModule,
     MatSelectModule,
     MatDialogModule,
     MatListModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    MatBadgeModule,
+    MatTabsModule,
     FormsModule,
     NgxPhotoEditorModule,
     MatProgressSpinnerModule,

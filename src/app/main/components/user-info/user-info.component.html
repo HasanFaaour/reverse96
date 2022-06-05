@@ -1,12 +1,16 @@
-<div class="userInfo">
+<!-- <div class="userInfo">
   <div class="title">
     <div class="image"><img [src]="picture" style="border-radius:50%;height: 100%; width: 100%;object-fit: cover;"></div>
     <div class="name">
-        <p class="email">{{name}}</p>
-        <p class="username">{{username}}</p>
+      <p class="username">{{username}}</p>
+      <p class="fullname">{{name}}</p>
     </div>
-    <button class="editprofile" (click)="editeProfile()" >Edit Profile</button>
-    <button class="send-message" [routerLink]="routeUsername?'../../message/'+username:'../message/'+username">{{routeUsername? "Send A Message":"Saved Messages"}}</button>
+    <button class="editprofile" (click)="editeProfile()" *ngIf="username == 'ADz'" >
+      Edit Profile
+    </button>
+    <button mat-mini-fab class="send-message" (click)="navigateTo('message/'+username)">
+      <mat-icon>message</mat-icon>
+    </button>
   </div>
 
   <br>
@@ -59,4 +63,135 @@
     </form>
   </div>
 
+</div> -->
+
+
+<div class="container" >
+
+  <!-- Info Card -->
+  <mat-card class="user-info-card">
+
+    <!-- Headers -->
+    <mat-card-header>
+
+      <!-- Avatar -->
+      <img class="avatar" mat-card-avatar [src]="askedFor?.picture" (click)="display(askedFor?.picture)" />
+
+      <!-- Username -->
+      <mat-card-title>
+        {{askedFor?.username}}
+      </mat-card-title>
+
+      <!-- Real Name -->
+      <mat-card-subtitle>
+        {{askedFor?.name}}
+      </mat-card-subtitle>
+
+      <!-- Buttons/Links -->
+      <div class="actions">
+        
+        <!-- Send Message -->
+        <button mat-mini-fab class="action-fab send-message" [class]="askedFor?.username == user.username?'green':'blue'" (click)="navigateTo('message/'+askedFor?.username)" [matTooltip]="(askedFor.username == user.username)? 'Saved Messages':'Message'" >
+          <mat-icon *ngIf="askedFor?.username != user.username" >message</mat-icon>
+          <mat-icon *ngIf="askedFor?.username == user.username" >bookmark</mat-icon>
+        </button>
+
+        <!-- Edit Profile -->
+        <button mat-mini-fab class="action-fab edit-profile green" *ngIf="askedFor?.username == user.username" matTooltip="Edit Profile" >
+          <mat-icon>edit_note</mat-icon>
+        </button>
+        
+        <!-- Follow -->
+        <button *ngIf="!following && !pending && askedFor?.username != user.username" mat-mini-fab class="action-fab follow blue" matTooltip="Follow" (click)="follow()" >
+          <mat-icon>person_add_alt</mat-icon>
+        </button>
+
+        <!-- Unfollow -->
+        <button *ngIf="following && askedFor?.username != user.username" mat-mini-fab class="action-fab follow red" matTooltip="Unfollow" (click)="unfollow()" >
+          <mat-icon>person_remove_alt</mat-icon>
+        </button>
+
+        <!-- Follow Pending -->
+        <button *ngIf="!following && pending && askedFor?.username != user.username" mat-mini-fab class="action-fab pending green" matTooltip="Cancel Request" (click)="cancelFollow()" >
+          <mat-icon>cancel</mat-icon>
+        </button>
+
+      </div>
+
+    </mat-card-header>
+
+    <!-- User Statistics -->
+    <mat-card-content>
+      {{askedFor?.followerCount}} <small [mat-menu-trigger-for]="followersMenu" >Followers</small>
+      {{askedFor?.followingCount}} <small [mat-menu-trigger-for]="followingsMenu" >Followings</small>
+
+    </mat-card-content>
+
+  </mat-card>
+
+  <!-- Reviews -->
+  <div class="reviews-area" *ngIf="public || following" >
+
+   
+    <mat-card class="single-review" *ngFor="let review of reviews" (mouseenter)="showDescription(review)" (mouseleave)="hideDescription(review)" >
+      <mat-card-header class="review-header">
+
+        <mat-card-title class="review-title">
+          <div class="qq">{{review.title}}</div>
+        </mat-card-title>
+
+        <mat-card-subtitle class="review-place">
+          <div>{{review.location_name}}</div>
+        </mat-card-subtitle>
+
+      <img mat-card-avatar class="place-image" [src]="review.location_picture" (click)="display(review.location_picture)" >
+
+      </mat-card-header>
+
+      <img mat-card-image class="review-image" [src]="review.picture" (click)="display(review.picture)" />
+
+      <mat-card-content *ngIf="review.showText" class="review-content">
+
+        <div class="review-text"  >
+          {{review.text}}
+        </div>
+      
+      </mat-card-content>
+
+      <mat-card-actions class="review-actions-area" align="end" >
+
+        <button class="review-action" mat-icon-button >
+          <mat-icon>chat_bubble_outline</mat-icon>
+        </button>
+
+        <button class="review-action review-like" mat-icon-button (click)="like(review)" >
+          {{review.likes}}
+          <mat-icon *ngIf="!review.liked" class="like" >favorite_border</mat-icon>
+          <mat-icon *ngIf="review.liked" class="unlike" >favorite</mat-icon>
+        </button>
+
+        <button class="review-action review-delete" mat-icon-button *ngIf="askedFor.username == user.username" >
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+
+      </mat-card-actions>
+
+    </mat-card>
+
+  </div>
+
+  <div class="private" *ngIf="!(public || following)" >
+    This account is private, if you want to see their reviews, send them a follow request.
+  </div>
+
 </div>
+
+<!-- Followers -->
+<mat-menu #followersMenu="matMenu" class="follow-menu" >
+  <a mat-menu-item class="follow-item" *ngFor="let follower of askedFor.followers" href="/user/{{follower.username}}"><img mat-card-avatar [src]="follower.picture"/>{{follower.username}}</a>
+</mat-menu>
+
+<!-- Followings -->
+<mat-menu #followingsMenu="matMenu">
+  <a mat-menu-item class="follow-item" *ngFor="let following of askedFor.followings" href="/user/{{following.username}}"><img mat-card-avatar [src]="following.picture"/>{{following.username}}</a>
+</mat-menu>

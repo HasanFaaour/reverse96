@@ -135,40 +135,13 @@
     height: auto;
     width: 100%;
     float: right;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-  }
-  .review-content {
-    padding: 13px;
-   /*  padding-bottom: 15px; */
-    font-size: 14px;
-  }
-  .review-content:hover {
-    background-color: rgb(240, 238, 238);
-    border-bottom: 1px solid #ddd ;
-    cursor: pointer;
-    
-  }
-  .review-content mat-icon {
-    fill: 0;
-    vertical-align: middle;
-    margin-top: 2px;
-    font-size: 17px;
-    color: rgb(138, 137, 137);
-    padding-right: 25px;
-  }
-  .review-content .name {
-    margin-bottom: 3px;
-    font-size: 16px;
-    font-weight: 500;
-  }
-  .review-content .row {
-    margin-bottom: 3px;
-    height: 18px;
-  }
-  .review-content .row1 {
-    margin-bottom: 3px;
-    height: 18px;
+    z-index: 1;
+    overflow-y: hidden;
+    top: 12%;
+    right: 3%;
+    background-color: rgba(221, 221, 221, 0.13);
+    border-radius: 8px;
+    border: 1px solid #ddd;
   }
   .company {
     color: rgb(206, 205, 205);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, Subscriber, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 
@@ -39,17 +39,28 @@ export class HttpRequestService {
   }
 
   //Defining the refresh post request method (Errors not handled)
-  refresh ():void{
-    let refresh = sessionStorage.getItem('refresh')
-    if (refresh){
-      let sub = this.hC.post(`${this.db}/api/login/refresh`,{refresh: refresh},{ headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'}).subscribe((response) => {
-        sessionStorage.setItem('access',Object.values(response)[0]);
-        sessionStorage.setItem('refresh',Object.values(response)[1]);
-        sub.unsubscribe();
-        return;   
-      });
-    }
-    return;
+  refresh ():Observable<null>{
+    return new Observable( (observer: Subscriber<null>) => {
+      let refresh = localStorage.getItem('refresh')
+      if (refresh){
+        this.hC.post(`${this.db}/api/login/refresh`,{refresh: refresh},{ headers:{}, observe: 'body', responseType: 'json'}).subscribe({
+          next: (response) => {
+            localStorage.setItem('access',Object.values(response)[0]);
+            localStorage.setItem('refresh',Object.values(response)[1]);
+            observer.next();
+            console.log('token refreshed');
+            return;   
+          },
+          error: (resp) => {
+            console.log(resp.status,'resp');
+            observer.error();
+          
+          }
+        });
+      }else {
+      observer.error();
+      }
+    });
   }
 
   //Defining the post request method for adding a review
@@ -84,6 +95,20 @@ export class HttpRequestService {
 
   addComent (reviewId: number, text: string): Observable<object> {
     return this.hC.post(`${this.db}/api/add_user_comment/${reviewId}`,{comment_text: text},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  }
+
+  followUser (username: string): Observable<object> {
+    return this.hC.post(`${this.db}/api/send-follow-request`,{to_user: username},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  }
+
+  unfollowUser (username: string): Observable<object> {
+    return this.hC.post(`${this.db}/api/unfollow-user`,{user: username},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  }
+
+  acceptFollow (username:string, accept: boolean): any {
+    console.log('accept',accept,username);
+    
+    this.hC.post(`${this.db}/api/accept-follow-request`,{from_user: username, accept: accept},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'}).subscribe();
   }
 
   get server():string {

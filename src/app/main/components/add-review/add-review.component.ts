@@ -46,7 +46,7 @@ export class AddReviewComponent implements OnInit {
   ngOnInit(): void {
     //Checking if the user is logged in
     this.userToken = localStorage.getItem('access');
-    if (this.userToken && localStorage.getItem('userID')){
+    if (this.userToken){
       console.log("Adding Review");
     }else{
 
@@ -56,7 +56,7 @@ export class AddReviewComponent implements OnInit {
       this.router.navigate(['logout']);
     }
 
-    this.reviewParams.get('location')?.setValue(this.locationID);
+    this.reviewParams.get('location')!.setValue(this.locationID);
     
     /*this.formReset = document.getElementById("reset-button")? document.getElementById("reset-button"): {click: () => {}}; */
 
@@ -185,7 +185,7 @@ export class AddReviewComponent implements OnInit {
       if (selectedImage.file.size <= 10 ** 7) {
 
         //Valid
-        this.image?.setValue(selectedImage.file);
+        this.image!.setValue(selectedImage.file);
         this.imageDisplay = selectedImage.base64;
       }
       
@@ -201,10 +201,10 @@ export class AddReviewComponent implements OnInit {
 
     //Image Select Event
     this.cropImage = selectedImage;
-    this.image?.setValue(selectedImage.target.files[0]);
+    this.image!.setValue(selectedImage.target.files[0]);
     this.imageDisplay = "";
 
-    if (!this.image?.value){
+    if (!this.image!.value){
       
       //Display the default icon in the input
       this.imageDisplay = selectImageIcon;
@@ -215,12 +215,12 @@ export class AddReviewComponent implements OnInit {
     else{
 
       //Validate Selected image's size
-      if (this.image.value.size > 10 ** 7){
+      if (this.image!.value.size > 10 ** 7){
 
         //Invalid -> Show error + Display default icon
         this.imageDisplay = selectImageIcon;
         this.imageError = true;
-        this.image.setValue(null);
+        this.image!.setValue(null);
         return;
       }
 
@@ -233,7 +233,7 @@ export class AddReviewComponent implements OnInit {
           return;
         }
 
-        reader.readAsDataURL(this.image.value);
+        reader.readAsDataURL(this.image!.value);
       }
     }
   }
@@ -244,11 +244,11 @@ export class AddReviewComponent implements OnInit {
     //Remove the error message
     this.errorStatus = false;
 
-    let textFieldStyle:any = document.getElementById('text-field')?.style;
+    let textFieldStyle:any = document.getElementById('text-field')!.style;
     //Check if the user has manually changed the text field's size (don't change it in that case)
     if (['', '130px'].includes(textFieldStyle.getPropertyValue('height'))){
 
-      if (this.text?.value){
+      if (this.text!.value){
         //maximize the text field's size
         textFieldStyle.setProperty('height','130px');
 

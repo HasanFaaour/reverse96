@@ -123,8 +123,8 @@ export class HomeComponent implements OnInit {
   getReviews():void {
     this.http.getReviews(2).subscribe({
       next: (response: any) => {
+        this.serverConnection = "connected"
         for (let review of response.message) {
-          this.serverConnection = "connected"
           review.picture = `${this.http.server}${review.picture}`;
           review.liked = review.liked_by.includes(this.userId);
           review.likes = review.liked_by.length;
@@ -143,9 +143,9 @@ export class HomeComponent implements OnInit {
     this.http.getReviews(1).subscribe({
       next: (response: any) => {
         for (let review of response.message) {
-          console.log("review",review.id);
+          // console.log("review",review);
           review.picture = `${this.http.server}${review.picture}`;
-          console.log(review.liked_by,this.userId);
+          // console.log(review.liked_by,this.userId);
           review.liked = review.liked_by.includes(this.userId);
           review.likes = review.liked_by.length;
           this.sideBarList.push(review);
@@ -206,14 +206,16 @@ export class HomeComponent implements OnInit {
   }
 
   display(url: string) {
-    this.dialog.open(BigImage, {data: {url:url}, panelClass: 'big-picture'});
+
+    this.dialog.open(BigImage, {data: {url:url}, panelClass: 'full-picture', maxWidth: '97vw', maxHeight: '99vh', backdropClass: 'full-picture-backdrop' });
+
   }
 
 }
 
 @Component({
-  selector: 'dialog-data-example-dialog',
-  template: '<div style="margin: auto;" ><img [src]="url.url" style="margin-left: 0; max-width: 100%; max-height: 100%; object-fit: fill" /></div>',
+  selector: 'big-image-display',
+  template: '<div style="margin: auto;" ><img [src]="url.url" style="margin-left: 0; max-width: 97vw; max-height:99vh; object-fit:fill" /></div>',
 })
 export class BigImage {
   constructor(@Inject(MAT_DIALOG_DATA) public url: dlgURL) {}
