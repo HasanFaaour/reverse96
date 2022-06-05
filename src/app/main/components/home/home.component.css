@@ -1,7 +1,11 @@
 .connection-bar {
-  margin-left: 21%;
-  margin-top: 71px;
-  width: 79%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 6;
+ /*  margin-left: 0%;
+  margin-top: 0px; */
+  width: 100%;
   /* height: 50px; */
 }
 
@@ -104,10 +108,32 @@
   border-bottom-right-radius: 8px;
 }
 
+/*--------------------right side---------------------*/
+.side {
+  width: 23%;
+  height: auto;
+  position: absolute;
+  float: right;
+  top: 12%;
+  right: 3%;
+}
 .right-side {
-    height: 60%;
-    width: 22%;
-    position: fixed;
+   height: 300px;
+   width: 100%;
+   overflow-y: scroll;
+   float: right;
+   z-index: 1;
+   top: 12%;
+   right: 3%;
+   background-color: #f5f5f5;
+   border-radius: 10px;
+   margin-top: 20px;
+   margin-bottom: 8px;
+}
+  .top-reviews {
+    margin-left: 20px;
+    height: auto;
+    width: 100%;
     float: right;
     z-index: 1;
     overflow-y: hidden;
@@ -118,16 +144,15 @@
     border: 1px solid #ddd;
   }
   .company {
-    position: fixed;
-    top: 73%;
-    right: 15%;
     color: rgb(206, 205, 205);
   }
 
   .title2 {
-    width: 100%;
+    width: 99%;
     height: 60px;
     display: inline-block;
+    margin-left: 1%;
+    margin-bottom: 15px;
   }
   .title2 .name {
     margin-left: 20px;
@@ -140,13 +165,22 @@
   border-radius: 100px;
 }
   .right-side .image {
-    width: 45px;
-    height: 45px;
+    width: 55px;
+    height: 55px;
     border: 1px solid #ddd;
     margin-bottom: 10px;
     margin-left: 10px;
     border-radius: 100px;
     display: inline-block;
+}
+.top-reviews .image {
+  width: 55px;
+  height: 55px;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  border-radius: 100px;
+  display: inline-block;
 }
 
 
@@ -154,11 +188,13 @@
 .name p {
   margin-bottom: 0px;
   padding-top: 0px;
+  font-size: 16;
+  font-weight: 500;
 }
 .name .username {
-  color: rgb(96, 218, 248);
+  color: rgb(39, 39, 39);
   font-weight: 300;
-  font-size: 16px;
+  font-size: 14px;
 }
 
   .fav-title {

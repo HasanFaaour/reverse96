@@ -150,6 +150,7 @@ const routes: Routes = [
     MatSidenavModule,
     MatInputModule,
     MatMenuModule,
+    MatSelectModule,
     MatDialogModule,
     MatListModule,
     MatSnackBarModule,

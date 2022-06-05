@@ -6,15 +6,14 @@
     margin-bottom: 0px;
     padding: 3px;
 }
-
+.progres {
+    margin-bottom: 10px;
+}
 form {
     width: 100%;
 }
 .image-input{
     display: none;
-}
-.form-group {
-    margin-bottom: 20px;
 }
 .add-img-icon {
     width: 75px;
@@ -23,23 +22,59 @@ form {
     border-radius: 8px;
     display: flex;
     vertical-align: middle ;
-    
+
 }
+
+.imageInfo .butt {
+   border: 1px solid rgb(136, 136, 136);
+   border-radius: 6px;
+   height: 24px;
+   margin-top: 10px;
+   padding-top: 2px;
+   padding-left: 10px;
+   cursor: pointer;
+   width: 50%;
+}
+.image-display {
+    width: 75px;
+    height: 75px;
+    border-radius: 8px;
+}
+.form-group {
+    margin-top: 20px;
+}
+mat-form-field {
+    width: 100%;
+}
+
 mat-icon {
     font-size: 30px;
     vertical-align: middle ;
     margin-top: 20px;
     margin-left: 20px;
-  
 }
 .button {
-    width: 120px;
+    width: 47%;
     height: 30px;
     border: 1px solid #ddd;
     border-radius: 8px;
     color: white;
     background-color: rgb(117, 197, 103);
-    margin-top: 30px;
+    margin-top: 0px;
+    margin-bottom: 15px;
+    margin-right: 6%;
+    float: left;
+}
+.cancel-button {
+    width: 47%;
+    height: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color: white;
+    background-color: rgb(155, 155, 155);
+    margin-top: 0px;
+    margin-bottom: 15px;
+    float: left;
 }
 p {
     font-size: 13px;
@@ -50,7 +85,12 @@ h2 {
 
 .message {
     color: rgb(190, 62, 73);
-    width: 300px;
+    background-color: rgb(255, 200, 200);
+    width: 100%;
+    font-size: 16px;
     height: 40px;
-    padding: 13px;
+    margin-bottom: 12px;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid rgb(252, 30, 30);
 }

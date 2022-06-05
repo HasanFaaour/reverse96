@@ -13,7 +13,7 @@ export class LocationsService {
   constructor(private http: HttpClient) { }
   
   getMapLocations(model: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/api/get_map_location_reviews`, 
+    return this.http.post<any>(`https://reverse96-reverse96.fandogh.cloud/api/category`, 
            model, {headers:{"Content-Type":"application/json"}, 
            responseType: 'json'});
   }
@@ -21,12 +21,18 @@ export class LocationsService {
 
   addPlace(model: any): Observable<any> {
     console.log("access" +localStorage.getItem('access'));
-    return this.http.post(`${this.baseUrl}/api/add_location`, 
+    return this.http.post(`https://reverse96-reverse96.fandogh.cloud/api/add_location`, 
            model, { headers:{'authorization':`Bearer ${localStorage.getItem('access')}`}});
   }
 
   getReviewById(id: any): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/api/get_location_reviews/${id}`,
+    return this.http.get<any>(`https://reverse96-reverse96.fandogh.cloud/api/get_location_reviews/${id}`,
+    {headers:{"Content-Type":"application/json"}, 
+    responseType: 'json'} );
+  }
+
+  getTopReviews(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/api/get_reviews/${2}`,
     {headers:{"Content-Type":"application/json"}, 
     responseType: 'json'} );
   }

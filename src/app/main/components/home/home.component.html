@@ -29,17 +29,16 @@
 <div class="blank-two">
 </div>
 
-
-<div class="right-side">
-    <h2 class="fav-title">Suggestions For You</h2>
-    <div class="title2" *ngFor="let item of sideBarList.slice(0,5); let i = index">
-      <div class="image"><img [src]="item.picture" style="height: 100%; width: 100%;"></div>
-      <div class="name">
-          <p class="email">{{item.title}}</p>
-          <p class="username">location{{item.location}}</p>
+  
+  <div class="right-side">
+      <h2 class="fav-title">Suggestions For You</h2>
+      <div class="title2" *ngFor="let item of sideBarList">
+        <div class="image"><img [src]="item.picture" style="height: 100%; width: 100%;"></div>
+        <div class="name">
+            <p class="email">{{item.title}}</p>
+            <p class="username">location{{item.location}}</p>
+        </div>
+        <!-- <mat-divider></mat-divider> -->
       </div>
-      <mat-divider *ngIf="i < 5"></mat-divider>
-    </div>
-    
-</div>
-<div class="company">2022 from revers96</div>
+  </div>
+  <div class="company">2022 from revers96</div>

@@ -11,7 +11,27 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     align-items: center;
     justify-content: center;
     display: flex;
-    width: auto;
-    overflow-y: hidden;
-    box-shadow: 0 0 0 100vw rgba(0, 0, 0, .85);
+
 }
+
+
+.leaflet-popup-content-wrapper {
+    padding-left: 0px;
+    margin: 0px;
+    text-align: left;
+    border-radius: 12px;
+}
+
+.leaflet-popup-dark-style .leaflet-popup-content-wrapper {
+    border-radius: 12px; 
+}
+.leaflet-popup-default style .leaflet-popup-content-wrapper {
+    padding-left: 0px;
+    text-align: left;
+    margin: 0px;
+    border-radius: 12px;
+}
+
+
+
+

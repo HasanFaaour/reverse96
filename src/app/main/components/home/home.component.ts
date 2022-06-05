@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { HttpRequestService } from 'src/app/http-service.service';
+import { LocationsService } from '../../services/locations.service';
 import { UserInfoService } from '../../services/user-info.service';
 
 export interface dlgURL {url:""};
@@ -13,16 +14,25 @@ export interface dlgURL {url:""};
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  name: string = 'dalan';
+  
 
-  constructor(private router: Router, private http: HttpRequestService, private userInfo: UserInfoService, private dialog: MatDialog) {
+  constructor(private router: Router,
+              private http: HttpRequestService,
+              private userInfo: UserInfoService,
+              private locationSer: LocationsService,
+              private dialog: MatDialog) 
+  {
+    this.getTenTopReviews();
   }
   
+  name: string = 'dalan';
+  baseUrl = "http://localhost:8000";
   username = "";
   userId : number = -5;
 
   list: any[] = [];
   sideBarList:any[] = [];
+  topReviews: any;
   
   serverConnection = 'connecting';
 
@@ -87,6 +97,7 @@ export class HomeComponent implements OnInit {
     this.likeNum = - this.likeNum;
   }
   ngOnInit(): void {
+    this.getTenTopReviews();
     if (!localStorage.getItem('access')){
       console.log("Not logged in, redirecting to login page...");
       this.router.navigate(['../login']);
@@ -149,6 +160,22 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  getTenTopReviews() {
+    this.locationSer.getTopReviews().subscribe({
+      next: (data) => {  
+        this.topReviews = data.message;
+        for(let review of this.topReviews){
+          review.picture = `${this.baseUrl}${review.picture}`;
+        }
+        console.log("Ya aba abd allah alhosien");
+        console.log(this.topReviews);
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
   addComent (item: any) {
     if (!item.newComment){
       console.log("ignored");
@@ -179,7 +206,9 @@ export class HomeComponent implements OnInit {
   }
 
   display(url: string) {
+
     this.dialog.open(BigImage, {data: {url:url}, panelClass: 'full-picture', maxWidth: '97vw', maxHeight: '99vh', backdropClass: 'full-picture-backdrop' });
+
   }
 
 }
