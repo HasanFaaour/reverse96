@@ -48,6 +48,7 @@ export class MapReviewComponent implements AfterViewInit  {
   pendding: boolean | undefined;
   useInfSer: any;
   image: any;
+  open: boolean = true;
   
 
   latLngCorners = { coordinates: [-3,-3,2,2]};
@@ -156,7 +157,7 @@ export class MapReviewComponent implements AfterViewInit  {
     this.map = new L.Map('map').locate({setView: true, maxZoom: 15});
     this.makCirOnCurPos();
     this.addTileLayer();
-    const icon = this.createIcon("marker.png", "red");
+   /*  const icon = this.createIcon("marker.png", "red"); */
    
     this.getCorners();
     

@@ -1,12 +1,28 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
 <mat-progress-bar *ngIf="show" mode="indeterminate"></mat-progress-bar>
 <div class = "sidenav" >
-    <!-- <div class="search-border"><input name="name" type="search"  class="search-box" placeholder="search..."></div> -->
-    <!-- <div class="logo" routerLink="/home"><img src="assets\images\sidebar\logo.png" style="width: 30px; height: 30px; margin-right: 15px; margin-bottom: 4px;">LogoNme</div>   -->
-    <a routerLink="/home" routerLinkActive="active"><img src="assets\images\sidebar\home.png"><span class="ico"></span>Home</a>
-    <a ><span class="sid-ico"><mat-icon>favorite_border</mat-icon></span>Favorites</a>
-    <a routerLink="/notifications"><mat-icon fontIcon="outline" [matBadge]="notificationCount" matBadgePosition="before" matBadgeColor="accent" matBadgeSize="small" [matBadgeHidden]="notificationCount<1" >notifications_none</mat-icon> Notifications</a>
-    <a routerLink="/map-reviws" routerLinkActive="active" *ngIf="isLogin"><img src="assets\images\sidebar\map.png" ><span class="ic"></span>Map</a>
-    <a *ngIf="isLogin" routerLink="/userInfo"><img src="assets\images\sidebar\person_1.png" ><span class="ic">Profile</span></a>
-    <a routerLink="/message"><img src="assets\images\sidebar\message.png" ><span class="ic">Message</span></a>
-   
+    <a class="side-icon" routerLink="/home" routerLinkActive="active">
+        <mat-icon class="material-icons-outlined"> home</mat-icon>
+        <span class="ico">Home</span>
+    </a>
+    <a class="test4" routerLinkActive="active">
+        <mat-icon>favorite_border</mat-icon>
+        <span class="sid-ico">Favorites</span>
+    </a>
+    <a routerLink="/notifications" routerLinkActive="active">
+        <mat-icon fontIcon="outline" [matBadge]="notificationCount" matBadgePosition="before" matBadgeColor="accent" matBadgeSize="small" [matBadgeHidden]="notificationCount<1" >notifications_none</mat-icon>
+        <span class="sid-ico">Notifications</span>
+    </a>
+    <a routerLink="/map-reviws" routerLinkActive="active" *ngIf="isLogin" routerLinkActive="active">
+        <mat-icon class="material-icons-outlined">place</mat-icon>
+        <span class="ic">Map</span>
+    </a>
+    <a *ngIf="isLogin" routerLink="/userInfo" routerLinkActive="active">
+        <mat-icon class="material-icons-outlined">person_outline</mat-icon>
+        <span class="ic">Profile</span>
+    </a>
+    <a routerLink="/message" routerLinkActive="active">
+        <mat-icon class="material-icons-outlined">email</mat-icon>
+        <span class="ic">Message</span>
+    </a>
 </div>
