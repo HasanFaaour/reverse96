@@ -37,7 +37,9 @@ import {MatListModule} from '@angular/material/list';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatBadgeModule} from '@angular/material/badge';
-import {MatTabsModule} from '@angular/material/tabs'
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatButtonToggleModule} from '@angular/material/button-toggle'
+
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { AddPlaceComponent } from './components/add-place/add-place.component';
 
@@ -157,6 +159,7 @@ const routes: Routes = [
     MatTooltipModule,
     MatBadgeModule,
     MatTabsModule,
+    MatButtonToggleModule,
     FormsModule,
     NgxPhotoEditorModule,
     MatProgressSpinnerModule,

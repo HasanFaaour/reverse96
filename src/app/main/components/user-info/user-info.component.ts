@@ -4,6 +4,26 @@ import { UserInfoService } from '../../services/user-info.service';
 import { HttpRequestService } from 'src/app/http-service.service';
 import { BigImage } from '../home/home.component';
 import { MatDialog } from '@angular/material/dialog';
+import { EnumMember, EnumType } from 'typescript';
+import { dashCaseToCamelCase } from '@angular/compiler/src/util';
+
+enum Pinned {
+  unset,
+  show,
+  hide
+}
+
+enum View {
+  reviews,
+  followers,
+  followings
+}
+
+enum DisplayModel {
+  pin = 'pin',
+  alwaysShowDes = 'alwaysShowDes',
+  extendButton = 'extendButton'
+}
 
 @Component({
   selector: 'app-user-info',
@@ -20,19 +40,22 @@ export class UserInfoComponent implements OnInit {
   // phone_number: string = "";
   // picture: string = "/profiles/default.png";
 
-  routeUsername: string|null = null;
+  reviewDisplayModel = DisplayModel.pin;
 
   user: any = {};
   askedFor: any = {};
 
+  editing = false;
+
   followed = false;
   following = false;
   mutual = false;
-  pending = false
+  pendingFollow = false
 
   public = true;
 
-  // followState = 'unknown';
+  view = View.reviews;
+  followList: any[] = [];
 
   reviews: any[] = [];
 
@@ -47,6 +70,107 @@ export class UserInfoComponent implements OnInit {
  editeProfile() {
     this.isEnabled = false;
  }
+
+ ngOnInit(username: string = "@@"): void {
+  // Initializing variables
+  this.user = {};
+  this.askedFor = {};
+
+  this.editing = false;
+
+  this.followed = false;
+  this.following = false;
+  this.mutual = false;
+  this.pendingFollow = false
+
+  this.public = true;
+
+  this.view = View.reviews;
+  this.followList = [];
+
+  this.reviews = [];
+
+  // Authenticate User
+  this.useInfSer.getUserInfo().subscribe({
+    next: (data: any) => {
+      let list = data.message;
+      console.log(list);
+      
+      this.user.id = list.id;
+      this.user.name = list.name;
+      this.user.username = list.username;
+      this.user.email = list.email;
+      this.user.address = list.address;
+      this.user.phone_number = list.phone_number;
+      this.user.picture = this.useInfSer.server + list.picture;
+
+      this.user.followerCount = list.followers?.length
+      this.user.followingCount = list.followings?.length
+
+      this.user.followers = []; 
+      for (let follower of list.followers) {
+        
+        if(!follower.picture.includes(this.useInfSer.server)) {
+          follower.picture = this.useInfSer.server + follower.picture;
+        }
+        
+        this.user.followers.push(follower)
+      }
+
+      this.user.followings = [];
+      for (let following of list.followings) {
+        
+        if (!following.picture.includes(this.useInfSer.server))
+          following.picture = this.useInfSer.server + following.picture;
+        
+        this.user.followings.push(following)
+      }
+
+      //...
+      let routeUsername = this.activatedRoute.snapshot.paramMap.get('username');
+      if (username != "@@") {
+        routeUsername = username;
+      }
+      if (routeUsername && routeUsername != this.user.username) {
+        
+        this.askedFor.username = routeUsername;      
+        this.getUserinformation();
+      }
+      else {
+        this.askedFor = this.user;
+
+        // Get The Reviews
+        this.getReviews();
+      }
+
+    },
+    error: (err) => {
+      console.log(err);
+      if (err.status == 401) {
+        this.httpRequest.refresh().subscribe({
+          next: (v) => {
+            console.log("token ref");
+            this.ngOnInit();
+            return;
+            
+          },
+          error: (er) => {
+            alert('Invalid authorization. Please login again.');
+            this.router.navigateByUrl('logout');
+            return;
+          }
+
+        });
+        return;
+      }
+      alert(`Invalid auth(${err.status})`);
+      this.router.navigateByUrl('logout');
+      return;
+    }
+ 
+  });
+
+}
 
   getUserinformation() : void {
     console.log("asking for",this.askedFor.username);
@@ -91,7 +215,7 @@ export class UserInfoComponent implements OnInit {
           this.askedFor.followings.push(following)
         }
 
-        this.pending = list.follow_state == 'pending';
+        this.pendingFollow = list.follow_state == 'pending';
         // console.log('p?',this.pending);
 
         this.public = list.is_public;
@@ -107,87 +231,6 @@ export class UserInfoComponent implements OnInit {
       }
    
     });
-  }
-
-  ngOnInit(): void {
-
-    // Authenticate User
-    this.useInfSer.getUserInfo().subscribe({
-      next: (data: any) => {
-        let list = data.message;
-        console.log(list);
-        
-        this.user.id = list.id;
-        this.user.name = list.name;
-        this.user.username = list.username;
-        this.user.email = list.email;
-        this.user.address = list.address;
-        this.user.phone_number = list.phone_number;
-        this.user.picture = this.useInfSer.server + list.picture;
-
-        this.user.followerCount = list.followers?.length
-        this.user.followingCount = list.followings?.length
-
-        this.user.followers = []; 
-        for (let follower of list.followers) {
-          
-          if(!follower.picture.includes(this.useInfSer.server)) {
-            follower.picture = this.useInfSer.server + follower.picture;
-          }
-          
-          this.user.followers.push(follower)
-        }
-
-        this.user.followings = [];
-        for (let following of list.followings) {
-          
-          if (!following.picture.includes(this.useInfSer.server))
-            following.picture = this.useInfSer.server + following.picture;
-          
-          this.user.followings.push(following)
-        }
-
-        //...
-        this.routeUsername = this.activatedRoute.snapshot.paramMap.get('username');
-        if (this.routeUsername && this.routeUsername != this.user.username) {
-          
-          this.askedFor.username = this.routeUsername;      
-          this.getUserinformation();
-        }
-        else {
-          this.askedFor = this.user;
-
-          // Get The Reviews
-          this.getReviews();
-        }
-
-      },
-      error: (err) => {
-        console.log(err);
-        if (err.status == 401) {
-          this.httpRequest.refresh().subscribe({
-            next: (v) => {
-              console.log("token ref");
-              this.ngOnInit();
-              return;
-              
-            },
-            error: (er) => {
-              alert('Invalid authorization. Please login again.');
-              this.router.navigateByUrl('logout');
-              return;
-            }
-  
-          });
-          return;
-        }
-        alert(`Invalid auth(${err.status})`);
-        this.router.navigateByUrl('logout');
-        return;
-      }
-   
-    });
-
   }
 
   getReviews (): void {
@@ -238,18 +281,18 @@ export class UserInfoComponent implements OnInit {
   }
 
   follow (): void {
-    this.pending = true;
+    this.pendingFollow = true;
     if (this.public) {
       this.askedFor.followerCount ++;
       this.user.followingCount ++;
       this.following = true;
-      this.pending = false;
+      this.pendingFollow = false;
     this.askedFor.followers.push(this.user)
   }
     this.httpRequest.followUser(this.askedFor.username).subscribe({
   
       error: (err) => {
-        this.pending = false;
+        this.pendingFollow = false;
         this.following = false;
       }
     });
@@ -259,11 +302,14 @@ export class UserInfoComponent implements OnInit {
     this.following = false;
     this.askedFor.followerCount --;
     this.user.followingCount --;
+    this.view = View.reviews;
     this.httpRequest.unfollowUser(this.askedFor.username).subscribe({
     
       error: (err) => {
         this.following = true
-      }
+        this.user.followingCount ++;
+        this.askedFor.followerCount ++;
+  }
     })
   }
 
@@ -282,6 +328,35 @@ export class UserInfoComponent implements OnInit {
 
   hideDescription(review: any) {
     review.showText = false;
+  }
+
+  pinDescription(review: any) {
+    if (review.pinned === undefined) {
+      review.pinned = Pinned.show;
+      return;
+    }
+    review.pinned = review.pinned == Pinned.show? Pinned.hide: review.pinned == Pinned.hide? Pinned.unset: Pinned.show;
+  }
+
+  switchView (followers: boolean): void {
+    if (!(this.public || this.following)) {
+      return;
+    }
+
+    if (followers) {
+      this.view = this.view == View.followers? View.reviews: View.followers;
+      this.followList = this.askedFor.followers;
+    }
+
+    else {
+      this.view = this.view == View.followings? View.reviews: View.followings;
+      this.followList = this.askedFor.followings;
+    }
+  }
+
+  switchUser (username: string) {
+    window.history.pushState("","",`user/${username}`);
+    this.ngOnInit(username);
   }
 
   display (url: string): void {
