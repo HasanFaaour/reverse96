@@ -106,8 +106,6 @@ export class HttpRequestService {
   }
 
   acceptFollow (username:string, accept: boolean): any {
-    console.log('accept',accept,username);
-    
     this.hC.post(`${this.db}/api/accept-follow-request`,{from_user: username, accept: accept},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'}).subscribe();
   }
 

@@ -268,7 +268,12 @@ export class UserInfoComponent implements OnInit {
   }
 
   cancelFollow(): void {
-    
+    this.pendingFollow = false;
+    this.httpRequest.followUser(this.askedFor.username).subscribe({
+      error: (err) => {
+        this.pendingFollow = true;
+      }
+    })
   }
 
   showDescription(review: any) {
