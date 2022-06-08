@@ -16,60 +16,73 @@ export class NotificationService {
 
   private obs: Observable<{type: string, data: any}> = new Observable();
 
-  connect (url:string): void {
-    console.log('connect');
+  connect (url:string): Observable<{type: string, data: any}>|undefined {
+    console.log('Asked to connect');
     
     
     if (this.socket && this.socket.readyState == WebSocket.OPEN){
-      this.socket.close(1000,'switch')
+      console.log("Already connected. duplicate call");
+      
+      return;
     }
 
-    this.obs = new Observable((observer: Subscriber<{type: string, data: any}>) => {
-      
-      this.socket = new WebSocket(`${this.baseURL}/ws/notification/${url}/`);
+    this.socket = new WebSocket(`${this.baseURL}/ws/notification/${url}/`);
 
-      this.socket.onclose = (ev) => {
+    this.obs = new Observable((observer: Subscriber<{type: string, data: any}>) => {
+
+      this.socket!.onclose = (ev) => {
         observer.error({type:'colse',data: ev.reason});
         console.log("closed");
         
       };
 
-      this.socket.onopen = (ev) => {
+      this.socket!.onopen = (ev) => {
+        console.log("Socket opened");
+        
         observer.next({type: 'open', data: ev});
-        console.log("Tracking...");
         
       };
 
-      this.socket.onmessage = (ev: MessageEvent) => {
+      this.socket!.onmessage = (ev: MessageEvent) => {
         let json = JSON.parse(ev.data).message;
 
         if (json.command == "on_connect") {
-        this.notificationCount = json.messages.length;
-        this.notificationList = json.messages;
-        console.log('on_c', this.notificationList);
-        
-        observer.next({type: 'fetch', data: json.messages});
+          console.log('received on_connect @ socket: ', json);
+          this.notificationCount = json.messages.length;
+          this.notificationList = json.messages;
+          console.log("(in service)notif list now: ", this.notificationList);
+          
+          
+          observer.next({type: 'fetch', data: json.messages});
         }
         else if (json.command == "post_connect") {
+          console.log('received post_connect @ socket: ', json);
           this.notificationCount ++;
-          this.notificationList.push(json.message);
-          console.log('notif',json.message);          
+          this.notificationList.push(json.messages);
+          console.log("(in service)notif list now: ", this.notificationList);
+
           observer.next({type: 'message', data: json})
         }
       };
 
     });
+    return this.obs;
   }
 
   disconnect (reason: string = 'manual'): void {
     if (this.socket) {
       this.socket.close(1000,reason);
     }
+    this.notificationCount = 0;
+    this.notificationList = [];
   }
 
   markAsRead (list: number[]): void {
     if (this.socket && this.socket.readyState == WebSocket.OPEN && list.length > 0){
       this.socket.send(JSON.stringify({received_id:list}));
+      // this.notificationList = this.notificationList.map((notif)=>list.includes(notif.id)?notif:void 0);
+      this.notificationCount -= list.length;
+      
     }
   }
 

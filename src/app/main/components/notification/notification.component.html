@@ -1,15 +1,15 @@
 <div class="container" (mousemove)="check()" >
     <mat-list>
-        <a class="notif" mat-list-item *ngFor="let notif of notificationList" routerLink="/user/{{notif.from}}" >
+        <a class="notif" mat-list-item *ngFor="let notif of notificationList" routerLink="/user/{{notif?.from}}" >
             <div class="from">
-                {{notif.from}}
+                {{notif?.from}}
             </div>
             <div class="content">
-                {{notif.notif == "followed_you"?"now follows you.":notif.notif == "new_review"?"has posted a new review.":notif.notif=="follow_request"? "Wants to follow you.":notif.notif == "declined"? "had sent an unsuccessful follow reques to you.":notif.notif == "follow_request_accepted"?"has accepted your follow request":notif.notif}}
+                {{notif?.notif == "followed_you"?"now follows you.":notif?.notif == "new_review"?"has posted a new review.":notif?.notif=="follow_request"? "Wants to follow you.":notif?.notif == "declined"? "had sent an unsuccessful follow reques to you.":notif?.notif == "follow_request_accepted"?"has accepted your follow request":notif?.notif}}
             </div>
             <div class="action">
-                <button *ngIf="notif.notif == 'follow_request'" mat-mini-fab class="accept" (click)="accept(notif.from,$event,notif)" ><mat-icon>done</mat-icon></button>
-                <button *ngIf="notif.notif == 'follow_request'" mat-mini-fab class="decline" (click)="decline(notif.from,$event,notif)" ><mat-icon>delete_outline</mat-icon></button>
+                <button *ngIf="notif && notif.notif == 'follow_request'" mat-mini-fab class="accept" (click)="accept(notif.from,$event,notif)" ><mat-icon>done</mat-icon></button>
+                <button *ngIf="notif && notif.notif == 'follow_request'" mat-mini-fab class="decline" (click)="decline(notif.from,$event,notif)" ><mat-icon>delete_outline</mat-icon></button>
             </div>
         </a>
     </mat-list>
