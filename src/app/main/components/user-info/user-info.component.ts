@@ -50,7 +50,8 @@ export class UserInfoComponent implements OnInit {
   followed = false;
   following = false;
   mutual = false;
-  pendingFollow = false
+  pendingFollow = false;
+  followBlocked = false;
 
   public = true;
 
@@ -82,6 +83,7 @@ export class UserInfoComponent implements OnInit {
   this.following = false;
   this.mutual = false;
   this.pendingFollow = false
+  this.followBlocked = false;
 
   this.public = true;
 
@@ -217,6 +219,8 @@ export class UserInfoComponent implements OnInit {
 
         this.pendingFollow = list.follow_state == 'pending';
         // console.log('p?',this.pending);
+
+        this.followBlocked = list.follow_state == 'Declined';
 
         this.public = list.is_public;
         // console.log(this.public);
