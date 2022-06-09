@@ -22,6 +22,9 @@
                     <!-- Image -->
                     <img class="chat-img" [src]="chat.image? chat.image:'assets/images/profile-image.png'" />
 
+                    <!-- More Options -->
+                    <button mat-icon-button class="chat-options" (click)="chatInfo($event, chat)" disabled="false" ><mat-icon >more_horiz</mat-icon></button>
+
                 </div>
 
                 <!-- Text -->
@@ -53,20 +56,39 @@
 
                 <!-- Single Message -->
                 <div id="message-{{message.id}}" (contextmenu)="cM($event, message, trigger)" *ngFor="let message of bubble.messages; let i = index" [ngClass]="{'chat-message':true, 'me':message.author == username, 'them': message.author != username, 'last': i == bubble.length-1, 'first': i == 0, 'selected-message':message.selected}" class="chat-message" >
+                    
+                    <!-- Bubble's Author (only first message) -->
                     <div class="author" (mouseenter)="showInfo($event,bubble.author)" (mouseleave)="hideInfo($event,true)" (click)="navigateTo('userInfo/'+message.author)" *ngIf="i==0">{{message.author}}</div>
+                    
+                    <!-- Reply (if present) -->
                     <div class="in-reply-to" *ngIf="message.replyTo" (click)="showReply((message.replyTo.id).toString())" >
                         <div class="in-reply-to-text" >
+
+                            <!-- Reply's Author -->
                             <div class="in-reply-to-{{message.replyTo.author == username?'me':'them'}}">{{message.replyTo.author}}</div>
+                            
+                            <!-- Reply's Text -->
                             <div class="in-reply-to-content">{{message.replyTo.content}}</div>
+
                         </div>
                         <mat-icon>reply</mat-icon>
                     </div>
+                    
                     <div class="message" >
+
+                        <!-- Message Text -->
                         <div class="inner-text">{{message.content}}</div>
+
+                        <!-- Creation Time -->
                         <div class="date" >{{message.date | date: 'HH:mm'}}</div>
+
+                        <!-- [Edited] -->
                         <mat-icon class="edited" *ngIf="message.edited" >edit</mat-icon>
+
+                        <!-- Seen State -->
                         <mat-icon class="seen" *ngIf="!message.seen && message.author == username" >done</mat-icon>
                         <mat-icon class="seen" *ngIf="message.seen && message.author == username" >done_all</mat-icon>
+
                     </div>
                 </div>
             </div>

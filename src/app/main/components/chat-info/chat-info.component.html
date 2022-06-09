@@ -1,0 +1,23 @@
+<mat-card class="dialog" >
+    <mat-card-header>
+
+        <mat-card-title class="title" >
+            {{chatInfo?.name}}
+        </mat-card-title>
+
+        <mat-card-subtitle>
+            {{chatInfo?.participants?.length}} member{{chatInfo && chatInfo.participants && chatInfo.participants.length > 1?'s':''}}
+        </mat-card-subtitle>
+
+        <img mat-card-avatar class="avatar" [src]="chatInfo?.image">
+
+    </mat-card-header>
+
+    <mat-divider class="header-divider" ></mat-divider>
+
+    <mat-card-content class="content" >
+        <mat-action-list class="members-list" >
+            <button mat-list-item mat-dialog-close="hi" class="members-item" *ngFor="let member of members" [routerLink]="'/user/'+member.username" ><img mat-list-avatar [src]="member.image" /> <div class="member-username" >{{member.username}}</div> </button>
+        </mat-action-list>
+    </mat-card-content>
+</mat-card>

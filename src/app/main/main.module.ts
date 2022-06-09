@@ -46,6 +46,7 @@ import { AddPlaceComponent } from './components/add-place/add-place.component';
 import { NgxPhotoEditorModule } from 'ngx-photo-editor';
 
 import { NgbAlertModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { ChatInfoComponent } from './components/chat-info/chat-info.component';
 
 const routes: Routes = [
   {
@@ -131,6 +132,7 @@ const routes: Routes = [
     AddReviewComponent,
     ComponentsComponent,
     ChatComponent,
+    ChatInfoComponent,
     MapReviewComponent,
     UserInfoComponent,
     AddPlaceComponent,

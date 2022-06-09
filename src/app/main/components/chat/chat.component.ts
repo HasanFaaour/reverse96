@@ -8,6 +8,8 @@ import { ChatMessage, Bubble, MessageList } from './MessageClasses';
 import {Clipboard} from '@angular/cdk/clipboard';
 import { HttpRequestService } from 'src/app/http-service.service';
 import { MatList } from '@angular/material/list';
+import { MatDialog } from '@angular/material/dialog';
+import { ChatInfoComponent } from '../chat-info/chat-info.component';
 
 @Component({
   selector: 'app-chat',
@@ -23,7 +25,8 @@ export class ChatComponent implements OnInit {
     private userInfo: UserInfoService,
     private chatService: ChatService,
     private clipboard: Clipboard,
-    private snack: MatSnackBar
+    private snack: MatSnackBar,
+    private dialog: MatDialog
     ) 
   {  }
 
@@ -129,7 +132,7 @@ export class ChatComponent implements OnInit {
             error: (er) => {
               console.log("failed refresh");
               alert("This session is expired. Please login again.");
-              this.router.navigate(['logout']);         
+              this.router.navigate(['logout']);
             }
           });
         }
@@ -601,15 +604,15 @@ export class ChatComponent implements OnInit {
   }
 
   showInfo (event: MouseEvent, user: string): void {
-    this.infoPosition.x = event.clientX < window.visualViewport.width - 200? `left: ${event.clientX.toString()}px;`: `right: ${(window.visualViewport.width-event.clientX).toString()}px;`;
-    this.infoPosition.y = event.clientY < window.visualViewport.height - 200? `top: ${event.clientY.toString()}px;`: `bottom: ${(window.visualViewport.height-event.clientY).toString()}px;`;
-    console.log("hovered",this.infoPosition.x,",",this.infoPosition.y, "user:",user);
-    this.infoUser = user;
-    this.infoHover1 = true;
+    // this.infoPosition.x = event.clientX < window.visualViewport.width - 200? `left: ${event.clientX.toString()}px;`: `right: ${(window.visualViewport.width-event.clientX).toString()}px;`;
+    // this.infoPosition.y = event.clientY < window.visualViewport.height - 200? `top: ${event.clientY.toString()}px;`: `bottom: ${(window.visualViewport.height-event.clientY).toString()}px;`;
+    // console.log("hovered",this.infoPosition.x,",",this.infoPosition.y, "user:",user);
+    // this.infoUser = user;
+    // this.infoHover1 = true;
   }
 
   enter() {
-    this.infoHover2 = true;
+    // this.infoHover2 = true;
   }
 
   hideInfo(event: MouseEvent, mode: boolean): void {
@@ -617,13 +620,13 @@ export class ChatComponent implements OnInit {
     //   this.infoHover = false;
     //   console.log("hide");
     // }
-    if (mode) {
-      this.infoHover1 = false
-    }
+    // if (mode) {
+    //   this.infoHover1 = false
+    // }
 
-    else {
-    this.infoHover2 = false;
-    }
+    // else {
+    // this.infoHover2 = false;
+    // }
     
   }
 
@@ -672,6 +675,13 @@ export class ChatComponent implements OnInit {
 
   markAsRead (): void {
     this.chatService.setSeen(this.chatId, this.username);    
+  }
+
+  chatInfo (ev: MouseEvent, chat: any): void {
+    ev.stopImmediatePropagation();
+    ev.preventDefault();
+
+    this.dialog.open(ChatInfoComponent, {data: chat, closeOnNavigation: true, disableClose: false});
   }
 
   navigateTo (url: string):void {
