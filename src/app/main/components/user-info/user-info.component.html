@@ -102,8 +102,8 @@
         </button>
         
         <!-- Follow -->
-        <button *ngIf="!following && !pendingFollow && askedFor?.username != user.username" mat-mini-fab class="action-fab follow blue" matTooltip="Follow" (click)="follow()" >
-          <mat-icon>person_add_alt</mat-icon>
+        <button *ngIf="!following && !pendingFollow && askedFor?.username != user.username" mat-mini-fab class="action-fab follow blue" (click)="follow()" [disabled]="followBlocked" >
+          <mat-icon [matTooltip]="followBlocked?'Already Declined': 'Follow'" >person_add_alt</mat-icon>
         </button>
 
         <!-- Unfollow -->
@@ -130,10 +130,10 @@
   </mat-card>
 
   <!-- Cahnge Review Display Model -->
-  <mat-button-toggle-group class="review-model-select" [(ngModel)]="reviewDisplayModel" >
-    <mat-button-toggle value="pin" matTooltip="Pin Model" ><mat-icon>push_pin</mat-icon></mat-button-toggle>
-    <mat-button-toggle value="extendButton" matTooltip="Extend Button Model" ><mat-icon>notes</mat-icon></mat-button-toggle>
-    <mat-button-toggle value="alwaysShowDes" matTooltip="Always Show" ><mat-icon>visibility</mat-icon></mat-button-toggle>
+  <mat-button-toggle-group class="review-model-select" [(ngModel)]="reviewDisplayModel" [disabled]="!(public || following)" >
+    <mat-button-toggle value="pin" matTooltip="Pin Model" [matTooltipDisabled]="!(public || following)" ><mat-icon>push_pin</mat-icon></mat-button-toggle>
+    <mat-button-toggle value="extendButton" matTooltip="Extend Button Model" [matTooltipDisabled]="!(public || following)" ><mat-icon>notes</mat-icon></mat-button-toggle>
+    <mat-button-toggle value="alwaysShowDes" matTooltip="Always Show" [matTooltipDisabled]="!(public || following)" ><mat-icon>visibility</mat-icon></mat-button-toggle>
   </mat-button-toggle-group>
 
   <!-- Private (can't see reviews) -->

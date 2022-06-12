@@ -220,7 +220,7 @@ export class UserInfoComponent implements OnInit {
         this.pendingFollow = list.follow_state == 'pending';
         // console.log('p?',this.pending);
 
-        this.followBlocked = list.follow_state == 'Declined';
+        this.followBlocked = list.follow_state == 'declined';
 
         this.public = list.is_public;
         // console.log(this.public);
