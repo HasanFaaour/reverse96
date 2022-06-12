@@ -26,7 +26,7 @@
                     [imageChangedEvent]="cropImage"
                     (imageCropped)="checkImage($event, 'crop')"
                     [aspectRatio]="0"
-                    [viewMode]="3"
+                    [viewMode]="0"
                 ></ngx-photo-editor>
                 <input class="image-display" type="image" alt="Choose an image" src="{{imageDisplay}}" (click)="Image.click()" (click)="$event.preventDefault()" />
                 
