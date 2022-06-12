@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable, Subscriber, TeardownLogic } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,7 @@ export class NotificationService {
   private obs: Observable<{type: string, data: any}> = new Observable();
 
   connect (url:string): Observable<{type: string, data: any}>|undefined {
+
     console.log('Asked to connect');
     
     
@@ -26,46 +27,65 @@ export class NotificationService {
       return;
     }
 
-    this.socket = new WebSocket(`${this.baseURL}/ws/notification/${url}/`);
+    function multicastingObservableFunction (_this: NotificationService) {
+      
+      let subscribersList: Subscriber<{type: string, data: any}>[] = [];
 
-    this.obs = new Observable((observer: Subscriber<{type: string, data: any}>) => {
+      _this.socket = new WebSocket(`${_this.baseURL}/ws/notification/${url}/`);
+      
+      return (observer: Subscriber<{type: string, data: any}>): TeardownLogic => {
 
-      this.socket!.onclose = (ev) => {
-        observer.error({type:'colse',data: ev.reason});
-        console.log("closed");
-        
-      };
+        subscribersList.push(observer);
 
-      this.socket!.onopen = (ev) => {
-        console.log("Socket opened");
-        
-        observer.next({type: 'open', data: ev});
-        
-      };
+        if (subscribersList.length === 1) {
 
-      this.socket!.onmessage = (ev: MessageEvent) => {
-        let json = JSON.parse(ev.data).message;
+          _this.socket!.onclose = (ev) => {
+            subscribersList.forEach((obs) => obs.error({type:'colse',data: ev.reason}));
+            console.log("closed");
+            
+          };
 
-        if (json.command == "on_connect") {
-          console.log('received on_connect @ socket: ', json);
-          this.notificationCount = json.messages.length;
-          this.notificationList = json.messages;
-          console.log("(in service)notif list now: ", this.notificationList);
-          
-          
-          observer.next({type: 'fetch', data: json.messages});
+          _this.socket!.onopen = (ev) => {
+            console.log("Socket opened");
+            
+            subscribersList.forEach((obs) => obs.next({type: 'open', data: ev}));
+            
+          };
+
+          _this.socket!.onmessage = (ev: MessageEvent) => {
+            let json = JSON.parse(ev.data).message;
+
+            if (json.command == "on_connect") {
+              console.log('received on_connect @ socket: ', json);
+              _this.notificationCount = json.messages.length;
+              _this.notificationList = json.messages;
+              console.log("(in service)notif list now: ", _this.notificationList);
+              
+              
+              subscribersList.forEach((obs) => obs.next({type: 'fetch', data: json.messages}));
+            }
+            else if (json.command == "post_connect") {
+              console.log('received post_connect @ socket: ', json);
+              _this.notificationCount ++;
+              _this.notificationList.push(json.messages);
+              console.log("(in service)notif list now: ", _this.notificationList);
+
+              subscribersList.forEach((obs) => obs.next({type: 'message', data: json}));
+            }
+          };
+
         }
-        else if (json.command == "post_connect") {
-          console.log('received post_connect @ socket: ', json);
-          this.notificationCount ++;
-          this.notificationList.push(json.messages);
-          console.log("(in service)notif list now: ", this.notificationList);
 
-          observer.next({type: 'message', data: json})
-        }
-      };
+        return {
+          unsubscribe() {
+            // Remove from the observers array so it's no longer notified
+            subscribersList.splice(subscribersList.indexOf(observer), 1);
+          }
+        };
+      }
+    };
 
-    });
+    this.obs = new Observable(multicastingObservableFunction(this));
     return this.obs;
   }
 
