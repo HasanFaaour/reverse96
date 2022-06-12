@@ -44,6 +44,7 @@ import { AddPlaceComponent } from './components/add-place/add-place.component';
 import { NgxPhotoEditorModule } from 'ngx-photo-editor';
 
 import { NgbAlertModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReviewDetailsComponent } from './components/review-details/review-details.component';
 
 const routes: Routes = [
   {
@@ -132,9 +133,13 @@ const routes: Routes = [
     MapReviewComponent,
     UserInfoComponent,
     AddPlaceComponent,
-    NotificationComponent
+    NotificationComponent,
+    ReviewDetailsComponent
   ],
-  entryComponents: [AddPlaceComponent],
+  entryComponents: [
+    AddPlaceComponent,
+    ReviewDetailsComponent
+  ],
   imports: [
     CommonModule,
     MatIconModule,

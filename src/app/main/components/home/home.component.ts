@@ -22,7 +22,8 @@ export class HomeComponent implements OnInit {
               private locationSer: LocationsService,
               private dialog: MatDialog) 
   {
-    this.getTenTopReviews();
+    this.getFollows();
+    //this.getTenTopReviews();
   }
   
   name: string = 'dalan';
@@ -30,25 +31,29 @@ export class HomeComponent implements OnInit {
   username = "";
   userId : number = -5;
 
+  date: any;
   list: any[] = [];
   sideBarList:any[] = [];
-  topReviews: any;
+  topReviews: any[] = [];
   
   serverConnection = 'connecting';
 
-  /*
-    {name: "dalan" , image: "assets/images/restoran.jpg" , likes: 200 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
-    {name: "dalan" , image: "assets/images/restoran3.jpg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false},
-    {name: "dalan" , image: "assets/images/sea.jpg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false} ,
-    {name: "dalan" , image: "assets/images/restoran2.jpeg" , likes: 1500 , description: "description...." , isReadMore: false , liked: false , enaColor: false}  
+  test1: any = [
+    {title: "dalan" , image: "assets/images/restoran.jpg" , likes: 200 , location: 8  , date_created: "2022-5-23" , username:" HasanFaaour"} ,
+    {title: "dalan" , image: "assets/images/restoran3.jpg" , likes: 1500 , location: 4  , date_created: "2022-5-23" , username: "HasanFaaour"},
+    {title: "dalan" , image: "assets/images/jamkaran.jpg" , likes: 1500 , location: 5 , date_created: "2022-5-23" , username: "HasanFaaour"} ,
+    {title: "dalan" , image: "assets/images/restoran2.jpeg" , likes: 1500 , location: 7  , date_created: "2022-5-23" , username: "HasanFaaour"}  
   ];
-  */
+ 
 
   searchList: any[] = [];
-  
+  user: any = [];
+  followers: any = [];
   isClicked: boolean = false;
   enaColor: boolean = false;
   likeNum: number = 10;
+  extended = false;
+  viewLess = false;
   isReadMore = true;
   status: any[] = [{isReadMore : false},{isReadMore : false}];
 
@@ -59,6 +64,10 @@ export class HomeComponent implements OnInit {
      this.isReadMore = !this.isReadMore
   }                 
 
+  onViewMore(){
+    this.extended = !this.extended;
+    this.viewLess = !this.viewLess;
+  }
    /*for delete */
   showText(id : any) {
      this.status[id].isReadMore = ! this.status[id].isReadMore;
@@ -97,7 +106,8 @@ export class HomeComponent implements OnInit {
     this.likeNum = - this.likeNum;
   }
   ngOnInit(): void {
-    this.getTenTopReviews();
+    //this.getTenTopReviews();
+    this.getFollows();
     if (!localStorage.getItem('access')){
       console.log("Not logged in, redirecting to login page...");
       this.router.navigate(['../login']);
@@ -140,6 +150,8 @@ export class HomeComponent implements OnInit {
       }
     });
 
+    
+
     this.http.getReviews(1).subscribe({
       next: (response: any) => {
         for (let review of response.message) {
@@ -148,8 +160,12 @@ export class HomeComponent implements OnInit {
           // console.log(review.liked_by,this.userId);
           review.liked = review.liked_by.includes(this.userId);
           review.likes = review.liked_by.length;
+          this.date = review.date_created.split('T');
+          review.date_created = this.date[0];
           this.sideBarList.push(review);
         }
+        console.log("top:")
+        console.log(this.sideBarList);
       },
       error: (error) => {
         if (error.status == 401){
@@ -160,7 +176,29 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  getTenTopReviews() {
+  getFollows() {
+    this.userInfo.getUserInfo().subscribe({
+      next: (data: any) => {  
+        this.user = data.message;
+        this.user.picture = `${this.baseUrl}${this.user.picture}`;
+        
+        console.log("Ya aba abd allah alhosien");
+        console.log(this.user);
+        for(let follower of this.user.followers) {
+          if(!follower.picture.includes(this.baseUrl)) {
+            follower.picture = `${this.baseUrl}${follower.picture}`;
+          }
+          this.followers.push(follower)
+        }
+        console.log(this.followers);
+      },
+      error: (err) => {
+        console.log(err.status);
+      }
+    });
+  }
+
+  /* getTenTopReviews() {
     this.locationSer.getTopReviews().subscribe({
       next: (data) => {  
         this.topReviews = data.message;
@@ -175,7 +213,7 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
+ */
   addComent (item: any) {
     if (!item.newComment){
       console.log("ignored");

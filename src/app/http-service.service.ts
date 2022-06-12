@@ -82,7 +82,7 @@ export class HttpRequestService {
     console.log(user);
     body.append('user', user);
     */
-    return this.hC.post(`${this.db}/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
+    return this.hC.post(`https://reverse96-reverse96.fandogh.cloud/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
   }
 
   getReviews (mode: number): Observable<object> {

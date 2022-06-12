@@ -31,7 +31,7 @@ export class MapReviewComponent implements AfterViewInit  {
   iconName: string = '';
   iconColor: string = '';
   locId: string = '';
-  baseUrl = "http://localhost:8000";
+  baseUrl = "https://reverse96-reverse96.fandogh.cloud";
   sendValue: any;
   dialogValue!: string;
   map: any;
