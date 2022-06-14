@@ -46,10 +46,10 @@
         margin-left: auto;
         margin-right: 10px;
       }
-/* 
-      .action-fab:disabled {
-        background-color: #aaa;
-      } */
+
+      .action-fab.blue:disabled {
+        background-color: rgb(195, 199, 255);
+      }
 
       .action-fab.blue:enabled {
         background-color: rgb(88, 99, 255);
