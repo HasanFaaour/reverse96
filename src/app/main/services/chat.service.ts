@@ -21,11 +21,13 @@ export class ChatService {
 
   connect(roomID: string):Observable<{type: string, data: string}> {
     if (this.socket) {
-      this.disconnect();
+      this.disconnect('switch');
     }
     return new Observable( (observer: Subscriber<{type: string, data: any}>) => {
       this.socket = new WebSocket(`${this.wSUrl}/${roomID}/`);
       this.socket.onclose = (ev: CloseEvent) => {
+        console.log('close,', ev);
+        
         observer.error({type: 'close', data: ev.reason});
       }
       this.socket.onopen = (ev: Event) => {
@@ -50,13 +52,48 @@ export class ChatService {
     });
   }
 
-  create (username: string, guyName: string): Observable<any> {
+  createPV (username: string, guyName: string): Observable<any> {
     return this.http.post(`${this.api}/api/chat/create/`,{participants: [username, guyName], name: `${username} @private ${guyName}`, description: ''},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
   }
 
-  createGroup (members: string[], name: string): Observable<any>{
-    console.log(`Create group: ${name}, with members: ${members}`);
-    return this.http.post(`${this.api}/api/chat/create/`,{participants: members, name: name, description: ''},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+  createGroup (members: string[], name: string, description: string, image: any = null): Observable<any>{
+    
+    // No Image
+    if (image === null) {
+      return this.http.post(`${this.api}/api/chat/create/`,{participants: members, name: name, description: description},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    }
+
+    // Create Form Data
+    let data = new FormData();
+
+    // Fill Form Data
+    members.forEach((x) => data.append('participants', x));
+    data.append('picture',image,image.name);
+    data.append('name', name);
+    data.append('description', description);
+
+    // Send Request
+    return this.http.post(`${this.api}/api/chat/create/`,data,{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+  }
+
+  editGroup (groupId: number, members: string[], name: string, description: string, image: any = null): Observable<any>{
+
+    // No Image
+    if (image === null) {
+      return this.http.patch(`${this.api}/api/chat/${groupId}/update/`,{participants: members, name: name, description: description},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    }
+
+    // Create Form Data
+    let data = new FormData();
+
+    // Fill Form Data
+    members.forEach((x) => data.append('participants', x));
+    data.append('picture',image,image.name);
+    data.append('name', name);
+    data.append('description', description);
+
+    // Send Request
+    return this.http.patch(`${this.api}/api/chat/${groupId}/update/`,data,{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
   }
 
   fetch (chatId: number): void {
@@ -110,8 +147,10 @@ export class ChatService {
     }
   }
 
-  disconnect(): void {
-    this.socket?.close(1000,'Switch');
+  disconnect(reason = 'manual'): void {
+    console.log(this.socket?.readyState,WebSocket.OPEN,'-> dc ->',reason);
+    
+    this.socket?.close(3900,'manual');
     return;
   }
 

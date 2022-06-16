@@ -1,12 +1,12 @@
 import {ChatService} from '../../services/chat.service'
 
 export class ChatMessage  {
-  private _edited = false;
 
   constructor (
     private _author: string,
     private _content: string,
     private chatService: ChatService,
+    private _edited: boolean,
     private _date: Date = new Date(),
     private _id: number = -5,
     private _replyTo: string|null = null,

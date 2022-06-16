@@ -8,8 +8,10 @@ import { ChatMessage, Bubble, MessageList } from './MessageClasses';
 import {Clipboard} from '@angular/cdk/clipboard';
 import { HttpRequestService } from 'src/app/http-service.service';
 import { MatList } from '@angular/material/list';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ChatInfoComponent } from '../chat-info/chat-info.component';
+
+const groupDefaultIcon = 'assets/images/GroupChat.png';
 
 @Component({
   selector: 'app-chat',
@@ -60,7 +62,7 @@ export class ChatComponent implements OnInit {
   editingMessage: ChatMessage | null = null;
   replyTo: ChatMessage | null = null;
 
-  lastRefreshed: Date | null = null;
+  timesRefreshed = 0;
 
   infoHover1 = false;
   infoHover2 = false;
@@ -82,6 +84,8 @@ export class ChatComponent implements OnInit {
 
       //Valid user
       next: (response: any) => {
+        this.timesRefreshed = 0;
+
         let info = response.message;
 
         //record user's info
@@ -123,9 +127,15 @@ export class ChatComponent implements OnInit {
           //     return;
           //   }
           // }
+          this.timesRefreshed ++;
+
+          if (this.timesRefreshed > 3) {
+            alert(`This session is expired (refreshed ${this.timesRefreshed}times). Please login again. `);
+            this.router.navigate(['logout']);
+            return;
+          }
           this.authService.refresh().subscribe({
             next: (v) => {
-              this.lastRefreshed = new Date();
               this.ngOnInit();
               return;
             },
@@ -149,7 +159,7 @@ export class ChatComponent implements OnInit {
    
   }
 
-  authenticateGuy(guyName: string = "@@"): void {
+  authenticateGuy(guyName: string | null = "@@"): void {
 
     let guyId: string | null;
 
@@ -167,6 +177,7 @@ export class ChatComponent implements OnInit {
       //No guy(default message page), next step
       this.socketProgress = false;
       this.main = true;
+      
       this.getPrivateChat();
     }
     else
@@ -179,12 +190,14 @@ export class ChatComponent implements OnInit {
 
         //Successful authetication of guys
         next: (response: any) => {
+          this.timesRefreshed = 0;
+
           let info = response.message;
 
           //record guy's info
           this.guyName = info.username;
           this.guyImage = this.chatService.server + info.picture;
-          this.participantsInfo[this.guyName] = {name: info.name, image: this.guyImage, address: info.address, email: info.email};
+          this.participantsInfo[this.guyName] = {name: info.name, image: this.guyImage, address: info.address, email: info.email, bio: info.bio};
 
           //next step
           if (guyName == "@@") {
@@ -212,7 +225,14 @@ export class ChatComponent implements OnInit {
             // }
             this.authService.refresh().subscribe({
               next: (v) => {
-                this.lastRefreshed = new Date();
+                this.timesRefreshed ++;
+
+                if (this.timesRefreshed > 3) {
+                  alert(`This session is expired (refreshed ${this.timesRefreshed}times). Please login again. `);
+                  this.router.navigate(['logout']);
+                  return;
+                }
+                
                 this.authenticateGuy();
               },
               
@@ -221,6 +241,7 @@ export class ChatComponent implements OnInit {
                 this.router.navigate(['logout']);
               }
             });
+            return;
           }
 
           //Unkown reason
@@ -266,7 +287,8 @@ export class ChatComponent implements OnInit {
             chat.name = this.guyName;
             chat.selected = true;
             chat.link = chat.name;
-            chat.isGroup = false
+            chat.isGroup = false;
+            chat.description = this.participantsInfo[this.guyName].bio;
             this.contactList.push(chat);
 
             //Initiate socket for existing (private) chat
@@ -299,7 +321,7 @@ export class ChatComponent implements OnInit {
             else {
               chat.link = chat.name;
               chat.isGroup = true;
-              chat.image = "assets/images/GroupChat.png"
+              chat.image = chat.picture.includes("/default.png")? groupDefaultIcon: chat.picture;
               this.contactList.push(chat);
               continue;
             }
@@ -308,7 +330,8 @@ export class ChatComponent implements OnInit {
             this.userInfo.getUserInfo(chat.name).subscribe({
               //Recipiant exists
               next: (response: any) => {
-                chat.image = this.chatService.server+response.message.picture;
+                chat.image = this.chatService.server + response.message.picture;
+                chat.description = response.message.bio;
                 this.contactList.push(chat);
               },
 
@@ -331,7 +354,7 @@ export class ChatComponent implements OnInit {
         if (!chatExists && this.guyName){
 
           //Create the (private) chat
-          this.chatService.create(this.username, this.guyName).subscribe({
+          this.chatService.createPV(this.username, this.guyName).subscribe({
 
             //Succressful creation
             next: (response: any) => {
@@ -441,7 +464,7 @@ export class ChatComponent implements OnInit {
 
         //Message recieved/sent
         else if (ev.type == 'message') {
-          let message = new ChatMessage(ev.data.author, ev.data.content, this.chatService, ev.data.timestamp, ev.data.id, ev.data.reply, ev.data.reply_id, ev.data.reply_user, ev.data.flag);
+          let message = new ChatMessage(ev.data.author, ev.data.content, this.chatService, ev.data.edited, ev.data.timestamp, ev.data.id, ev.data.reply, ev.data.reply_id, ev.data.reply_user, ev.data.flag);
 
           this.messageList.push(message);
 
@@ -458,9 +481,9 @@ export class ChatComponent implements OnInit {
           let fetched = ev.data;
 
           for (let item of fetched ) {
-              let message = new ChatMessage(item.author, item.content, this.chatService, item.timestamp, item.id, item.reply, item.reply_id, item.reply_user, item.flag);
+              let message = new ChatMessage(item.author, item.content, this.chatService, item.edited, item.timestamp, item.id, item.reply, item.reply_id, item.reply_user, item.flag);
             if (this.lastSelected == item.id) {
-              message = new ChatMessage(item.author, item.content, this.chatService, item.timestamp, item.id, item.reply, item.reply_id, item.reply_user, item.flag,true);
+              message = new ChatMessage(item.author, item.content, this.chatService, item.edited, item.timestamp, item.id, item.reply, item.reply_id, item.reply_user, item.flag,true);
               this.lastSelected = null;
             }
             
@@ -501,7 +524,7 @@ export class ChatComponent implements OnInit {
 
     if (this.editingMessage == null) {
 
-      let message = new ChatMessage(this.username, this.newMessage, this.chatService)
+      let message = new ChatMessage(this.username, this.newMessage, this.chatService, false)
 
       if (this.replyTo == null) {
 
@@ -517,7 +540,9 @@ export class ChatComponent implements OnInit {
     }
 
     else {
-      this.editingMessage.edit(this.chatId, this.newMessage);
+      if (this.editingMessage.content != this.newMessage) {
+        this.editingMessage.edit(this.chatId, this.newMessage);
+      }
       this.editingMessage = null;
     }
 
@@ -535,9 +560,24 @@ export class ChatComponent implements OnInit {
     this.socketError = false;
     this.socketProgress = true;
     this.main = false;
+    this.replyTo = null;
+    this.editingMessage = null;
+    this.newMessage = "";
 
     for (let item of this.contactList) {
       item.selected = false; 
+    }
+
+    if (chat.id == this.chatId) {
+      console.log("-- back --");
+      
+      this.guyName = "";
+      this.groupName = "";
+      this.chatId = -5;
+      this.socketProgress = false;
+      this.main = true;
+      window.history.pushState("", "", 'message');
+      return;
     }
 
     if (chat.isGroup) {
@@ -555,41 +595,6 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  addGroup (groupMembers: any): void {
-    let members: string[] = [];
-    
-    members = groupMembers.selectedOptions.selected.map((user:any)=>user._text.nativeElement.innerText);
-    members.push(this.username);
-
-    this.chatService.createGroup(members,this.newGroupName).subscribe({
-      next: (response: any) => {
-
-        //record chat's id
-        this.chatId = response.id;
-
-        //Add the new chat to contact list
-        this.contactList.push({name: this.newGroupName, participants: members, selected: true,id: response.id, image: 'assets/images/GroupChat.png'});
-
-        //next step
-        this.getGroupChat(response);
-        this.connectToSocket();
-      },
-
-      //Unsuccessful creation
-      error: (error) => {
-        console.log(error);
-        this.socketError = true;
-        return;
-      },
-
-      //complete...
-      complete: () => {
-        return;
-      }
-
-    });
-  }
-
   cM(event: MouseEvent, message: ChatMessage, trigger:any, mode = "real"): void {
     event.preventDefault();
 
@@ -600,33 +605,6 @@ export class ChatComponent implements OnInit {
       // this.trigger.openMenu();
       trigger.click();
     }
-    
-  }
-
-  showInfo (event: MouseEvent, user: string): void {
-    // this.infoPosition.x = event.clientX < window.visualViewport.width - 200? `left: ${event.clientX.toString()}px;`: `right: ${(window.visualViewport.width-event.clientX).toString()}px;`;
-    // this.infoPosition.y = event.clientY < window.visualViewport.height - 200? `top: ${event.clientY.toString()}px;`: `bottom: ${(window.visualViewport.height-event.clientY).toString()}px;`;
-    // console.log("hovered",this.infoPosition.x,",",this.infoPosition.y, "user:",user);
-    // this.infoUser = user;
-    // this.infoHover1 = true;
-  }
-
-  enter() {
-    // this.infoHover2 = true;
-  }
-
-  hideInfo(event: MouseEvent, mode: boolean): void {
-    // if (!(this.infoPosition.x < event.clientX && event.clientX < this.infoPosition.x + 200 && this.infoPosition.y < event.clientY && event.clientY < this.infoPosition.y + 100)) {
-    //   this.infoHover = false;
-    //   console.log("hide");
-    // }
-    // if (mode) {
-    //   this.infoHover1 = false
-    // }
-
-    // else {
-    // this.infoHover2 = false;
-    // }
     
   }
 
@@ -678,10 +656,132 @@ export class ChatComponent implements OnInit {
   }
 
   chatInfo (ev: MouseEvent, chat: any): void {
+
     ev.stopImmediatePropagation();
     ev.preventDefault();
 
-    this.dialog.open(ChatInfoComponent, {data: chat, closeOnNavigation: true, disableClose: false});
+    let dialog_ref: any;
+
+    if (!chat.isGroup) {
+      dialog_ref = this.dialog.open(ChatInfoComponent, {data: {chatInfo: chat, mutuals: this.mutuals, username: this.username}, closeOnNavigation: true});
+    }
+
+    else {
+    dialog_ref = this.dialog.open(ChatInfoComponent, {data: {chatInfo: chat, mutuals: this.mutuals, username: this.username}, closeOnNavigation: true});
+    }
+
+    dialog_ref.afterClosed().subscribe((result: any) => {
+      if (!result) {
+        return;
+      }
+
+
+      // Creating new group
+      if (result.action == 'create') {
+
+        this.socketProgress = true;
+
+        // with Image
+        if (result.image) {
+          this.chatService.createGroup(result.members, result.name, result.description, result.image).subscribe({
+            next: (response: any) => {
+      
+              //Add the new chat to contact list
+              let newChat = {name: response.name, participants: response.participants, id: response.id, isGroup: true, image: response.picture, description: response.description};
+              let tmp = this.contactList[0];
+              this.contactList[0] = newChat;
+              this.contactList.push(tmp);
+      
+              //next step
+              this.socketProgress = false;
+              this.switchTo(newChat);
+            },
+      
+            //Unsuccessful creation
+            error: (error) => {
+              console.log(error);
+              this.socketError = true;
+              return;
+            },
+      
+            //complete...
+            complete: () => {
+              return;
+            }
+      
+          });
+        }
+
+        // without Image
+        else {
+          this.chatService.createGroup(result.members, result.name, result.description).subscribe({
+            next: (response: any) => {
+      
+              //Add the new chat to contact list
+              let newChat = {name: response.name, participants: response.participants, id: response.id, isGroup: true, image: groupDefaultIcon, description: response.description};
+              let tmp = this.contactList[0];
+              this.contactList[0] = newChat;
+              this.contactList.push(tmp);
+      
+              //next step
+              this.socketProgress = false;
+              this.switchTo(newChat);
+            },
+      
+            //Unsuccessful creation
+            error: (error) => {
+              console.log(error);
+              this.socketError = true;
+              return;
+            },
+      
+            //complete...
+            complete: () => {
+              return;
+            }
+      
+          });
+        }
+      }
+
+      // Editing group info
+      else if (result.action == 'edit') {
+
+        // with Image
+        if (result.image) {
+          this.chatService.editGroup(result.chat.id, result.members, result.name,  result.description, result.image).subscribe({
+            next: (response: any) => {
+              chat = response;
+              chat.isGroup = true;
+              chat.image = chat.picture;
+            },
+
+            error: (err) => {
+              alert(`Edit failed. (${err.status})`);
+              console.log(err);
+              
+            }
+          });
+        }
+
+        // without Image
+        else {
+          this.chatService.editGroup(result.chat.id, result.members, result.name, result.description).subscribe({
+            next: (response: any) => {
+              chat = response;
+              chat.isGroup = true;
+              chat.image = chat.picture.includes('/default.png')? groupDefaultIcon: chat.picture;
+            },
+
+            error: (err) => {
+              alert(`Edit failed(${err.status})`);
+              console.log(err);
+              
+            }
+          });
+        }
+      }
+    })
   }
 
   navigateTo (url: string):void {

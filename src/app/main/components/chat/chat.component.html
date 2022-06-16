@@ -4,17 +4,17 @@
     <div class="chat-list-area" [class]="main?'main':''" >
 
         <!-- Title (Chats) -->
-        <label class="chat-list-title" >
+        <div class="chat-list-title" >
             Chats
-            <button mat-mini-fab class="add-chat add-private" matTooltip="Add Private Chat" [matMenuTriggerFor]="addPrivateChat" ><mat-icon  >person_add_alt</mat-icon></button>
-            <button mat-mini-fab class="add-chat add-group" matTooltip="Add Group Chat" [matMenuTriggerFor]="addGroupChat" ><mat-icon  >group_add</mat-icon></button>
-        </label>
+            <button mat-mini-fab class="add-chat add-private" matTooltip="Add Private Chat" [matMenuTriggerFor]="addPrivateChat" ><mat-icon >person_add_alt</mat-icon></button>
+            <button mat-mini-fab class="add-chat add-group" matTooltip="Add Group Chat" (click)="chatInfo($event, 'new')" ><mat-icon >group_add</mat-icon></button>
+        </div>
 
         <!-- List -->
         <mat-action-list class="chat-list" *ngFor="let chat of contactList" >
 
             <!-- Item -->
-            <button (click)="switchTo(chat)" mat-list-item class="chat-item" [disabled]="chat.selected" >
+            <button (click)="switchTo(chat)" mat-list-item class="chat-item" [class]="chat.selected?'selected':''" >
 
                 <!-- Image Area -->
                 <div class="chat-image"  >
@@ -23,7 +23,7 @@
                     <img class="chat-img" [src]="chat.image? chat.image:'assets/images/profile-image.png'" />
 
                     <!-- More Options -->
-                    <button mat-icon-button class="chat-options" (click)="chatInfo($event, chat)" disabled="false" ><mat-icon >more_horiz</mat-icon></button>
+                    <button mat-icon-button class="chat-options" (click)="chatInfo($event, chat)" matTooltip="More Info" matTooltipShowDelay="500" ><mat-icon >more_horiz</mat-icon></button>
 
                 </div>
 
@@ -49,7 +49,7 @@
         <div [ngClass]="{'chat-bubble-area':true, 'my-bubble-area': bubble.author==username, 'their-bubble-area': bubble.author!= username}" *ngFor="let bubble of messageList.bubbles">
 
             <!-- Avatar area -->
-            <div class="avatar" ><img (mouseenter)="showInfo($event,bubble.author)" (mouseleave)="hideInfo($event,true)" (click)="navigateTo('userInfo/'+bubble.author)" [src]="bubble.author==username? userImage: participantsInfo[bubble.author]?.image" [ngClass]="{'avatar-image': true, 'user-image': bubble.author == username, 'guy-image': bubble.author != username}" /></div>
+            <div class="avatar" ><img (click)="chatInfo($event,{name: bubble.author, isGroup: false})" [src]="bubble.author==username? userImage: participantsInfo[bubble.author]?.image" [ngClass]="{'avatar-image': true, 'user-image': bubble.author == username, 'guy-image': bubble.author != username}" /></div>
 
             <!-- Messages Area -->
             <div class="chat-bubble">
@@ -58,7 +58,7 @@
                 <div id="message-{{message.id}}" (contextmenu)="cM($event, message, trigger)" *ngFor="let message of bubble.messages; let i = index" [ngClass]="{'chat-message':true, 'me':message.author == username, 'them': message.author != username, 'last': i == bubble.length-1, 'first': i == 0, 'selected-message':message.selected}" class="chat-message" >
                     
                     <!-- Bubble's Author (only first message) -->
-                    <div class="author" (mouseenter)="showInfo($event,bubble.author)" (mouseleave)="hideInfo($event,true)" (click)="navigateTo('userInfo/'+message.author)" *ngIf="i==0">{{message.author}}</div>
+                    <div class="author" (click)="chatInfo($event,{name: message.author, isGroup: false})" *ngIf="i==0">{{message.author}}</div>
                     
                     <!-- Reply (if present) -->
                     <div class="in-reply-to" *ngIf="message.replyTo" (click)="showReply((message.replyTo.id).toString())" >
@@ -80,14 +80,14 @@
                         <div class="inner-text">{{message.content}}</div>
 
                         <!-- Creation Time -->
-                        <div class="date" >{{message.date | date: 'HH:mm'}}</div>
+                        <div class="date" [matTooltip]="(message.date | date)!" matTooltipShowDelay="1000" >{{message.date | date: 'HH:mm'}}</div>
 
                         <!-- [Edited] -->
-                        <mat-icon class="edited" *ngIf="message.edited" >edit</mat-icon>
+                        <mat-icon class="edited" *ngIf="message.edited" matTooltip="Edited" matTooltipShowDelay="1000" >edit</mat-icon>
 
                         <!-- Seen State -->
-                        <mat-icon class="seen" *ngIf="!message.seen && message.author == username" >done</mat-icon>
-                        <mat-icon class="seen" *ngIf="message.seen && message.author == username" >done_all</mat-icon>
+                        <mat-icon class="seen" *ngIf="!message.seen && message.author == username" matTooltip="Sent" matTooltipShowDelay="1000" >done</mat-icon>
+                        <mat-icon class="seen" *ngIf="message.seen && message.author == username" matTooltip="Received" matTooltipShowDelay="1000" >done_all</mat-icon>
 
                     </div>
                 </div>
@@ -162,7 +162,7 @@
 
 </div>
 
-<!-- Artificial div to fool mat menu and make it go in the right place -->
+<!-- Artificial div to trick mat menu and make it go in the right place -->
 <div #trigger style="visibility: hidden; position: fixed;"
 [style.left.px]="cursorX"
 [style.top.px]="cursorY"
@@ -179,34 +179,7 @@
     <button mat-menu-item class="context-menu-item" (click)="deleteMessage()" *ngIf="clickedMessage && clickedMessage.author == username" ><mat-icon>delete</mat-icon>Delete</button>
 </mat-menu>
 
-<!-- User info on hover -->
-<mat-card (mouseenter)="enter()" (mouseleave)="hideInfo($event,false)" [style]="infoPosition.x + infoPosition.y" class="user-info" [class]="(infoHover1 || infoHover2)?'displayed':''" >
-    
-    <mat-card-header>
-        <mat-card-title class="user-info-username" >
-            {{infoUser}}
-        </mat-card-title>
-        <mat-card-subtitle class="user-info-name" >
-            {{participantsInfo[infoUser]?.name}}
-        </mat-card-subtitle>
-        <img mat-card-avatar [src]="participantsInfo[infoUser]?.image"/>
-
-    </mat-card-header>
-    <mat-card-content class="user-info-content">
-        Address:
-        <div>{{participantsInfo[infoUser]?.address}}</div>
-    </mat-card-content>
-</mat-card>
-
 <!-- Add Private Chat -->
 <mat-menu #addPrivateChat="matMenu" >
-    <a mat-menu-item *ngFor="let user of followers" href="/message/{{user.username}}" ><img mat-card-avatar [src]="user.picture" />{{user.username}}</a>
-</mat-menu>
-
-<mat-menu #addGroupChat="matMenu" >
-    <mat-selection-list (click)="$event.stopImmediatePropagation(); $event.preventDefault();" >
-        <mat-list-option *ngFor="let user of followers" (click)="$event.stopImmediatePropagation(); $event.preventDefault();" ><div><img mat-card-avatar [src]="user.picture" />{{user.username}}</div></mat-list-option>
-    </mat-selection-list>
-    <input (click)="$event.stopImmediatePropagation(); $event.preventDefault();" />
-    <button mat-button>Add Group</button>
+    <a mat-menu-item *ngFor="let user of followers" href="/message/{{user.username}}" ><img mat-card-avatar [src]="user.picture" style="margin-right: 5px; margin-left: -10px;" /> {{user.username}}</a>
 </mat-menu>
