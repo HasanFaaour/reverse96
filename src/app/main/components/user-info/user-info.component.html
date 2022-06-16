@@ -144,73 +144,78 @@
   <!-- Reviews -->
   <div class="view-area reviews-area" *ngIf="(public || following) && view < 1" >
 
-    <!-- Single Review -->
-    <mat-card class="single-review" *ngFor="let review of reviews" (mouseenter)="showDescription(review)" (mouseleave)="hideDescription(review)" >
-      <mat-card-header class="review-header">
+    <div *ngFor="let review of reviews" (mouseenter)="showDescription(review)" (mouseleave)="hideDescription(review)" style="width: max-content; height: max-content;display: inline-block;padding: 7px; margin: 3px; padding-top: 10px; padding-bottom: 20px; margin-top: 0; margin-bottom: 0;">
 
-        <!-- Title -->
-        <mat-card-title class="review-title">
-          <div class="qq">{{review.title}}</div>
-        </mat-card-title>
+      <!-- Single Review -->
+      <mat-card class="single-review" >
 
-        <!-- Place name -->
-        <mat-card-subtitle class="review-place">
-          <div>{{review.location_name}}</div>
-        </mat-card-subtitle>
+        <mat-card-header class="review-header">
 
-        <!-- Place Image -->
-        <img mat-card-avatar class="place-image" [src]="review.location_picture" (click)="display(review.location_picture)" >
+          <!-- Title -->
+          <mat-card-title class="review-title">
+            <div class="qq">{{review.title}}</div>
+          </mat-card-title>
 
-      </mat-card-header>
+          <!-- Place name -->
+          <mat-card-subtitle class="review-place">
+            <div>{{review.location_name}}</div>
+          </mat-card-subtitle>
 
-      <!-- Review Image -->
-      <img mat-card-image class="review-image" [src]="review.picture" (click)="display(review.picture)" />
+          <!-- Place Image -->
+          <img mat-card-avatar class="place-image" [src]="review.location_picture" (click)="display(review.location_picture)" >
 
-      <!-- Review Text (Displayed Based on Display Model) -->
-      <mat-card-content *ngIf="reviewDisplayModel == 'alwaysShowDes' || reviewDisplayModel == 'extendButton' && (review.extended) || reviewDisplayModel == 'pin' && (review.pinned != 2 && (review.pinned == 1 || review.showText))" class="review-content">
+        </mat-card-header>
 
-        <div class="review-text"  >
-          {{review.text}}
-        </div>
-      
-      </mat-card-content>
+        <!-- Review Image -->
+        <img mat-card-image class="review-image" [src]="review.picture" (click)="display(review.picture)" />
 
-      <mat-card-actions class="review-actions-area" align="end" >
+        <!-- Review Text (Displayed Based on Display Model) -->
+        <mat-card-content *ngIf="reviewDisplayModel == 'alwaysShowDes' || reviewDisplayModel == 'extendButton' && (review.extended) || reviewDisplayModel == 'pin' && (review.pinned != 2 && (review.pinned == 1 || review.showText))" class="review-content">
 
-        <!-- Pin Button (if review display model is set to pin) -->
-        <button mat-icon-button [ngClass]="{'review-action': true, 'review-pin':true,'active':review.pinned>0}" *ngIf="reviewDisplayModel == 'pin'" (click)="pinDescription(review)" [matTooltip]="review.pinned == 2? 'Unpin': review.pinned == 1?'Hide':'Pin' " >
-          <i class="bi bi-pin-fill" *ngIf="!review.pinned || review.pinned < 1" ></i>
-          <i class="bi bi-pin-angle-fill" *ngIf="review.pinned && review.pinned == 1" ></i>
-          <mat-icon *ngIf="review.pinned && review.pinned == 2" >visibility_off</mat-icon>
-        </button>
+          <div class="review-text"  >
+            {{review.text}}
+          </div>
+        
+        </mat-card-content>
 
-        <!-- Extend Button (if review display model is set to extend button) -->
-        <button mat-icon-button class="review-action review-extend" *ngIf="reviewDisplayModel == 'extendButton'" (click)="review.extended =review.extended === undefined? true: !review.extended;" [matTooltip]="review.extended? 'Hide Description':'Show Description'" >
-          <mat-icon *ngIf="!review.extended" class="extend" >notes</mat-icon>
-          <mat-icon *ngIf="review.extended" >playlist_remove</mat-icon>
-        </button>
+        <mat-card-actions class="review-actions-area" align="end" >
 
-        <!-- Comments -->
-        <button class="review-action review-comments" mat-icon-button >
-          <mat-icon>chat_bubble_outline</mat-icon>
-        </button>
+          <!-- Pin Button (if review display model is set to pin) -->
+          <button mat-icon-button [ngClass]="{'review-action': true, 'review-pin': true, 'active': review.pinned > 0}" *ngIf="reviewDisplayModel == 'pin'" (click)="pinDescription(review)" [matTooltip]="review.pinned == 2? 'Unpin': review.pinned == 1?'Hide':'Pin' " >
+            <i class="bi bi-pin-fill" *ngIf="!review.pinned || review.pinned < 1" ></i>
+            <i class="bi bi-pin-angle-fill" *ngIf="review.pinned && review.pinned == 1" ></i>
+            <mat-icon *ngIf="review.pinned && review.pinned == 2" >visibility_off</mat-icon>
+          </button>
 
-        <!-- Like/Unlike -->
-        <button class="review-action review-like" mat-icon-button (click)="like(review)" >
-          {{review.likes}}
-          <mat-icon *ngIf="!review.liked" class="liun like" >favorite_border</mat-icon>
-          <mat-icon *ngIf="review.liked" class="liun unlike" >favorite</mat-icon>
-        </button>
+          <!-- Extend Button (if review display model is set to extend button) -->
+          <button mat-icon-button class="review-action review-extend" *ngIf="reviewDisplayModel == 'extendButton'" (click)="review.extended =review.extended === undefined? true: !review.extended;" [matTooltip]="review.extended? 'Hide Description':'Show Description'" >
+            <mat-icon *ngIf="!review.extended" class="extend" >notes</mat-icon>
+            <mat-icon *ngIf="review.extended" >playlist_remove</mat-icon>
+          </button>
 
-        <!-- Delete Button (only if you're visitting your own profile) -->
-        <button class="review-action review-delete" mat-icon-button *ngIf="askedFor.username == user.username" >
-          <mat-icon>delete_outline</mat-icon>
-        </button>
+          <!-- Comments -->
+          <button class="review-action review-comments" mat-icon-button >
+            <mat-icon>chat_bubble_outline</mat-icon>
+          </button>
 
-      </mat-card-actions>
+          <!-- Like/Unlike -->
+          <button class="review-action review-like" mat-icon-button (click)="like(review)" >
+            {{review.likes}}
+            <mat-icon *ngIf="!review.liked" class="liun like" >favorite_border</mat-icon>
+            <mat-icon *ngIf="review.liked" class="liun unlike" >favorite</mat-icon>
+          </button>
 
-    </mat-card>
+          <!-- Delete Button (only if you're visitting your own profile) -->
+          <button class="review-action review-delete" mat-icon-button *ngIf="askedFor.username == user.username" >
+            <mat-icon>delete_outline</mat-icon>
+          </button>
 
+        </mat-card-actions>
+
+      </mat-card>
+
+    </div>
+    
   </div>
 
   <!-- Followers/Followings -->

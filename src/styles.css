@@ -18,6 +18,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     padding: 0!important;
 }
 
+.mat-tooltip-panel {
+    pointer-events: none;
+}
+
+.mat-tooltip-hide {
+    animation: none!important;
+}
 
 .leaflet-popup-content-wrapper {
     padding-left: 0px;

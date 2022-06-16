@@ -18,9 +18,9 @@
   .user-info-card {
     margin-left: 20px;
     margin-right: auto;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     width: 500px;
-    max-width: 98%;
+    max-width: 60%;
     height: max-content;
     background-color: rgb(237, 233, 195);
     border-radius: 15px;
@@ -110,9 +110,9 @@
 
     .single-review {
       display: inline-block;
-      margin-right: 20px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      /* margin-right: 20px; */
+      /* margin-top: 10px; */
+      /* margin-bottom: 10px; */
       width: 350px;
       height: max-content;
       background-color: rgb(238, 244, 252);
@@ -125,7 +125,7 @@
       /* padding-bottom: 0; */
     }
 
-    .single-review:hover {
+    div:hover>.single-review {
       box-shadow: 1px 0 4px 0 gray;
     }
 
