@@ -4,8 +4,7 @@ import { UserInfoService } from '../../services/user-info.service';
 import { HttpRequestService } from 'src/app/http-service.service';
 import { BigImage } from '../home/home.component';
 import { MatDialog } from '@angular/material/dialog';
-import { EnumMember, EnumType } from 'typescript';
-import { dashCaseToCamelCase } from '@angular/compiler/src/util';
+import { ChatInfoComponent } from '../chat-info/chat-info.component';
 
 enum Pinned {
   unset,
@@ -282,6 +281,10 @@ export class UserInfoComponent implements OnInit {
       }
     })
 
+  }
+
+  editProfile () {
+    this.dialog.open(ChatInfoComponent, {data: {action: 'edit_profile', username: this.user.username, isGroup: false}});
   }
 
   follow (): void {

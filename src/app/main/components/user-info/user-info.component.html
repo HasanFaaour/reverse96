@@ -97,7 +97,7 @@
         </button>
 
         <!-- Edit Profile -->
-        <button mat-mini-fab class="action-fab edit-profile green" *ngIf="askedFor?.username == user.username" matTooltip="Edit Profile" >
+        <button mat-mini-fab class="action-fab edit-profile green" *ngIf="askedFor?.username == user.username" matTooltip="Edit Profile" (click)="editProfile()" >
           <mat-icon>edit_note</mat-icon>
         </button>
         

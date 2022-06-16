@@ -75,6 +75,7 @@
         width: min-content;
         font-size: 9px;
         color: #777;
+        transition: color .2s ease-in-out;
         cursor: not-allowed;
         user-select: none;
       }
@@ -85,11 +86,12 @@
 
       .follow-count-title.clicked {
         color: rgb(81, 187, 248);
+        transition: color .2s ease-in-out;
       }
 
   .review-model-select {
     position: absolute;
-    right: 120px;
+    right: 1vw;
     top: 30px;
   }
 
