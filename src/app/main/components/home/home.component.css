@@ -37,31 +37,38 @@
   .likes {
     height: auto;
     width: 100%;
-    margin-left: 4%;
+    margin-left: 3%;
     margin-right: 3%;
     margin-top: 0px;
-    margin-bottom: 0px;
+    margin-bottom: 8px;
     font-size: 18px;
     font-weight: 500;
-    color: rgb(85, 85, 85);
+    color: rgb(73, 73, 73);
     cursor: pointer;
   }
 
-.title {
-  margin-left: 3%;
+.place-card .title {
+  margin-left: 4%;
+  margin-bottom: 2px;
+  font-size: 20px;
   margin-top: 10px;
 }
 
-.author {
-  height: 30px;
-  position: absolute;
+.place-card .author {
+  height: 16px;
+  width: 100%;
+ /*  position: relative; */
   float: right;
-  border: 1px soid red;
-  margin-left: 22px;
-  font-size: small;
-  margin-top: -3px;
+ /*  border: 1px solid red; */
+  padding-left: 4%;
+  margin-left: 4%;
+  font-size: 16px;
+  margin-bottom: 8px;
 }
-
+.place-card img {
+  margin-top: 0px;
+  padding: 0px;
+}
 .author a {
   text-decoration: solid;
   padding-bottom: 10px;
@@ -72,16 +79,17 @@
 }
 
   .place-image {
+  /*   border: 1px solid red; */
     background-color: rgb(225, 225, 226);
-    margin-left: 4%;
-    margin-top: 5%;
+    margin-left: 2%;
+    margin-top: 6%;
     height: 500px;
     border-radius: 10px;
-    width: 92%;
+    width: 96%;
   }
 
   .icon-list {
-    margin-left: 5%;
+    margin-left: 3%;
   }
   .icon-list a {
     display: inline-block;
@@ -189,6 +197,7 @@ mat-icon {
 .container2 {
   width: 100%;
   height: 50%;
+ 
   background-color: white;
   margin-bottom: 7px;
   border-radius: 10px;
@@ -196,7 +205,7 @@ mat-icon {
 }
 .right-side .top-rev {
   width: 100%;
-  height: 87%;
+  height: 91%;
   overflow-y: hidden;
   background-color: white;
   margin-top: 0px;
@@ -261,7 +270,7 @@ mat-icon {
     height: 55px;
     display: inline-block;
     margin-left: 1%;
-    margin-bottom: 5px;
+    margin-bottom: 16px;
   }
   .top-rev {
     background-color: white;
@@ -398,7 +407,7 @@ mat-icon {
 .add-comment {
   width: 100%;
   height: 40px;
-  font-size: 20px;
+  font-size: 16px;
   border-top: 1px solid white;
   border-left:  #ddd;
   border-bottom-left-radius: 8px;
@@ -406,6 +415,7 @@ mat-icon {
   border-right: #ddd;
   margin-left: 0px;
   margin-top: 0px;
+  padding-top: 12px;
   padding-left: 4%;
 }
 .add-comment:focus {
@@ -426,8 +436,9 @@ mat-icon {
 
 
 .text-content {
-  margin-left: 4%;
+  margin-left: 3%;
   margin-right: 4%;
+  margin-bottom: 8px;
   width: 92%;
   color: rgb(44, 44, 44);
   text-align: justify;
@@ -436,7 +447,7 @@ mat-icon {
 }
 .view-more{
   display: inline-block;
-  margin-left: 4%;
+  margin-left: 3%;
   margin-bottom: 10px;
   color: rgb(172, 170, 170);
   text-decoration: none;

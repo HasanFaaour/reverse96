@@ -10,7 +10,7 @@
   <div class="icon-list">
     <a *ngIf ="!item.liked" (click)="onLike(item)" class="ico"><span class="fav1"><mat-icon >favorite_border</mat-icon></span></a>
     <a *ngIf ="item.liked" (click)="onLike(item)"  class="ico"><span class="fav2"><mat-icon >favorite</mat-icon></span></a>
-    <a href="#" class="ico"><mat-icon >chat_bubble_outline</mat-icon></a>
+    <a (click)="openDialog(item.title , item.picture , item.id)" class="ico"><mat-icon >chat_bubble_outline</mat-icon></a>
     <a href="#" class="ico"><mat-icon >share</mat-icon></a>
   </div>
   <div class="info">
@@ -28,74 +28,13 @@
   </div>
 </div>
 
-
-<div *ngFor="let item of list; let i = index;" class="place-card">
-  <div class="title">{{item.title}}</div><div class="author">By <a routerLink="../userInfo/{{item.username}}">{{item.username}}</a></div>
-  <div class="place-image">
-    <input type="image" (click)="display(item.picture)" [src]="item.picture" style="height: 100%; width: 100%; border-radius: 8px; object-fit: cover;">
-  </div>
-  <div class="icon-list">
-    <a *ngIf ="!item.liked" (click)="onLike(item)" class="ico"><span class="fav1"><mat-icon >favorite_border</mat-icon></span></a>
-    <a *ngIf ="item.liked" (click)="onLike(item)"  class="ico"><span class="fav2"><mat-icon >favorite</mat-icon></span></a>
-    <a href="#" class="ico"><mat-icon >chat_bubble_outline</mat-icon></a>
-    <a href="#" class="ico"><mat-icon>share</mat-icon></a>
-  </div>
-  <div class="info">
-    <p class="likes">{{item.likes}} likes </p>
-    <div class="text-content" [ngClass]="{'limitTextHeight': !item.isReadMore }">
-      {{item.text}}
-    </div>
-    <a class="view-more" (click)="showAllText(i)">
-      {{ isReadMore ? 'view more': 'view less' }}
-    </a>
-    <div class="input-container">
-    <input type="text" class="add-comment" placeholder="Add a comment" [(ngModel)]="item.newComment"  >
-    <a (click)="addComent(item)" ><mat-icon>add</mat-icon></a>
-  </div>
-  </div>
-</div>
-
-
 <div class="blank-two">
 </div>
-
-  <div class="right-side">
-    <div class="container1" [ngStyle]="{'height': extended ? 'auto' : '64%' }">
+<app-right-sidebar></app-right-sidebar>
+  <!-- <div class="right-side">
+    <div class="container1" [ngStyle]="{'height': extended ? 'auto' : '62%' }">
       <div class="top-rev">
         <div class="fav-title">Top reviews</div>
-          <div class="title2" >
-            <div class="imag"><img src="assets/images/restoran3.jpg" style="height: 100%; width: 100%; border-radius: 10px;"></div>
-            <div class="name">
-                <a class="tit">Tehran restoran</a>
-                <a class="user-name"><span class="by">BY</span> AhmadFarhat</a>
-                <a class="li">23 likes</a>
-                <a class="loc">Location-4</a>
-                <a class="cre-dat">Created in 2022-5-3</a>
-            </div>
-        </div>
-  
-        <div class="title2" >
-          <div class="imag"><img src="assets/images/park.jpeg" style="height: 100%; width: 100%; border-radius: 10px;"></div>
-          <div class="name">
-              <a class="tit">Mellat park</a>
-              <a class="user-name"><span class="by">BY</span> MohammadYM</a>
-              <a class="li">43 likes</a>
-              <a class="loc">Location-8</a>
-              <a class="cre-dat">Created in 2022-5-73</a>
-          </div>
-        </div>
-  
-        <div class="title2" >
-          <div class="imag"><img src="assets/images/jamkaran.jpg" style="height: 100%; width: 100%; border-radius: 10px;"></div>
-          <div class="name">
-              <a class="tit">Masjed Jamkaran</a>
-              <a class="user-name"><span class="by">BY</span> AliAyan</a>
-              <a class="li">3000 likes</a>
-              <a class="loc">Location 1</a>
-              <a class="cre-dat">Created in 2019-3-5</a>
-          </div>
-        </div>
-  
         <div class="title2" *ngFor="let item of sideBarList">
           <div class="imag"><img [src]="item.picture" style="height: 100%; width: 100%; border-radius: 10px;"></div>
           <div class="name">
@@ -106,79 +45,26 @@
               <a class="cre-dat">Created in {{item.date_created}}</a>
           </div>
         </div> 
-       <!--  <div class="title2" >
-          <div class="imag"><img src="assets/images/restoran.jpg" style="height: 100%; width: 100%; border-radius: 10px;"></div>
-          <div class="name">
-              <a class="tit">Tehran restoran</a>
-              <a class="location">location3</a>
-              <a class="location">location2</a>
-          </div>
-        </div> -->
       </div>
-      <div style="width: 100%; height: 30px; background-color: white; border-bottom-left-radius: 10px;" *ngIf="!viewLess" class="view" (click)="onViewMore()">View more</div>
-      <div *ngIf="viewLess" class="view" (click)="onViewMore()">View less</div>
+      <div style="width: 100%; height: 30px; background-color: white; border-bottom-left-radius: 10px;" *ngIf="!viewLess" class="view" (click)="onViewMore1()">View more</div>
+      <div *ngIf="viewLess" class="view" (click)="onViewMore1()">View less</div>
     </div>
     
-    <div class="container2" [ngStyle]="{'height': extended ? 'auto' : '50%' }">
+    <div class="container2" [ngStyle]="{'height': extended2 ? 'auto' : '42%' }">
       <div class="follower">
         <div class="fav-title">Followers</div>
-        <div class="title2" *ngFor="let item of sideBarList">
-          <div class="image"><img src="assets/images/pr9.png" style="height: 100%; width: 100%; border-radius: 100px;"></div>
+        <div class="title2" *ngFor="let follower of followers">
+          <div class="image"><img [src]="follower.picture" style="height: 100%; width: 100%; border-radius: 100px;"></div>
           <div class="name">
-              <a class="tit">HasanFaaour</a>
+              <a class="tit">{{follower.username}}</a>
               <a class="location">1abo1995ali@gmail.com</a>
           </div>
         </div>
-        <div class="title2" *ngFor="let item of sideBarList">
-          <div class="image"><img src="assets/images/pr5.jpg" style="height: 100%; width: 100%; border-radius: 100px;"></div>
-          <div class="name">
-              <a class="tit">AhmadFR</a>
-              <a class="location">ahmadfarhat@gmail.com</a>
-          </div>
-        </div>
-        <div class="title2" *ngFor="let item of sideBarList">
-          <div class="image"><img src="assets/images/pro6.png" style="height: 100%; width: 100%; border-radius: 100px;"></div>
-          <div class="name">
-              <!-- <a class="following">Following</a> -->
-              <a class="tit">Mohammad</a>
-              <a class="location">mohammad10@gmail.com</a>
-          </div>
-        </div>
-        <div class="title2" *ngFor="let item of sideBarList">
-          <div class="image"><img src="assets/images/pro6.png" style="height: 100%; width: 100%; border-radius: 100px;"></div>
-          <div class="name">
-              <!-- <a class="following">Following</a> -->
-              <a class="tit">Mohammad</a>
-              <a class="location">mohammad10@gmail.com</a>
-          </div>
-        </div>
-       <!--  <div class="title2" *ngFor="let item of sideBarList">
-          <div class="image"><img [src]="item.picture" style="height: 100%; width: 100%; border-radius: 100px;"></div>
-          <div class="name">
-              <a class="tit">{{item.title}}</a>
-              <a class="location">location{{item.location}}</a>
-          </div>
-        </div> -->
       </div>
-      <div style="width: 100%; height: 30px; background-color: white; border-bottom-left-radius: 10px;" *ngIf="!viewLess" class="view" (click)="onViewMore()">View more</div>
-      <div *ngIf="viewLess" class="view" (click)="onViewMore()">View less</div>
+      <div style="width: 100%; height: 30px; background-color: white; border-bottom-left-radius: 10px;" *ngIf="!viewLess2" class="view" (click)="onViewMore2()">View more</div>
+      <div *ngIf="viewLess2" class="view" (click)="onViewMore2()">View less</div>
     </div>
     <div class="company">2022 from revers96</div>
-  </div>
-
-  <!-- <div class="right-side">
-      <h2 class="fav-title">Suggestions For You</h2>
-      <div class="title2" *ngFor="let item of sideBarList">
-        <div class="image"><img [src]="item.picture" style="height: 100%; width: 100%;"></div>
-        <div class="name">
-            <p class="email">{{item.title}}</p>
-            <p class="username">location{{item.location}}</p>
-        </div>
-       
-      </div>
-
   </div> -->
-  
-  
-  
+
 </body>

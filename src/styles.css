@@ -33,6 +33,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     border-radius: 12px;
 }
 
+.custom-dialog-container .mat-dialog-container {
+    margin: 0px;
+    padding: 0px;
+}
+
 
 
 

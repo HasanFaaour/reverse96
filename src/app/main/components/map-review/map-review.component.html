@@ -37,32 +37,29 @@
       <div class="image">
         <img [src]= "location.picture" style="height: 100%; width: 100%; border-radius: 10px;"/> 
       </div>
-      <p class="placeName">{{location.name}}</p>
+      <div class="placeName">{{location.name}}</div>
       <div  class="contianer">
-        <div class="rate">
-          <!-- rgb(253, 224, 60) -->
+       <!--  <div class="rate">
           <a><mat-icon style="color: rgb(180, 180, 180); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
           <a><mat-icon style="color: rgb(180, 180, 180); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
           <a><mat-icon style="color: rgb(180, 180, 180); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
           <a><mat-icon style="color: rgb(180, 180, 180); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
           <a><mat-icon style="color: rgb(180, 180, 180); vertical-align: middle; bottom: 3px;">star</mat-icon></a>
-        </div>
-        <br>
-        <p class="comments">{{location.no_of_likes}} likes</p>
-        <p class="comments">{{location.no_of_reviews}} reviews</p>
-       <!--  <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">room</mat-icon>Tehran-tehran pars- iust</a>
-        <a><mat-icon style="color: rgb(70, 183, 248); vertical-align: middle; bottom: 3px;">phone</mat-icon>+989371811432</a> -->
+        </div> -->
+        <div class="likes">{{location.no_of_likes}} likes</div>
+        <div class="review-number">{{location.no_of_reviews}} reviews</div>
         <button class="addReview" (click)="addReview()">add review</button>
         <app-add-review *ngIf="!dlg" [locationID]="locId"></app-add-review>
       </div>
       <div *ngFor="let r of reviews;" class="review" >
-        <div class="description">
-            <p class="title">{{r.title}}</p>
-            <p class="text">{{r.text}}</p>
-            <!-- <p class="comments">{{l.no_of_reviews}} reviews</p> -->
-        </div>
-        <div class="image"><img [src]="r.picture" style="width: 100%; height: 100%; border-radius: 10px;"></div>
-        <div class="like"><span>{{r.liked_by.length}} likes</span> <!-- <mat-icon >favorite_border</mat-icon> --></div>
+        <!-- <div class="description2"> -->
+            <div class="r-title">{{r.title}}</div>
+       <!--  </div> -->
+        <div class="r-image"><img [src]="r.picture" style="width: 100%; height: 100%; border-radius: 10px;"></div>
+        <div class="r-like"><span>{{r.liked_by.length}} likes</span> <!-- <mat-icon >favorite_border</mat-icon> --></div>
+        <div class="r-text" [ngStyle]="{'height': viewMore ? 'auto': '20px'}">{{r.text}}</div>
+        <a class="view-m" (click)="extendText()">View more</a>
+        
       </div>
     </div>
     <div class="empty-locations-list" *ngIf="locationsIsEmpty">

@@ -8,6 +8,7 @@ import { AddReviewComponent } from '../add-review/add-review.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AddPlaceComponent } from '../add-place/add-place.component';
 import {NgbAlertConfig} from '@ng-bootstrap/ng-bootstrap';
+import { UserInfoService } from '../../services/user-info.service';
 
 @Component({
   selector: 'app-map-review',
@@ -27,6 +28,7 @@ export class MapReviewComponent implements AfterViewInit  {
   showAlert = false;
   sideBarbuttonCloseClicked = false;
   locationsIsEmpty = false;
+  viewMore = false;
 
   iconName: string = '';
   iconColor: string = '';
@@ -49,7 +51,6 @@ export class MapReviewComponent implements AfterViewInit  {
   useInfSer: any;
   image: any;
   open: boolean = true;
-  
 
   latLngCorners = { coordinates: [-3,-3,2,2]};
   reviews: any;
@@ -69,7 +70,6 @@ export class MapReviewComponent implements AfterViewInit  {
     {id: 9 ,  color:"rgb(243, 69, 69)", viewValue:"Mall", value: "local_mall"},
     {id: 17 ,  color:"rgb(84, 204, 124)", viewValue:"Mosque", value: "mosque"},
     {id: 1 ,  color:"rgb(60, 187, 102)", viewValue:"Park", value: "park"},
-   /*  {id: 0 , color:"rgb(243, 69, 69)", viewValue:"Place", value: "restaurant"}, */
     {id: 3 , color:"rgb(243, 69, 69)", viewValue:"Restaurant", value: "restaurant"},
     {id: 7 , color:"rgb(75, 133, 226)", viewValue:"School", value: "school"},
     {id: 4 , color:"rgb(121, 120, 120)", viewValue:"Stadium", value: "stadium"},
@@ -83,6 +83,7 @@ export class MapReviewComponent implements AfterViewInit  {
   component = this.resolver.resolveComponentFactory(AddReviewComponent).create(this.injector);
   @Input() public alerts: Array<string> = [];
   constructor(private locationSer: LocationsService,
+              private useInfo : UserInfoService,
               private injector: Injector,
               private resolver : ComponentFactoryResolver,
               public dialog: MatDialog ,
@@ -91,7 +92,7 @@ export class MapReviewComponent implements AfterViewInit  {
   { 
     alertConfig.type = 'success';
     alertConfig.dismissible = false;
-    
+    this.baseUrl = this.useInfo.server;
   }
   
   addReview() {
@@ -108,6 +109,7 @@ export class MapReviewComponent implements AfterViewInit  {
   showReviewsList() {
     this.showReviewList = true;
     this.showLocationDetail = false;
+    this.reviews =  [];
   }
 
   ngAfterViewInit(): void {
@@ -120,6 +122,10 @@ export class MapReviewComponent implements AfterViewInit  {
     this.sideBarbuttonCloseClicked = true;
     this.isMarkerCreated = true;
     this.toggle();
+  }
+  
+  extendText(){
+    this.viewMore = true;
   }
 
   openSidebare() {
@@ -138,6 +144,7 @@ export class MapReviewComponent implements AfterViewInit  {
     this.getLocations();
     const dialogRef = this.dialog.open(AddPlaceComponent, {
       width:'420px', height: 'auto',
+      
       data: { pageValue: this.sendValue }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -158,9 +165,7 @@ export class MapReviewComponent implements AfterViewInit  {
     this.makCirOnCurPos();
     this.addTileLayer();
    /*  const icon = this.createIcon("marker.png", "red"); */
-   
     this.getCorners();
-    
     this.map.on('moveend', (event: any) => {   
       this.getLocations();
     });
@@ -205,11 +210,9 @@ export class MapReviewComponent implements AfterViewInit  {
       next: (data) => {  
         this.locations = [];
         this.filteredLocations = data.message;
-        console.log(data);
         if(this.slectedValue != 19){
           for(let location of this.filteredLocations){
             if(location.place_category == this.slectedValue ){
-              console.log("ya hosien");
               this.locations.push(location);
             }
           }
@@ -228,11 +231,8 @@ export class MapReviewComponent implements AfterViewInit  {
           location.long = +location.long;
           this.coordinates.push({lat: +location.latt, lon: +location.long, cate: location.place_category});
         }
-        console.log(this.location);
         this.markerFilter();
-        console.log(this.location);
-        console.log(data);
-        if(this.locations.length > 0){
+        if(this.locations.length > 0 || this.showLocationDetail == true){
           this.locationsIsEmpty = false;
         }else{
           this.locationsIsEmpty = true;
@@ -248,6 +248,7 @@ export class MapReviewComponent implements AfterViewInit  {
     this.locationSer.getReviewById(id).subscribe({
       next: (data) => {  
         this.reviews = data.message;
+        //console.log(this.reviews);
         for(let review of this.reviews){
           review.picture = `${this.baseUrl}${review.picture}`;
         }
@@ -260,21 +261,18 @@ export class MapReviewComponent implements AfterViewInit  {
 
   clikOnLocation(loc: any){
     for(let i of this.locations){
-      if(loc.latt === i.latt && loc.long === i.long){
+      if(loc.id === i.id /* i.latt */ /* && loc.long === i.long */){
         this.location = i;
-        console.log(this.location);
         this.locId = i.id;
-       // this.reviews = this.getReviews(i.id);
         this.reviews = i.reviews;
         for(let review of this.reviews){
-          review.picture = `${this.baseUrl}${review.picture}`;
+          if(!review.picture.includes(this.baseUrl)) {
+            review.picture = `${this.baseUrl}${review.picture}`;
+          }
         }
       }
     }  
-   
     for(let marker of this.listmarkers){
-      console.log(typeof marker.m.getLatLng().lat.toString());
-      console.log(typeof this.location.latt.toString());
       if(marker.m.getLatLng().lat == this.location.latt.toString() && marker.m.getLatLng().lng == this.location.long.toString()){
         this.marker = marker;
         marker.m.openPopup();
@@ -333,11 +331,13 @@ export class MapReviewComponent implements AfterViewInit  {
       }
       for(let i of this.locations){
         if(lat === i.latt && lng === i.long){
-          this.location = i;
+          this.location = i;    
           this.locId = i.id.toString();
           this.reviews = i.reviews;
           for(let review of this.reviews){
-            review.picture = `${this.baseUrl}${review.picture}`;
+            if(!review.picture.includes(this.baseUrl)) {
+              review.picture = `${this.baseUrl}${review.picture}`;
+            }
           }
         }
       }
@@ -360,10 +360,10 @@ export class MapReviewComponent implements AfterViewInit  {
       if(lat === i.latt && lng === i.long){
         this.popupContent = i;
         this.locId = i.id.toString();
-        this.reviews = i.reviews;
+/*         this.reviews = i.reviews;
         for(let review of this.reviews){
           review.picture = `${this.baseUrl}${review.picture}`;
-        }
+        } */
       }
     }
     popup.setContent(
@@ -402,7 +402,6 @@ export class MapReviewComponent implements AfterViewInit  {
         [southwest.lat,southwest.lng,
          northeast.lat,northeast.lng]
       ;
-      console.log(this.latLngCorners);
     });
     return this.latLngCorners;
   }
@@ -430,7 +429,6 @@ export class MapReviewComponent implements AfterViewInit  {
     }
   }
 }
-
 
 function onLocationFound(e: any, any: any) {
   throw new Error('Function not implemented.');

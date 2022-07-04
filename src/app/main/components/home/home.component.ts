@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HttpRequestService } from 'src/app/http-service.service';
 import { LocationsService } from '../../services/locations.service';
 import { UserInfoService } from '../../services/user-info.service';
+import { ReviewDetailsComponent } from '../review-details/review-details.component';
 
 export interface dlgURL {url:""};
 
@@ -14,15 +15,13 @@ export interface dlgURL {url:""};
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  
-
   constructor(private router: Router,
               private http: HttpRequestService,
               private userInfo: UserInfoService,
               private locationSer: LocationsService,
               private dialog: MatDialog) 
   {
-    this.getFollows();
+    //this.getFollows();
     //this.getTenTopReviews();
   }
   
@@ -31,21 +30,20 @@ export class HomeComponent implements OnInit {
   username = "";
   userId : number = -5;
 
+  reviewTitle: string = '';
+  reviewId: number | undefined;
+  reviewPicture: any;
+
   date: any;
   list: any[] = [];
   sideBarList:any[] = [];
   topReviews: any[] = [];
+  commentsList: any;
   
   serverConnection = 'connecting';
-
-  test1: any = [
-    {title: "dalan" , image: "assets/images/restoran.jpg" , likes: 200 , location: 8  , date_created: "2022-5-23" , username:" HasanFaaour"} ,
-    {title: "dalan" , image: "assets/images/restoran3.jpg" , likes: 1500 , location: 4  , date_created: "2022-5-23" , username: "HasanFaaour"},
-    {title: "dalan" , image: "assets/images/jamkaran.jpg" , likes: 1500 , location: 5 , date_created: "2022-5-23" , username: "HasanFaaour"} ,
-    {title: "dalan" , image: "assets/images/restoran2.jpeg" , likes: 1500 , location: 7  , date_created: "2022-5-23" , username: "HasanFaaour"}  
-  ];
  
-
+  pageValue: any;
+  dialogValue: any;
   searchList: any[] = [];
   user: any = [];
   followers: any = [];
@@ -54,19 +52,36 @@ export class HomeComponent implements OnInit {
   likeNum: number = 10;
   extended = false;
   viewLess = false;
+  extended2 = false;
+  viewLess2 = false;
   isReadMore = true;
   status: any[] = [{isReadMore : false},{isReadMore : false}];
-
-                
+ 
+  openDialog(tit: string , pic: any , reviewId: number) {
+    this.pageValue = [{title: tit , picture: pic , id: reviewId }];
+    const dialogRef = this.dialog.open(ReviewDetailsComponent, {
+      width:'900px', height: 'auto',
+      panelClass: 'custom-dialog-container',
+      data: { pageValue: this.pageValue }
+    });
+    /* dialogRef.afterClosed().subscribe(result => {
+      if(result)
+      this.dialogValue = result.data;
+    }); */
+  }             
 
   showAllText(id : any) {
      this.list[id].isReadMore = ! this.list[id].isReadMore;
      this.isReadMore = !this.isReadMore
   }                 
 
-  onViewMore(){
+  onViewMore1(){
     this.extended = !this.extended;
     this.viewLess = !this.viewLess;
+  }
+  onViewMore2(){
+    this.extended2 = !this.extended2;
+    this.viewLess2 = !this.viewLess2;
   }
    /*for delete */
   showText(id : any) {
@@ -106,14 +121,13 @@ export class HomeComponent implements OnInit {
     this.likeNum = - this.likeNum;
   }
   ngOnInit(): void {
-    //this.getTenTopReviews();
-    this.getFollows();
+   /*  this.getComments(1); */
+    //this.getFollows();
     if (!localStorage.getItem('access')){
       console.log("Not logged in, redirecting to login page...");
       this.router.navigate(['../login']);
     }
     else {
-
       this.userInfo.getUserInfo().subscribe({
         next: (response) => {
           this.userId = Object.values(response)[0]['id'];
@@ -135,10 +149,14 @@ export class HomeComponent implements OnInit {
       next: (response: any) => {
         this.serverConnection = "connected"
         for (let review of response.message) {
+          const str = review.title;
+          review.title = review.title.charAt(0).toUpperCase() + str.slice(1);
           review.picture = `${this.http.server}${review.picture}`;
           review.liked = review.liked_by.includes(this.userId);
           review.likes = review.liked_by.length;
           this.list.push(review);
+          console.log("reviews:::");
+          console.log(response);
         }
       },
       error: (error) => {
@@ -150,9 +168,7 @@ export class HomeComponent implements OnInit {
       }
     });
 
-    
-
-    this.http.getReviews(1).subscribe({
+   /*  this.http.getReviews(1).subscribe({
       next: (response: any) => {
         for (let review of response.message) {
           // console.log("review",review);
@@ -166,6 +182,7 @@ export class HomeComponent implements OnInit {
         }
         console.log("top:")
         console.log(this.sideBarList);
+        
       },
       error: (error) => {
         if (error.status == 401){
@@ -173,22 +190,21 @@ export class HomeComponent implements OnInit {
           this.router.navigate(['logout']);
         }
       }
-    });
+    }); */
   }
 
-  getFollows() {
+ /*  getFollows() {
     this.userInfo.getUserInfo().subscribe({
       next: (data: any) => {  
         this.user = data.message;
         this.user.picture = `${this.baseUrl}${this.user.picture}`;
-        
+        this.followers = this.user.followers;
         console.log("Ya aba abd allah alhosien");
-        console.log(this.user);
-        for(let follower of this.user.followers) {
+        console.log(this.followers);
+        for(let follower of this.followers) {
           if(!follower.picture.includes(this.baseUrl)) {
             follower.picture = `${this.baseUrl}${follower.picture}`;
           }
-          this.followers.push(follower)
         }
         console.log(this.followers);
       },
@@ -197,31 +213,35 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
-  /* getTenTopReviews() {
-    this.locationSer.getTopReviews().subscribe({
-      next: (data) => {  
-        this.topReviews = data.message;
-        for(let review of this.topReviews){
-          review.picture = `${this.baseUrl}${review.picture}`;
-        }
-        console.log("Ya aba abd allah alhosien");
-        console.log(this.topReviews);
+ */
+  getComments(id: number){
+    this.locationSer.getCommentsReview(id).subscribe({
+      next: (data: any) => {  
+        this.commentsList = data.message;
+        this.pageValue = [{title: this.reviewTitle , picture: this.reviewPicture , id: this.reviewId , comments: this.commentsList}];
+        console.log("comments:")
+        console.log(this.commentsList);
       },
       error: (err) => {
-        console.log(err);
+        console.log(err.status);
       }
     });
   }
- */
+
   addComent (item: any) {
     if (!item.newComment){
       console.log("ignored");
       return;
     }
+    //this.serverConnection = 'connecting';
     this.http.addComent(item.id, item.newComment).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         item.newComment = "";
+        console.log(response);
+        //this.serverConnection = '';
+        if(response.message === "comment submited "){
+          console.log("comment added successful!");
+        }
       },
       error: (error) => {
         if (error.status == 401) {

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { LocationsService } from '../../services/locations.service';
 
 @Component({
   selector: 'app-review-details',
@@ -6,10 +8,55 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./review-details.component.css']
 })
 export class ReviewDetailsComponent implements OnInit {
+  fromHomePage: any;
+  commentText: string = '';
+  comment: any = {comment_text: ""};
+  commentsList: any;
 
-  constructor() { }
+  showProg = false;
 
-  ngOnInit(): void {
+  constructor(private locSer : LocationsService,
+              private dialog: MatDialog,
+              @Optional() @Inject(MAT_DIALOG_DATA) public data: any ) 
+  { 
+    this.fromHomePage = data.pageValue[0];
+    console.log(this.fromHomePage)
   }
 
+  ngOnInit(): void {
+    this.getComments(this.fromHomePage.id);
+  }
+  
+  addComment(id: number) {
+    this.showProg = true;
+    this.comment.comment_text = this.commentText;
+    console.log(this.comment);
+    this.locSer.addCommentForReview(this.comment , id ).subscribe({
+      next: (data: any) => {
+        console.log(data);
+        if(data.message === "comment submited "){
+          console.log("comment added successful!");
+        }
+        this.commentText = ''
+        this.showProg = false;
+        this.getComments(this.fromHomePage.id)
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  getComments(id: number){
+    this.locSer.getCommentsReview(id).subscribe({
+      next: (data: any) => {  
+        this.commentsList = data.message;
+        console.log("comments:")
+        console.log(this.commentsList);
+      },
+      error: (err) => {
+        console.log(err.status);
+      }
+    });
+  }
 }

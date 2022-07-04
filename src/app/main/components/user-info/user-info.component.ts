@@ -62,7 +62,8 @@ export class UserInfoComponent implements OnInit {
         this.askedFor.address = list.address;
         this.askedFor.phone_number = list.phone_number;
         this.askedFor.picture = this.useInfSer.server + list.picture;
-        
+        console.log("askefor:");
+        console.log(this.askedFor);
         this.askedFor.followerCount = list.followers?.length
         this.askedFor.followingCount = list.followings?.length
 

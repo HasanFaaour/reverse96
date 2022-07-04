@@ -9,7 +9,8 @@ export class UserInfoService {
 
   userName: string | null = null;
   
-  baseUrl = "http://localhost:8000";
+  //baseUrl = "http://localhost:8000";
+  baseUrl = "https://reverse96-reverse96.fandogh.cloud"
   httpHeaders = new HttpHeaders ({'Content-Type' : 'application/json'});
 
   constructor(private http: HttpClient) { }
