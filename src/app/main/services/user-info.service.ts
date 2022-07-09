@@ -28,6 +28,20 @@ export class UserInfoService {
     return this.http.get(`${this.baseUrl}/api/get_user_reviews/${userId}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}});
   }
 
+  editProfile (data: {key: string, value: any}[], image: any = null): Observable<object> {
+    
+    let body = new FormData();
+    data.forEach((entrie) => body.append(entrie.key, entrie.value));
+
+    if (image === null) {
+      return this.http.patch(`${this.baseUrl}/api/Edit-userProfile`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}});
+    }
+
+    body.append('picture', image, image.name);
+
+    return this.http.patch(`${this.baseUrl}/api/Edit-userProfile`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}});
+  }
+  
   get server(): string {
     return this.baseUrl;
   }

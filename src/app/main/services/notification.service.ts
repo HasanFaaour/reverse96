@@ -9,7 +9,9 @@ export class NotificationService {
   constructor(  ) { }
 
   socket: WebSocket|null = null;
-  baseURL = "ws://localhost:8000"
+  
+  apiURL = "http://localhost:8000"
+  wsUrl = "ws://localhost:8000"
 
   notificationCount = -5;
   notificationList: any[] = [];
@@ -31,7 +33,7 @@ export class NotificationService {
       
       let subscribersList: Subscriber<{type: string, data: any}>[] = [];
 
-      _this.socket = new WebSocket(`${_this.baseURL}/ws/notification/${url}/`);
+      _this.socket = new WebSocket(`${_this.wsUrl}/ws/notification/${url}/`);
       
       return (observer: Subscriber<{type: string, data: any}>): TeardownLogic => {
 
