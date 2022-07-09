@@ -1,0 +1,216 @@
+.dialog {
+    width: 400px;
+    height: max-content;
+    min-height: 80vh;
+    max-height: 99vh;
+}
+
+/* * {
+    border: 1px solid green;
+} */
+
+        .title {
+            margin-top: 20px;
+        }
+
+        .edit-info .title {
+            padding: 0;
+        }
+
+        .edit-title-ff {
+            /* margin-top: -30px; */
+            /* display: inline-block; */
+            position: relative;
+            transform: scale(.9);
+            margin-left: 0;
+            margin-right: -30px;
+            margin-bottom: -100px;
+            top: -25px;
+            width: auto;
+        }
+
+            .edit-title {
+                margin-top: 0;
+            }
+
+        .file-input {
+            display: none;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .edit-avatar {
+            box-shadow: 0 0 3px 1px gray;
+        }
+
+        .edit-avatar:active {
+            /* box-shadow: 0 0 2px 1px gray inset; */
+            box-shadow: 0 0 1px 1px gray;
+            /* transition: box-shadow .08s ease-in-out; */
+        }
+
+        .edit-avatar.default {
+            object-fit: scale-down;
+        }
+
+        .options {
+            position: absolute;
+            right: 10px;
+            top: 20px;
+        }
+
+    .header-divider {
+        margin-top: 15px;
+    }
+
+    .content {
+        overflow-y: scroll;
+        max-height: 75vh;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        height: max-content;
+    }
+
+    .content::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .content::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    .content::-webkit-scrollbar-track {
+        background: #eee;
+    }
+
+    .content::-webkit-scrollbar-thumb {
+        background: #aaa;
+        border-radius: 4px;
+    }
+
+    .content::-webkit-scrollbar:disabled {
+        display: none;
+    }
+    
+        .desc-area {
+            display: block;
+            max-height: 20vh;
+        }
+
+            .desc-title {
+                font-weight: 500;
+                height: 2vh;
+            }
+
+            .desc-ff {
+                width: 100%;
+                min-height: 17vh;
+                max-height: 17vh;
+            }
+
+            .desc-text {
+                margin-top: 10px;
+                width: 100%;
+                height: max-content;
+                max-height: 17vh;
+                overflow-y: scroll;
+            }
+
+            textarea.desc-text {
+                max-height: 69vh;
+                height: 17vh;
+                margin-top: 0;
+            }
+
+            .desc-text::-webkit-scrollbar {
+                width: 5px;
+            }
+    
+            .desc-text::-webkit-scrollbar-button {
+                display: none;
+            }
+    
+            .desc-text::-webkit-scrollbar-track {
+                background: #eee;
+            }
+    
+            .desc-text::-webkit-scrollbar-thumb {
+                background: #aaa;
+                border-radius: 4px;
+            }
+    
+            div.desc-text::-webkit-scrollbar:disabled {
+                display: none;
+            }
+
+        .desc-divider {
+            margin-top: 20px;
+            color: gray;
+        }
+
+        .members-title {
+            font-weight: 500;
+        }
+
+        .members-list {
+            overflow-y: scroll;
+            max-height: 55vh;
+        }
+
+        .members-list::-webkit-scrollbar {
+            display: none;
+        }
+
+            .members-item {
+                background-color: white;
+            }
+
+            .members-item:hover {
+                background-color: #eee;
+            }
+
+                /* .member-image {
+                    border-radius: 50%;
+                    width: 40px;
+                    height: 40px;
+                    object-fit: cover;
+                    display: flex;
+                } */
+
+                .member-username {
+                    margin-left: 10px;
+                    width: max-content;
+                }
+
+        .edit-user-ff {
+            width: 100%;
+        }
+
+        .edit-user-address {
+            max-height: 110px;
+        }
+
+    .actions-area {
+        display: flex;
+        position: absolute;
+        margin-top: 20px;
+        bottom: 15px;
+        right: 20px;
+        /* box-shadow: 0 0 2px 1px #bbb inset; */
+        border-radius: 4px;
+        width: 95%;
+        padding: 5px;
+    }
+
+        .action-button:enabled {
+            background-color: rgb(88, 99, 255);
+            color: white;
+            margin-bottom: 5px;
+            /* transform: scale(.9); */
+            /* margin-right: 0; */
+        }
