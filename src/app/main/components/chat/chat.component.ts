@@ -164,19 +164,13 @@ export class ChatComponent implements OnInit {
    
   }
 
-  authenticateGuy(guyName: string | null = "@@"): void {
+  authenticateGuy(): void {
 
     let guyId: string | null;
 
-    if (guyName == "@@") {
-      //Get guy id/username from URL
-      guyId = this.route.snapshot.paramMap.get('guyId');
-      // console.log('new guy:',guyId);
-    }
-
-    else{
-      guyId = guyName;
-    }
+   
+    guyId = this.route.snapshot.paramMap.get('guyId');
+    console.log('new guy:',guyId);
 
     if (!guyId){
       //No guy(default message page), next step
@@ -189,70 +183,75 @@ export class ChatComponent implements OnInit {
     {
       console.log('norm '+guyId);
       
-      this.socketProgress = true;
+      // this.socketProgress = true;
       this.main = false;
 
+      this.guyName = guyId;
+
+      this.getContacts(true);
+
+
       // console.log("asking for",guyId);
-      this.userInfo.getUserInfo(guyId).subscribe({
+      // this.userInfo.getUserInfo(guyId).subscribe({
 
-        //Successful authetication of guys
-        next: (response: any) => {
-          this.timesRefreshed = 0;
+      //   //Successful authetication of guys
+      //   next: (response: any) => {
+      //     this.timesRefreshed = 0;
 
-          let info = response.message;
+      //     let info = response.message;
 
-          //record guy's info
-          this.guyName = info.username;
-          this.guyImage = this.chatService.server + info.picture;
-          this.participantsInfo[this.guyName] = {name: info.name, image: this.guyImage, address: info.address, email: info.email, bio: info.bio};
+      //     //record guy's info
+      //     this.guyName = info.username;
+      //     this.guyImage = this.chatService.server + info.picture;
+      //     this.participantsInfo[this.guyName] = {name: info.name, image: this.guyImage, address: info.address, email: info.email, bio: info.bio};
 
-          //next step
-          if (guyName == "@@") {
-            this.getContacts(true);
-          }else{
-            this.getPV();
-          }
-        },
+      //     //next step
+      //     if (guyName == "@@") {
+      //       this.getContacts(true);
+      //     }else{
+      //       this.getPV();
+      //     }
+      //   },
 
-        //Failed authentication because
-        error: (response) => {
+      //   //Failed authentication because
+      //   error: (response) => {
 
-          //User's token is expired
-          if (response.status == 401) {
+      //     //User's token is expired
+      //     if (response.status == 401) {
             
-            this.authService.refresh().subscribe({
-              next: (v) => {
-                this.timesRefreshed ++;
+      //       this.authService.refresh().subscribe({
+      //         next: (v) => {
+      //           this.timesRefreshed ++;
 
-                if (this.timesRefreshed > 3) {
-                  alert(`This session is expired (refreshed ${this.timesRefreshed}times). Please login again. `);
-                  this.router.navigate(['logout']);
-                  return;
-                }
+      //           if (this.timesRefreshed > 3) {
+      //             alert(`This session is expired (refreshed ${this.timesRefreshed}times). Please login again. `);
+      //             this.router.navigate(['logout']);
+      //             return;
+      //           }
                 
-                this.authenticateGuy();
-              },
+      //           this.authenticateGuy();
+      //         },
               
-              error: (er) => {
-                alert('Token expired, please login again! (' + response.status + ')');
-                this.router.navigate(['logout']);
-              }
-            });
-            return;
-          }
+      //         error: (er) => {
+      //           alert('Token expired, please login again! (' + response.status + ')');
+      //           this.router.navigate(['logout']);
+      //         }
+      //       });
+      //       return;
+      //     }
 
-          //Unkown reason
-          else {
-            alert('Invalid guy id! (' + response.status + ')');
-            this.router.navigate(['message']);
-          }
-        },
+      //     //Unkown reason
+      //     else {
+      //       alert('Invalid guy id! (' + response.status + ')');
+      //       this.router.navigate(['message']);
+      //     }
+      //   },
 
-        //complete...
-        complete: () => {
-          return;
-        }
-      });
+      //   //complete...
+      //   complete: () => {
+      //     return;
+      //   }
+      // });
     }
   }
 
@@ -340,7 +339,7 @@ export class ChatComponent implements OnInit {
     console.log('getting ' + this.guyName);
     
     this.mainChat = this.contactList.find((chat: any) => chat.name == this.guyName);
-    console.log(this.mainChat);    
+    console.log(this.mainChat);   
     
     if (this.mainChat) {
       this.mainChat.selected = true; 
@@ -348,13 +347,33 @@ export class ChatComponent implements OnInit {
     
     }
 
-    else this.socketError = true;
+    else this.chatService.createPV(this.username, this.guyName).subscribe({
 
-    this.socketProgress = false;
-  }
+      //Succressful creation
+      next: (response: any) => {
+ 
+        //Add the new chat to contact list
+        let newChat = {name: this.guyName, participants: [this.username, this.guyName], image: this.guyImage, selected: true, id: response.id};
+        this.contactList.push(newChat);
 
-  addChat(chat: any, main: boolean) {
+        //next step
+        this.mainChat = newChat;
+        this.connectToSocket();
+      },
 
+      //Unsuccessful creation
+      error: (error) => {
+        console.log(error);
+        this.socketError = true;
+        return;
+      },
+
+      //complete...
+      complete: () => {
+        return;
+      }
+    });
+  
   }
 
   getGroupChat (group: any): void {
@@ -625,7 +644,6 @@ export class ChatComponent implements OnInit {
     }
 
     else {
-      chat.selected = true;
       this.mainChat = chat;
       this.connectToSocket();
       window.history.pushState("","",`message/${chat.name.trim()}`);

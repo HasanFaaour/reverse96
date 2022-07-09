@@ -72,11 +72,15 @@ describe('ChatComponent', () => {
   };
 
   let chatServiceStub = {
+    chats: [],
+
+    has: (id: number) => false,
+
     getContacts: (username: string) => {
       chatStubLog += `getContacts(${username}) - `;
       return observableFromSignal(signal);
     },
-    connect: (roomID: string) => {
+    newChat: (roomID: number) => {
       chatStubLog += `connect(${roomID}) - `;
       return observableFromSignal(signal);
     },
@@ -409,7 +413,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.getPrivateChat();
+    component.getContacts(true);
 
     expect(chatStubLog).toContain("createPV(user,guy)");
     expect(chatStubLog).toContain("connect(5)");
@@ -429,7 +433,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.getPrivateChat();
+    component.getContacts(true);
 
     expect(chatStubLog).not.toContain("create");
     expect(chatStubLog).toContain("connect(69)");
@@ -449,7 +453,7 @@ describe('ChatComponent', () => {
     chatStubLog = "";
     component.contactList = [];
 
-    component.getPrivateChat();
+    component.getContacts(false);
 
     // -1 for "no more"
     expect(component.contactList.length).toBe(contacts.length-1);
@@ -465,12 +469,11 @@ describe('ChatComponent', () => {
     createSignal = {type: 'error', response: 'error'};
 
     component.socketError = false;
-    component.chatId = 5;
     component.contactList = [];
 
     chatStubLog = "";
 
-    component.getPrivateChat();
+    component.getContacts(true);
 
     expect(chatStubLog).toContain("createPV");
     expect(component.socketError).toBeTrue();
@@ -552,7 +555,7 @@ describe('ChatComponent', () => {
     signal = {type: 'error', response: {type: 'close', data: 'reason'}};
 
     component.socketError = false;
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     component.connectToSocket();
 
@@ -565,7 +568,7 @@ describe('ChatComponent', () => {
     signal = {type: 'next', response: {type: 'open', data: 'opened'}};
 
     component.socketError = false;
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     component.connectToSocket();
 
@@ -582,7 +585,7 @@ describe('ChatComponent', () => {
 
     details = [{error: false, username: "second guy", picture: "second guy picture", followers: [], followings: [], mutuals: []}];
 
-    component.chatId = 1;
+    component.mainChat = chat1;
 
     component.switchTo(chat2);
 
@@ -591,7 +594,7 @@ describe('ChatComponent', () => {
     expect(chat1.selected).toBeFalse();
     expect(chat2.selected).toBeTrue();
 
-    expect(component.chatId).toBe(2);
+    expect(component.mainChat).toBe(chat2);
   })
 
   it ("(switch) should switch to a group chat without problem when needed", () => {
@@ -602,7 +605,7 @@ describe('ChatComponent', () => {
 
     details = [{error: false, username: "second guy", picture: "second guy picture", followers: [], followings: [], mutuals: []},{error: false, username: "first guy", picture: "first guy picture", followers: [], followings: [], mutuals: []}];
 
-    component.chatId = 1;
+    component.mainChat = chat1;
 
     component.switchTo(chat2);
 
@@ -611,7 +614,7 @@ describe('ChatComponent', () => {
     expect(chat1.selected).toBeFalse();
     expect(chat2.selected).toBeTrue();
 
-    expect(component.chatId).toBe(2);
+    expect(component.mainChat).toBe(chat2);
   })
 
   it ("(messages) should add the new message to the list", () => {
@@ -621,7 +624,7 @@ describe('ChatComponent', () => {
     signal = {type: 'next', response: {type: 'message',data: newMessage}};
 
     component.socketError = false;
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     component.connectToSocket();
 
@@ -640,7 +643,7 @@ describe('ChatComponent', () => {
     signal = {type: 'next', response: {type: 'fetch',data: messages}};
 
     component.socketError = false;
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     component.lastSelected = '53';
 
@@ -656,7 +659,7 @@ describe('ChatComponent', () => {
 
   it ("(messages) should send the message", () => {
     component.socketError = false;
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
     component.username = "messageSender"
     component.newMessage = "New short message."
 
@@ -677,7 +680,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
     component.username = 'person 2';
 
 
@@ -710,7 +713,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
     component.username = 'person 2';
 
 
@@ -741,7 +744,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     component.connectToSocket();
 
@@ -772,7 +775,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     component.connectToSocket();
 
@@ -798,7 +801,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     component.connectToSocket();
 
@@ -827,7 +830,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     component.connectToSocket();
 
@@ -845,7 +848,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     component.connectToSocket();
 
@@ -868,7 +871,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     component.connectToSocket();
 
@@ -884,7 +887,7 @@ describe('ChatComponent', () => {
 
   it ("(messages) should mark seen messages as read", () => {
     component.username = "user";
-    component.chatId = 5;
+    component.mainChat = {name: 'chat name',id: 5};
 
     chatStubLog = "";
 
