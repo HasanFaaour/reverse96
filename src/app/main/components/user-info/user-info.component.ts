@@ -60,18 +60,16 @@ export class UserInfoComponent implements OnInit {
   reviews: any[] = [];
 
   constructor(
-    private useInfSer : UserInfoService,
+    private userInfoService : UserInfoService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private httpRequest: HttpRequestService,
     private dialog: MatDialog
     ) {  }
 
- editeProfile() {
-    this.isEnabled = false;
- }
-
  ngOnInit(username: string = "@@"): void {
+  console.log('init');
+  
   // Initializing variables
   this.user = {};
   this.askedFor = {};
@@ -92,10 +90,10 @@ export class UserInfoComponent implements OnInit {
   this.reviews = [];
 
   // Authenticate User
-  this.useInfSer.getUserInfo().subscribe({
+  
+  this.userInfoService.getUserInfo().subscribe({
     next: (data: any) => {
-      let list = data.message;
-      console.log(list);
+      let list = data.message;      
       
       this.user.id = list.id;
       this.user.name = list.name;
@@ -103,7 +101,7 @@ export class UserInfoComponent implements OnInit {
       this.user.email = list.email;
       this.user.address = list.address;
       this.user.phone_number = list.phone_number;
-      this.user.picture = this.useInfSer.server + list.picture;
+      this.user.picture = this.userInfoService.server + list.picture;
 
       this.user.followerCount = list.followers?.length
       this.user.followingCount = list.followings?.length
@@ -111,8 +109,8 @@ export class UserInfoComponent implements OnInit {
       this.user.followers = []; 
       for (let follower of list.followers) {
         
-        if(!follower.picture.includes(this.useInfSer.server)) {
-          follower.picture = this.useInfSer.server + follower.picture;
+        if(!follower.picture.includes(this.userInfoService.server)) {
+          follower.picture = this.userInfoService.server + follower.picture;
         }
         
         this.user.followers.push(follower)
@@ -121,20 +119,21 @@ export class UserInfoComponent implements OnInit {
       this.user.followings = [];
       for (let following of list.followings) {
         
-        if (!following.picture.includes(this.useInfSer.server))
-          following.picture = this.useInfSer.server + following.picture;
+        if (!following.picture.includes(this.userInfoService.server))
+          following.picture = this.userInfoService.server + following.picture;
         
         this.user.followings.push(following)
       }
 
       //...
       let routeUsername = this.activatedRoute.snapshot.paramMap.get('username');
+      
       if (username != "@@") {
         routeUsername = username;
       }
       if (routeUsername && routeUsername != this.user.username) {
         
-        this.askedFor.username = routeUsername;      
+        this.askedFor.username = routeUsername;
         this.getUserinformation();
       }
       else {
@@ -176,7 +175,7 @@ export class UserInfoComponent implements OnInit {
   getUserinformation() : void {
     console.log("asking for",this.askedFor.username);
     
-    this.useInfSer.getUserInfo(this.askedFor.username).subscribe({
+    this.userInfoService.getUserInfo(this.askedFor.username).subscribe({
       next: (data: any) => {
         let list = data.message;
        
@@ -186,22 +185,20 @@ export class UserInfoComponent implements OnInit {
         this.askedFor.email = list.email;
         this.askedFor.address = list.address;
         this.askedFor.phone_number = list.phone_number;
-        this.askedFor.picture = this.useInfSer.server + list.picture;
+        this.askedFor.picture = this.userInfoService.server + list.picture;
         
         this.askedFor.followerCount = list.followers?.length
         this.askedFor.followingCount = list.followings?.length
 
         this.followed = list.followings.map((person:any)=>person.username).includes(this.user.username);
-        console.log('followed:',this.followed);
 
         this.following = list.followers.map((person:any)=>person.username).includes(this.user.username);
-        console.log('following:',this.following);
 
         this.askedFor.followers = []; 
         for (let follower of list.followers) {
           
-          if(!follower.picture.includes(this.useInfSer.server)) {
-            follower.picture = this.useInfSer.server + follower.picture;
+          if(!follower.picture.includes(this.userInfoService.server)) {
+            follower.picture = this.userInfoService.server + follower.picture;
           }
           
           this.askedFor.followers.push(follower)
@@ -210,19 +207,17 @@ export class UserInfoComponent implements OnInit {
         this.askedFor.followings = [];
         for (let following of list.followings) {
           
-          if (!following.picture.includes(this.useInfSer.server))
-            following.picture = this.useInfSer.server + following.picture;
+          if (!following.picture.includes(this.userInfoService.server))
+            following.picture = this.userInfoService.server + following.picture;
           
           this.askedFor.followings.push(following)
         }
 
         this.pendingFollow = list.follow_state == 'pending';
-        // console.log('p?',this.pending);
 
         this.followBlocked = list.follow_state == 'declined';
 
         this.public = list.is_public;
-        // console.log(this.public);
         
         //Get Reviews
         this.getReviews();
@@ -237,17 +232,16 @@ export class UserInfoComponent implements OnInit {
   }
 
   getReviews (): void {
-    console.log("reviews from:", this.askedFor.username);
+    console.log("reviews from: "+ this.askedFor.username);
     
-    this.useInfSer.getUserReviews(this.askedFor.username).subscribe({
+    this.userInfoService.getUserReviews(this.askedFor.username).subscribe({
       next: (response: any) => {
         let userReviews = response.message;
-        console.log(userReviews);
 
         for (let review of userReviews) {
 
-          review.picture = this.useInfSer.server + review.picture;
-          review.location_picture = this.useInfSer.server + review.location_picture;
+          review.picture = this.userInfoService.server + review.picture;
+          review.location_picture = this.userInfoService.server + review.location_picture;
 
           review.liked = review.liked_by.includes(this.user.id);
           review.likes = review.liked_by.length;
@@ -259,7 +253,6 @@ export class UserInfoComponent implements OnInit {
         
       }
     });
-    console.log(this.askedFor.followers);
     
   }
 
@@ -284,7 +277,10 @@ export class UserInfoComponent implements OnInit {
   }
 
   editProfile () {
-    this.dialog.open(ChatInfoComponent, {data: {action: 'edit_profile', username: this.user.username, isGroup: false}});
+    this.dialog.open(ChatInfoComponent, {data: {action: 'edit_profile', username: this.user.username}}).afterClosed().subscribe((result) => {
+      window.history.pushState("","",'user');
+      window.history.go();
+    });
   }
 
   follow (): void {
@@ -294,13 +290,18 @@ export class UserInfoComponent implements OnInit {
       this.user.followingCount ++;
       this.following = true;
       this.pendingFollow = false;
-    this.askedFor.followers.push(this.user)
-  }
+      this.askedFor.followers.push(this.user);
+    }
     this.httpRequest.followUser(this.askedFor.username).subscribe({
   
       error: (err) => {
         this.pendingFollow = false;
         this.following = false;
+        if (this.public) {
+          this.askedFor.followerCount --;
+          this.user.followingCount --;
+          this.askedFor.followers.pop();
+        }
       }
     });
   }
@@ -312,11 +313,15 @@ export class UserInfoComponent implements OnInit {
     this.view = View.reviews;
     this.httpRequest.unfollowUser(this.askedFor.username).subscribe({
     
+      next: (response: any) => {
+        this.askedFor.followers.splice(this.askedFor.followers.indexOf(this.user),1);
+      },
+
       error: (err) => {
         this.following = true
         this.user.followingCount ++;
         this.askedFor.followerCount ++;
-  }
+      }
     })
   }
 

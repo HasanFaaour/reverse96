@@ -1,71 +1,3 @@
-<!-- <div class="userInfo">
-  <div class="title">
-    <div class="image"><img [src]="picture" style="border-radius:50%;height: 100%; width: 100%;object-fit: cover;"></div>
-    <div class="name">
-      <p class="username">{{username}}</p>
-      <p class="fullname">{{name}}</p>
-    </div>
-    <button class="editprofile" (click)="editeProfile()" *ngIf="username == 'ADz'" >
-      Edit Profile
-    </button>
-    <button mat-mini-fab class="send-message" (click)="navigateTo('message/'+username)">
-      <mat-icon>message</mat-icon>
-    </button>
-  </div>
-
-  <br>
-  <div class="container">
-    <form action="/action_page.php">
-    <div class="row">
-      <div class="col-25">
-        <label for="fname"> Name</label>
-      </div>
-      <div class="col-75">
-        <input type="text" [(ngModel)]="name" id="fname" name="firstname" [disabled]="isEnabled">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-25">
-        <label for="lname">User Name</label>
-      </div>
-      <div class="col-75">
-        <input type="text" [(ngModel)]="username" id="lname" name="username" [disabled]="isEnabled">
-      </div>
-    </div>
-    <div class="row">
-        <div class="col-25">
-          <label for="lname">Phone Number</label>
-        </div>
-        <div class="col-75">
-          <input type="text" [(ngModel)]="phone_number" id="lname" name="phone_number" [disabled]="isEnabled">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">Email</label>
-        </div>
-        <div class="col-75">
-          <input type="text" [(ngModel)]="email" id="lname" name="email" [disabled]="isEnabled">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-25">
-          <label for="lname">Address</label>
-        </div>
-        <div class="col-75">
-          <input type="text" [(ngModel)]="address" id="lname" name="address" [disabled]="isEnabled">
-        </div>
-      </div>
-    <br>
-    <div *ngIf="!isEnabled" class="row">
-      <input type="submit" value="Submit">
-    </div>
-    </form>
-  </div>
-
-</div> -->
-
-
 <div class="container" >
 
   <!-- Info Card -->
@@ -221,6 +153,9 @@
   <!-- Followers/Followings -->
   <div class="view-area follow-users-area" *ngIf="(public || following) && view > 0" >
 
+    <!-- Title -->
+    <h4>{{view == 1? 'Followers': 'Followings'}}</h4>
+
     <!-- Single User -->
     <mat-card class="single-follow-user" *ngFor="let user of followList" (click)="switchUser(user.username)" (mouseenter)="user.showDescription=true;" (mouseleave)="user.showDescription=false;" >
 
@@ -257,13 +192,3 @@
   </div>
 
 </div>
-
-
-<!-- 
-<mat-menu #followersMenu="matMenu" class="follow-menu" >
-  <a mat-menu-item class="follow-item" *ngFor="let follower of askedFor.followers" href="/user/{{follower.username}}"><img mat-card-avatar [src]="follower.picture"/>{{follower.username}}</a>
-</mat-menu>
-
-<mat-menu #followingsMenu="matMenu">
-  <a mat-menu-item class="follow-item" *ngFor="let following of askedFor.followings" href="/user/{{following.username}}"><img mat-card-avatar [src]="following.picture"/>{{following.username}}</a>
-</mat-menu> -->
