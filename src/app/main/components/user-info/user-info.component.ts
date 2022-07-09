@@ -185,8 +185,8 @@ export class UserInfoComponent implements OnInit {
         this.askedFor.email = list.email;
         this.askedFor.address = list.address;
         this.askedFor.phone_number = list.phone_number;
-        this.askedFor.picture = this.userInfoService.server + list.picture;
-        
+        this.askedFor.picture = this.userInfoService.server + list.picture;        
+
         this.askedFor.followerCount = list.followers?.length
         this.askedFor.followingCount = list.followings?.length
 

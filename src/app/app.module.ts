@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -32,7 +33,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatSelectModule,
     MatCardModule,
     MatRadioModule,
-    ReactiveFormsModule,
+    /* ReactiveFormsModule, */
+    MatDialogModule,
     HttpClientModule,
     BrowserAnimationsModule,
     NgbModule

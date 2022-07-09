@@ -3,15 +3,15 @@
 <div class = "sidenav" >
     <a class="side-icon" routerLink="/home" routerLinkActive="active">
         <mat-icon class="material-icons-outlined"> home</mat-icon>
-        <span class="ico">Home</span>
+        <span class="ic">Home</span>
     </a>
     <a class="test4" routerLinkActive="active">
         <mat-icon>favorite_border</mat-icon>
-        <span class="sid-ico">Favorites</span>
+        <span class="ic">Favorites</span>
     </a>
     <a routerLink="/notifications" routerLinkActive="active">
         <mat-icon fontIcon="outline" [matBadge]="notificationCount" matBadgePosition="before" matBadgeColor="accent" matBadgeSize="small" [matBadgeHidden]="notificationCount<1" >notifications_none</mat-icon>
-        <span class="sid-ico">Notifications</span>
+        <span class="ic">Notifications</span>
     </a>
     <a routerLink="/map-reviws" routerLinkActive="active" *ngIf="isLogin" routerLinkActive="active">
         <mat-icon class="material-icons-outlined">place</mat-icon>

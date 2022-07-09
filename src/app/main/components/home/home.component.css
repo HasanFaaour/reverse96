@@ -37,32 +37,41 @@
   .likes {
     height: auto;
     width: 100%;
-    margin-left: 4%;
+    margin-left: 3%;
     margin-right: 3%;
-    margin-top: 15px;
-    margin-bottom: 20px;
+    margin-top: 0px;
+    margin-bottom: 8px;
     font-size: 18px;
-    color: rgb(90, 89, 89);
+    font-weight: 500;
+    color: rgb(73, 73, 73);
     cursor: pointer;
   }
 
-.title {
-  margin-left: 3%;
+.place-card .title {
+  margin-left: 4%;
+  margin-bottom: 2px;
+  font-size: 20px;
   margin-top: 10px;
 }
 
-.author {
-  position: absolute;
+.place-card .author {
+  height: 16px;
+  width: 100%;
+ /*  position: relative; */
   float: right;
-  margin-left: 22px;
-  font-size: small;
-  /* margin-right: 20px; */
-  margin-top: -3px;
-
+ /*  border: 1px solid red; */
+  padding-left: 4%;
+  margin-left: 4%;
+  font-size: 16px;
+  margin-bottom: 8px;
 }
-
+.place-card img {
+  margin-top: 0px;
+  padding: 0px;
+}
 .author a {
   text-decoration: solid;
+  padding-bottom: 10px;
 }
 
 .author a:hover {
@@ -70,15 +79,17 @@
 }
 
   .place-image {
+  /*   border: 1px solid red; */
     background-color: rgb(225, 225, 226);
-    margin-left: 4%;
-    margin-top: 3%;
+    margin-left: 2%;
+    margin-top: 6%;
     height: 500px;
-    width: 92%;
+    border-radius: 10px;
+    width: 96%;
   }
 
   .icon-list {
-    margin-left: 5%;
+    margin-left: 3%;
   }
   .icon-list a {
     display: inline-block;
@@ -86,9 +97,11 @@
     margin-bottom: 8px;
     text-decoration: none;
   }
-
+  .icon-lista:hover {
+    background-color: rgb(163, 33, 33);
+  }
   .icon-list .ico {
-    margin-left: 4%;
+    margin-right: 4%;
     margin-top: 10px;
   }
 
@@ -106,74 +119,251 @@
   border-bottom-right-radius: 8px;
 }
 
+mat-icon {
+  color: rgb(83, 81, 81);
+  vertical-align: middle;
+  width: 36px;
+  height: 36px;
+  border-radius: 100%;
+  padding-left: 6px;
+  padding-top: 6px;
+}
+.fav1 mat-icon {
+  color: rgb(88, 87, 87);
+  vertical-align: middle;
+  bottom: 3px;
+  cursor: pointer;
+}
+.fav2 mat-icon {
+  color: rgb(252, 64, 64);;
+  vertical-align: middle;
+  bottom: 3px;
+  cursor: pointer;
+}
+.icon-list mat-icon:hover {
+  
+ /*  background-color: #ddd; */
+}
+.icon-list a:hover > * {
+  color: #1da1f2;
+}
+.fav1:hover > * {
+  color: #1da1f2;
+}
+
 /*--------------------right side---------------------*/
 .side {
-  width: 23%;
-  height: auto;
+  width: 26%;
+  height: 100%;
   position: absolute;
   float: right;
   top: 12%;
-  right: 3%;
+  right: 0%;
 }
 .right-side {
    position: fixed;
-   height: 300px;
-   width: 23%;
-   /* overflow-y: scroll; */
+   height: 90%;
+   width: 26%;
+   overflow-y: scroll;
    float: right;
    z-index: 1;
-   top: 10%;
-   right: 3%;
-   background-color: white;
-   background-color: #f5f5f5;
-   border-radius: 10px;
+   top: 6%;
+   right: 0%;
    margin-top: 20px;
    margin-bottom: 8px;
-   box-shadow: 0 3px 6px 0 rgba(204, 204, 204, 0.164), 0 6px 20px 0 rgba(167, 166, 166, 0.103);
 }
-  .top-reviews {
-    margin-left: 20px;
-    height: auto;
-    width: 100%;
-    float: right;
-    z-index: 1;
-    overflow-y: hidden;
-    top: 12%;
-    right: 3%;
-    background-color: rgba(221, 221, 221, 0.13);
-    border-radius: 8px;
-    border: 1px solid #ddd;
-  }
+.right-side::-webkit-scrollbar {
+  display: none;
+}
+
+.fav-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: rgb(80, 80, 80);
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.container1 {
+  width: 100%;
+  height: 60%;
+  background-color: white;
+  margin-bottom: 20px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+}
+.container2 {
+  width: 100%;
+  height: 50%;
+ 
+  background-color: white;
+  margin-bottom: 7px;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+}
+.right-side .top-rev {
+  width: 100%;
+  height: 91%;
+  overflow-y: hidden;
+  background-color: white;
+  margin-top: 0px;
+  padding-top: 5px;
+ /*  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px; */
+}
+.view {
+  display: block;
+  width: 100%;
+  height: 30px;
+  padding-left: 20px;
+  font-size: 14px;
+  color: #1da1f2;
+  cursor: pointer;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: white;
+}
+
+.follower {
+  width: 100%;
+  height: 86%;
+  overflow-y: hidden;
+  background-color: white;
+  border: 1px solid white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+ /*  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px; */
+}
+.follower .view-more {
+  color: #1da1f2;
+  font-size: 16px;
+  margin-left: 20px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.follower .following {
+  float: right;
+}
+
+.top-reviews {
+  margin-left: 20px;
+  height: auto;
+  width: 100%;
+  float: right;
+  z-index: 1;
+  overflow-y: hidden;
+  top: 12%;
+  right: 3%;
+  background-color: rgba(221, 221, 221, 0.13);
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
   .company {
-    color: rgb(206, 205, 205);
+    font-size: 11px;
+    color: rgb(163, 163, 163);
+    margin-bottom: 20px;
   }
 
-  .title2 {
+  .follower .title2 {
     width: 99%;
-    height: 60px;
+    height: 55px;
     display: inline-block;
     margin-left: 1%;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
   }
-  .title2 .name {
-    margin-left: 20px;
+  .top-rev {
+    background-color: white;
+  }
+ .top-rev .title2 {
+    width: 99%;
+    height: 110px;
+   /*  border-bottom: 1px solid blue; */
+    display: inline-block;
+    margin-left: 1%;
     margin-top: 0px;
+    margin-bottom: 20px;
+  }
+  .top-rev .user-name {
+    font-size: 15px;
+    color: #1da1f2;
+    cursor: pointer;
+  }
+  .title2 .tit {
+    color: rgb(70, 70, 70);
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .top-rev .li {
+    font-size: 15px;
+    margin-top: 0px;
+    color: rgb(90, 90, 90);
+  }
+  .top-rev .by {
+    color: rgb(80, 80, 80);
+  }
+  .cre-dat , .loc {
+    font-size: 13px;
+    color: rgb(182, 182, 182);
+  }
+
+  .follower .name {
+    width: 65%;
+    height: 50px;
+    margin-left: 20px;
+    margin-top: 5px;
     display: inline-block;
     vertical-align: middle;
-    top: 3px;
 }
-.title2 img {
-  border-radius: 100px;
+.top-rev .name {
+  width: 60%;
+  height: 100%;
+  margin-left: 20px;
+  margin-top: 0px;
+  display: inline-block;
+  vertical-align: middle;
+  top: 3px;
+}
+
+.right-side .imag {
+  width: 70px;
+  height: 70px;
+  border: 1px solid #ddd;
+  margin-top: 5px;
+  margin-right: 20px;
+  border-radius: 10px;
+  float: right;
+  
 }
   .right-side .image {
-    width: 55px;
-    height: 55px;
+    width: 50px;
+    height: 50px;
     border: 1px solid #ddd;
     margin-bottom: 10px;
     margin-left: 10px;
     border-radius: 100px;
     display: inline-block;
 }
+.title2 p.email {
+  font-size: 20;
+  font-weight: 500;
+  color: red;
+  margin-top: 8px;
+}
+.title2 a {
+  display: block;
+  color: rgb(85, 84, 85);
+  margin-top: 0px;
+  text-decoration: none;
+}
+
+
+.title2 .location {
+  font-size: 13px;
+}
+
+/*-----------------------------------------------------------*/
 .top-reviews .image {
   width: 55px;
   height: 55px;
@@ -185,26 +375,6 @@
 }
 
 
-
-.name p {
-  margin-bottom: 0px;
-  padding-top: 0px;
-  font-size: 16;
-  font-weight: 500;
-}
-.name .username {
-  color: rgb(39, 39, 39);
-  font-weight: 300;
-  font-size: 14px;
-}
-
-  .fav-title {
-    margin-top: 15px;
-    margin-left: 15px;
-    margin-right: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-  }
   .ro-1 {
     margin-right: 15px;
     margin-left: 0px;
@@ -237,7 +407,7 @@
 .add-comment {
   width: 100%;
   height: 40px;
-  font-size: 20px;
+  font-size: 16px;
   border-top: 1px solid white;
   border-left:  #ddd;
   border-bottom-left-radius: 8px;
@@ -245,6 +415,7 @@
   border-right: #ddd;
   margin-left: 0px;
   margin-top: 0px;
+  padding-top: 12px;
   padding-left: 4%;
 }
 .add-comment:focus {
@@ -265,8 +436,9 @@
 
 
 .text-content {
-  margin-left: 4%;
+  margin-left: 3%;
   margin-right: 4%;
+  margin-bottom: 8px;
   width: 92%;
   color: rgb(44, 44, 44);
   text-align: justify;
@@ -275,7 +447,7 @@
 }
 .view-more{
   display: inline-block;
-  margin-left: 4%;
+  margin-left: 3%;
   margin-bottom: 10px;
   color: rgb(172, 170, 170);
   text-decoration: none;
@@ -292,6 +464,9 @@
 .blank-two {
   width: 50px;
   height: 10px;
+}
+.author {
+
 }
 
   @media screen and (max-width: 800px) {

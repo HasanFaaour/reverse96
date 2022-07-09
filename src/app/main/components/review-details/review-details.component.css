@@ -1,0 +1,139 @@
+.progres {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 4;
+}
+.review-details {
+    width: 900px;
+    height: 500px;
+}
+.container {
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+.review-image {
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+.title {
+    width: 100%;
+    height: 10%;
+    padding-left: 20px;
+    padding-top: 20px;
+    font-size: 20px;
+    font-weight: 500;
+    border-bottom: 1px solid #ddd;
+}
+.comments-container {
+    width: 100%;
+    height: 68%;
+    overflow-y: scroll;
+}
+.comment-content {
+  width: 94%;
+  margin-top: 20px;
+  margin-left: 3%;
+  display: inline-block;
+}
+.comment-content .text {
+  width: 87%;
+  float: left;
+  margin-left: 16px;
+}
+.comment-content .auth {
+  font-weight: 500;
+}
+
+/*--------- icon-list*----------*/
+mat-icon {
+  color: rgb(83, 81, 81);
+  vertical-align: middle;
+  width: 36px;
+  height: 36px;
+  /*border-radius: 100%;*/
+  padding-left: 6px;
+  padding-top: 6px;
+}
+.icon-list {
+  margin-left: 3%;
+}
+.icon-list a {
+  display: inline-block;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  text-decoration: none;
+}
+.icon-lista:hover {
+  background-color: rgb(163, 33, 33);
+}
+.icon-list .ico {
+  margin-right: 4%;
+  margin-top: 10px;
+}
+.fav1 mat-icon {
+  color: rgb(88, 87, 87);
+  vertical-align: middle;
+  bottom: 3px;
+  cursor: pointer;
+}
+.fav2 mat-icon {
+  color: rgb(252, 64, 64);;
+  vertical-align: middle;
+  bottom: 3px;
+  cursor: pointer;
+}
+.icon-list a:hover > * {
+  color: #1da1f2;
+}
+.fav1:hover > * {
+  color: #1da1f2;
+}
+/*------end---------*/
+
+
+.input-container {
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    height: 10%;
+    width: 100%;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid white;
+    border-bottom-left-radius: 8px;
+  }
+  .input-container a {
+    margin-bottom: 10px;
+  }
+  
+  .add-comment {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    border-top: 1px solid white;
+    border-left:  #ddd;
+    border-bottom-left-radius: 8px;
+    border-bottom: white;
+    border-right: #ddd;
+    margin-left: 0px;
+    margin-top: 0px;
+    padding-left: 4%;
+  }
+  .comments-container::-webkit-scrollbar {
+    display: none;
+  }
+  .add-comment:focus {
+    outline: none;
+  }
+  .add-comment::placeholder {
+    color: rgb(172, 170, 170);
+  }
+  .input-container mat-icon {
+    font-size: 30px;
+    color: rgb(81, 187, 248);
+    vertical-align: middle;
+    margin-right: 20px;
+    margin-top: 8px;
+    cursor: pointer;
+  }

@@ -1,0 +1,35 @@
+<div class="right-side">
+    <div class="container1" >
+      <div class="top-rev">
+        <div class="fav-title">Top reviews</div>
+        <div class="title2" *ngFor="let item of topreviews">
+          <div class="imag"><img [src]="item.picture" style="height: 100%; width: 100%; border-radius: 10px;"></div>
+          <div class="name">
+              <a class="tit">{{item.title}}</a>
+              <a class="user-name"><span class="by">BY</span>  {{item.username}}</a>
+              <a class="li">{{item.likes}} likes</a>
+              <a class="loc">Location {{item.location}}</a>
+              <a class="cre-dat">Created in {{item.date_created}}</a>
+          </div>
+        </div> 
+      </div>
+      <div style="width: 100%; height: 30px; background-color: white; border-bottom-left-radius: 10px;" *ngIf="!viewLess" class="view" (click)="onViewMore1()">View more</div>
+      <div *ngIf="viewLess" class="view" (click)="onViewLess1()">View less</div>
+    </div>
+    
+    <div class="container2" >
+      <div class="follower">
+        <div class="fav-title">Following</div>
+        <div class="title2" *ngFor="let follower of followers">
+          <div class="image"><img [src]="follower.picture" style="height: 100%; width: 100%; border-radius: 100px;"></div>
+          <div class="name">
+              <a class="tit">{{follower.username}}</a>
+              <a class="location">1abo1995ali@gmail.com</a>
+          </div>
+        </div>
+      </div>
+      <div style="width: 100%; height: 30px; background-color: white; border-bottom-left-radius: 10px;" *ngIf="!viewLess2" class="view" (click)="onViewMore2()">View more</div>
+      <div *ngIf="viewLess2" class="view" (click)="onViewLess2()">View less</div>
+    </div>
+    <div class="company">2022 from revers96</div>
+  </div>

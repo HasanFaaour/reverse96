@@ -25,33 +25,61 @@
 
 /*--------style one review---------*/
 .review {
-    width: 100%;
+    margin-left: 5%;
+    width: 90%;
     height: auto;
-    margin-bottom: 10px;
-    
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
 }
 
-.review .image {
+.review .r-image {
+    margin-left: 5%;
+    width: 90%;
   margin-top: 10px;
 }
 .img {
-    border-radius: 10px;
+    border-radius: 16px;
 }
-.review .like {
+.review .r-like {
     vertical-align: middle;
+    color: rgb(56, 56, 56);
+    font-weight: 500;
+    font-size: 16px;
     margin-top: 10px;
-    margin-left: 30px;
+    margin-left: 5%;
     top: 3px;
     display: flex;
 }
-.review .title {
-    font-size: 15px;
-     color: rgb(61, 61, 61);
+.review .r-title {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    color: rgb(61, 61, 61);
+    padding-top: 12px;
     font-weight: 500;
+    margin-left: 5%;
+    margin-top: 20px;
 }
-.review .text {
-    font-size: 13px;
+.review .r-text {
+    width: 90%;
+    font-size: 16px;
      color: rgb(85, 85, 85);
+     overflow-y: hidden;
+     overflow-x: hidden;
+     margin-left: 5%;
+     margin-top: 8px;
+     margin-bottom: 8px;
+}
+.review .view-m {
+    width: 100%;
+    height: 40px;
+    margin-left: 5%;
+    margin-bottom: 16px;
+    color: #1da1f2;
+    cursor: pointer;
+    text-decoration: none;
 }
 .review .mat-icon {
     font-size: 16px;
@@ -78,15 +106,28 @@
 .top-reviews {
     width: 100%;
     height: 35px;
+    font-size: 24px;
+    font-weight: 500;
     border-bottom: 1px solid rgb(121, 121, 120);
-    margin-bottom: 10px;
+    margin-bottom: 16px;
+}
+.top-reviews a {
+    font-size: 24px;
+    font-weight: 500;
+}
+.placeName {
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    margin-left: 10%;
 }
 .top-reviews a {
     display: block;
     margin-top: 15px;
     margin-left: 15px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 20px;
 }
 .filter {
     position: fixed;
@@ -135,14 +176,14 @@
     margin-top: 20px;
     text-decoration: none;
     background-color: white;
-    color: rgb(54, 178, 250);
-    border: 1px solid rgb(56, 177, 247);
+    color: #1da1f2;
+    border: 1px solid #1da1f2;
     border-radius: 7px;
     cursor: pointer;
 }
-.reviews p {
+.reviews .likes, .review-number {
     margin-left: 10%;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 .reviews .image {
     width: 80%;
@@ -190,6 +231,7 @@
     border: 1px solid #ddd;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
 }
 .sidebar-button-open mat-icon {/* new*/
     font-size: 24px;
@@ -208,6 +250,7 @@
     z-index: 500;
     border: 1px solid #ddd;
     border-top-left-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
 }
 
 .sidebar-button-close mat-icon {
@@ -308,7 +351,9 @@
 .add-review {
     display: flex;
 }
+.likes {
 
+}
 /*---------empty-locations-list-------*/
 
 .empty-locations-list{
@@ -355,3 +400,4 @@
     margin-bottom: 25px;
     vertical-align: middle;
 }
+ 

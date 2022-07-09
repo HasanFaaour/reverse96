@@ -1,0 +1,27 @@
+<mat-progress-bar class="progres" mode="indeterminate" *ngIf="showProg"></mat-progress-bar>
+<div class="review-details">
+    <img class="review-image" [src]="fromHomePage.picture">
+    <div class="container">
+        <div class="title">{{fromHomePage.title}}</div>
+        <div class="comments-container">
+          <div class="comment-content">
+            <img [src]="fromHomePage.picture" style="width: 35px; height: 35px; border-radius: 100px; float: left;" >  
+            <div class="text"><span class="auth">{{fromHomePage.title}} </span> {{fromHomePage.text}}</div>
+          </div>
+          <div *ngFor="let c of commentsList" class="comment-content">
+            <img [src]="fromHomePage.picture" style="width: 35px; height: 35px; border-radius: 100px; float: left;" >  
+            <div class="text"><span class="auth">{{c.auth}} </span> {{c.text}}</div>
+          </div>
+        </div>
+        <div class="icon-list">
+          <a *ngIf ="!fromHomePage.item.liked" (click)="onLike(fromHomePage.item)" class="ico"><span class="fav1"><mat-icon >favorite_border</mat-icon></span></a>
+          <a *ngIf ="fromHomePage.item.liked" (click)="onLike(fromHomePage.item)"  class="ico"><span class="fav2"><mat-icon >favorite</mat-icon></span></a>
+          <a  class="ico"><mat-icon >chat_bubble_outline</mat-icon></a>
+          <a  class="ico"><mat-icon >share</mat-icon></a>
+        </div>
+        <div class="input-container">
+            <input type="text" class="add-comment" placeholder="Add a comment" [(ngModel)]="commentText">
+            <a (click)="addComment(fromHomePage.id)"><mat-icon>add</mat-icon></a>
+        </div>
+    </div>
+</div>
