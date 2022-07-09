@@ -16,7 +16,7 @@ export class ChatService {
   chats: {id: number, socket: WebSocket, subscriber: Subscriber<{type: string, data: string}>}[] = [];
 
 
-   constructor(private baseUrl: BaseService, public http: HttpClient) {
+   constructor(public baseUrl: BaseService, public http: HttpClient) {
     this.apiUrl = baseUrl.apiServer;
     this.wsUrl = baseUrl.wsServer+'/ws/chat';
    }
@@ -26,25 +26,22 @@ export class ChatService {
   }
 
   newChat(roomID: number):Observable<{type: string, data: string}> {
-    let existingChat = this.chats.find((chat) => chat.id == roomID);
-
-    if(existingChat) {
-      console.log("Duplicate Call!");
-      
-      return new Observable((sub) => {
-        sub.error({message: 'Duplicate Call'});
-      });
-    }
+    if (this.chats.find((chat) => chat.id == roomID)) console.log('duplicate ' + roomID);
     
     return new Observable( (observer: Subscriber<{type: string, data: any}>) => {
       console.log('nC: '+ `${this.wsUrl}/${roomID}/`);
       
       let chat = this.chats.find((chat) => chat.id == roomID);
       if (chat === undefined) {
-        chat = {id: roomID, socket: new WebSocket(`${this.wsUrl}/${roomID}/`), subscriber: observer};
-        this.chats.push(chat);
+          chat = {id: roomID, socket: new WebSocket(`${this.wsUrl}/${roomID}/`), subscriber: observer};
+          this.chats.push(chat);
       }
+
       else chat.subscriber = observer;
+
+      if (chat.socket.readyState != WebSocket.OPEN) {
+        chat.socket = new WebSocket(`${this.wsUrl}/${roomID}/`);
+      }
 
       chat.socket.onclose = (ev: CloseEvent) => {
         console.log('close,', ev);
@@ -68,6 +65,7 @@ export class ChatService {
         }
 
       }
+      this.fetch(roomID);
       return;
     });
   }

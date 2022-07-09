@@ -142,7 +142,7 @@
     <form>
 
         <!-- Field -->
-        <input autofocus name="message" type="text" [(ngModel)]="newMessage" [ngClass]="{'text-field': true, 'editingMessage': editingMessage != null, 'main': main}" [placeholder]="socketError?'Connection to server failed.':socketProgress?'Connecting to server...':(mainChat != undefined)?'Type here...':'Select a chat from the left menu to start messaging. Have Fun :D'" [disabled]="socketError || socketProgress || !(guyName || groupName)" />
+        <input autofocus name="message" type="text" [(ngModel)]="newMessage" [ngClass]="{'text-field': true, 'editingMessage': editingMessage != null, 'main': main}" [placeholder]="socketError?'Connection to server failed.':socketProgress?'Connecting to server...':(mainChat != undefined)?'Type here...':'Select a chat from the left menu to start messaging. Have Fun :D'" [disabled]="socketError || socketProgress || !(mainChat)" />
 
         <!-- Button -->
         <button mat-icon-button #Send [disabled]="!newMessage" *ngIf="!(socketProgress || socketError)" (click)="sendMessage()" class="button">

@@ -7,9 +7,11 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NEVER, never, Observable, of, Subscriber } from 'rxjs';
 import { HttpRequestService } from 'src/app/http-service.service';
@@ -49,7 +51,7 @@ describe('ChatComponent', () => {
   };
 
   let chatStubLog = "";
-  let signal : {type: string, response: any};
+  let signal : {type: string, response: any} = {type: 'complete', response: ''};
   let createSignal : {type: string, response: any}= {type: 'next',response: {id:5} as any};
   let socketSub: any;
   let observableFromSignal = (signal: any) => {
@@ -125,8 +127,9 @@ describe('ChatComponent', () => {
     get server() {
       return "";
     },
-    wSUrl: '',
-    api: '',
+    wsUrl: '',
+    apiUrl: '',
+    baseUrl: {apiUrl: '', wsUrl: '', apiServer: '', wsServer: ''},
     socket: new WebSocket('ws://ds.asd.com/'),
     username: '',
     http: new HttpClient(HttpHandler.prototype)
@@ -267,6 +270,8 @@ describe('ChatComponent', () => {
         MatDividerModule,
         MatProgressSpinnerModule,
         MatInputModule,
+        MatTooltipModule,
+        MatListModule,
         FormsModule,
         CommonModule
       ]
@@ -293,7 +298,7 @@ describe('ChatComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.guyName).toBeFalsy();
+    expect(component.mainChat).toBeFalsy();
 
     expect(route).toBeFalsy();
 
@@ -304,9 +309,9 @@ describe('ChatComponent', () => {
 
   it ("(authentication) should authenticate valid user & guy properly", () => {
     //Signal user info service to return the expected info(first for user and then for guy)
-    details = [{error: false, username: "expected guy username", picture: "expected guy picture", followers: [{}], followings: [], mutuals: []},{error: false, username: "expected user username", picture: "expected user picture", followers: [], followings: [], mutuals: []}];
+    details = [{error: false, username: "guy person", picture: "expected guy picture", followers: [{}], followings: [], mutuals: []},{error: false, username: "expected user username", picture: "expected user picture", followers: [], followings: [], mutuals: []}];
     param = "guy person";
-    time = 'after';
+    signal = {type: 'next', response: [{name: 'expected user username @private guy person', id: 29, picture: 'pic'}]};
 
     route = "";
     userLog = "";
@@ -316,8 +321,7 @@ describe('ChatComponent', () => {
     expect(component.username).toBe("expected user username");
     expect(component.userImage).toBe("expected user picture");
     
-    expect(component.guyName).toBe("expected guy username");
-    expect(component.guyImage).toBe("expected guy picture");
+    expect(component.guyName).toBe("guy person");
 
     expect(component.main).toBeFalse();
 
@@ -330,7 +334,6 @@ describe('ChatComponent', () => {
   it ("(authentication) should logout if user credentials aren't valid", () => {
     //Signal user info service to return the expected info
     details = [{error: true, username: "expected username", picture: "expected picture", followers: [], followings: [], mutuals: []}];
-    time = 'after';
     route = "";
     userLog = "";
 
@@ -343,16 +346,21 @@ describe('ChatComponent', () => {
 
   it ("(authentication) should redirect to message if guy is invalid (valid user)", () => {
     //Signal user info service to return an 
-    details = [{error: true, username: "expected guy username", picture: "expected guy picture", followers: [], followings: [], mutuals: []},{error: false, username: "expected user username", picture: "expected user picture", followers: [], followings: [], mutuals: []}];
+    details = [{error: true, username: "guy person", picture: "expected guy picture", followers: [], followings: [], mutuals: []},{error: false, username: "expected user username", picture: "expected user picture", followers: [], followings: [], mutuals: []}];
     param = "guy person";
+    signal = {type: 'next', response: []};
+    createSignal = {type: 'error', response: {status: 0}};
 
     route = "";
     userLog = "";
+    chatStubLog = "";
 
     component.ngOnInit();
     
     expect(route).toContain('message');
-    expect(userLog).toBe("empty, guy person, ");
+    expect(chatStubLog).toContain('createPV');
+
+    expect(component.socketError).toBeTrue();
     
   });
 
@@ -380,7 +388,7 @@ describe('ChatComponent', () => {
     signal = {type: 'complete', response: null};
 
     // Valid user and guy
-    details = [{error: false, username: "expected guy username", picture: "expected guy picture", followers: [], followings: [], mutuals: []},{error: false, username: "expected user username", picture: "expected user picture", followers: [], followings: [], mutuals: []},{error: false, username: "expected guy username", picture: "expected guy picture", followers: [], followings: [], mutuals: []},{error: false, username: "expected user username", picture: "expected user picture", followers: [], followings: [], mutuals: []}]
+    details = [{error: false, username: "expected guy username", picture: "expected guy picture", followers: [], followings: [], mutuals: []},{error: false, username: "expected user username", picture: "expected user picture", followers: [], followings: [], mutuals: []},{error: false, username: "expected user username", picture: "expected user picture", followers: [], followings: [], mutuals: []}]
     param = "guy person";
 
     component.socketError = false;
@@ -404,19 +412,19 @@ describe('ChatComponent', () => {
   it ("(chats) should create a new chat if there isn't one, and try to connect to it", () => {
     //Signal user info service to return the expected info
     component.username = "user";
-    component.guyName = "guy";
-    let contacts = [{name: "user", participants: ["user", "guy"], picture: 'pict'}, {name: "guy", participants: ["user", "guy"], picture: 'pict'},{name: "user guy", participants: ["user", "guy"], picture: 'pict'},{name: "guy user", participants: ["user", "guy"], picture: 'pict'},{name: "not guy @private user", participants: ["user", "guy"], picture: 'pict'},{name: "user @private not guy", participants: ["user", "guy"], picture: 'pict'}];
+    component.guyName = "someguy";
+    let contacts = [{name: "user", participants: ["user", "guy"], picture: 'pict', id: 1}, {name: "guy", participants: ["user", "guy"], picture: 'pict', id: 2},{name: "user guy", participants: ["user", "guy"], picture: 'pict', id: 3},{name: "guy user", participants: ["user", "guy"], picture: 'pict', id: 4},{name: "not guy @private user", participants: ["user", "guy"], picture: 'pict', id: 5},{name: "user @private not guy", participants: ["user", "guy"], picture: 'pict', id: 6}];
     
     signal = {type: 'next', response: contacts};
-    createSignal = {type:'next', response: {id: 5}};
+    createSignal = {type:'next', response: {id: 52}};
     details = [{error: false, username: "user", picture: "pic", followers: [], followings: [], mutuals: []}];
 
     chatStubLog = "";
 
     component.getContacts(true);
 
-    expect(chatStubLog).toContain("createPV(user,guy)");
-    expect(chatStubLog).toContain("connect(5)");
+    expect(chatStubLog).toContain("createPV(user,someguy)");
+    expect(chatStubLog).toContain("connect(52)");
    
   });
 
@@ -426,10 +434,10 @@ describe('ChatComponent', () => {
     component.guyName = "guy";
     component.participantsInfo['guy'] = {bio:'bio'};
 
-    let contacts = [{name: "Monkey @private user", participants: ["Monkey","Lion"],id: 12},{name: "user @private guy", participants: ["user", "guy"], id: 69}];
+    let contacts = [{name: "Monkey @private user", participants: ["Monkey","Lion"],id: 12, picture: 'pict monk'},{name: "user @private guy", participants: ["user", "guy"], id: 69, picture: 'pict guy'}];
     
     signal = {type: 'next', response: contacts};
-    details = [{error: true, username: "Monkey", picture: "Monkey.pic", followers: [], followings: [], mutuals: []}];
+    details = [{error: false, username: "Monkey", picture: "Monkey.pic", followers: [], followings: [], mutuals: []},{error: false, username: "Monkey", picture: "Monkey.pic", followers: [], followings: [], mutuals: []},{error: false, username: "Monkey", picture: "Monkey.pic", followers: [], followings: [], mutuals: []},{error: false, username: "Monkey", picture: "Monkey.pic", followers: [], followings: [], mutuals: []},{error: false, username: "Monkey", picture: "Monkey.pic", followers: [], followings: [], mutuals: []},{error: false, username: "Monkey", picture: "Monkey.pic", followers: [], followings: [], mutuals: []}];
 
     chatStubLog = "";
 
@@ -455,8 +463,7 @@ describe('ChatComponent', () => {
 
     component.getContacts(false);
 
-    // -1 for "no more"
-    expect(component.contactList.length).toBe(contacts.length-1);
+    expect(component.contactList.length).toBe(contacts.length);
 
   });
 
@@ -481,15 +488,54 @@ describe('ChatComponent', () => {
   });
 
   it ("(chats,pv,dialog) should show user info for a PV", () => {
+    mDialogStub.clearDialogs();
+    mDialogStub.clearLog();
 
+    let chat = {isGroup: false, name: 'user', picture: 'pict'};
+
+    component.username = 'main user'
+
+    component.chatInfo(new MouseEvent('click'), chat);
+
+    expect(mDialogStub.log).toBe('open(ChatInfoComponent, show_user)');
+    expect(mDialogStub.dialogs.length).toBe(1);
+    expect(mDialogStub.dialogs[0].data.username).toBe('main user');
+    expect(mDialogStub.dialogs[0].data.chatInfo).toEqual(jasmine.objectContaining({name: 'user'}));
   });
 
   it ("(chats,group,dialog) should show group info for a group", () => {
+    mDialogStub.clearDialogs();
+    mDialogStub.clearLog();
+
+    let chat = {isGroup: true, name: 'group', picture: 'pict'};
+
+    component.username = 'main user'
+
+    component.chatInfo(new MouseEvent('click'), chat);
+
+    expect(mDialogStub.log).toBe('open(ChatInfoComponent, show_group)');
+    expect(mDialogStub.dialogs[0].data.username).toBe('main user');
+    expect(mDialogStub.dialogs[0].data.chatInfo).toEqual(jasmine.objectContaining(chat));
 
   });
 
   it ("(chats,group,dialog) should edit group info for a group", () => {
+    mDialogStub.clearDialogs();
+    mDialogStub.clearLog();
+    chatStubLog = "";
 
+    let chat = {isGroup: true, name: 'group', picture: 'pict'};
+
+    component.username = 'main user'
+
+    component.chatInfo(new MouseEvent('click'), chat);
+
+    expect(mDialogStub.log).toBe('open(ChatInfoComponent, show_group)');
+    
+    signal = {type: 'next', response: {picture: 'default'}}
+    mDialogStub.dialogs[0].sub?.next({action: 'edit', chat: {id:52}, name: 'edited group', members: ['main user','other user'], description: 'des'});
+
+    expect(chatStubLog).toContain('editGP(52: edited group,des,main user,other user,undefined)')
   });
 
   it ("(chats,group,dialog) should create group (without image => default icon) and try to connect to it", () => {
@@ -515,7 +561,7 @@ describe('ChatComponent', () => {
 
     expect(chatStubLog).toContain('createGP(Group Name,Description text,username 1,username 2,undefined)');
 
-    expect(component.contactList).toContain({name: "Group Name", participants: ['username 1', 'username 2'], id: 27, isGroup: true, image: 'assets/images/GroupChat.png', description: 'Description text', selected: true});
+    expect(component.contactList).toContain(jasmine.objectContaining({name: "Group Name", participants: ['username 1', 'username 2'], id: 27, isGroup: true, image: 'assets/images/GroupChat.png', description: 'Description text', selected: true}));
 
     expect(chatStubLog).toContain('connect(27)');
 
@@ -544,7 +590,7 @@ describe('ChatComponent', () => {
 
     expect(chatStubLog).toContain('createGP(Group Name,Description text,username 1,username 2,selected image)');
 
-    expect(component.contactList).toContain({name: "Group Name", participants: ['username 1', 'username 2'], id: 27, isGroup: true, image: 'selected image', description: 'Description text', selected: true});
+    expect(component.contactList).toContain(jasmine.objectContaining({name: "Group Name", participants: ['username 1', 'username 2'], id: 27, isGroup: true, image: 'selected image', description: 'Description text', selected: true}));
 
     expect(chatStubLog).toContain('connect(27)');
 
@@ -552,10 +598,12 @@ describe('ChatComponent', () => {
 
   it ("(socket) should indicate indicate an error, if connecting to socket fails", () => {
     //Signal user info service to return the expected info
-    signal = {type: 'error', response: {type: 'close', data: 'reason'}};
+    signal = {type: 'error', response: {type: 'close', data: ''}};
 
     component.socketError = false;
-    component.mainChat = {name: 'chat name',id: 5};
+    component.mainChat = {name: 'chat name',id: 5, selected: false, observable: 'aa'};
+
+    chatServiceStub.has = (id: number) => false;
 
     component.connectToSocket();
 
@@ -573,7 +621,7 @@ describe('ChatComponent', () => {
     component.connectToSocket();
 
     expect(component.socketError).toBeFalse();
-    expect(chatStubLog).toContain('fetch');
+    expect(chatStubLog).toContain('fetch(5)');
    
   });
 
@@ -599,7 +647,7 @@ describe('ChatComponent', () => {
 
   it ("(switch) should switch to a group chat without problem when needed", () => {
     let chat1 = {name: 'first guy', id: 1, isGroup: false, selected: true};
-    let chat2 = {name: 'group', id: 2, isGroup: true, selected: false, participants: ['first guy', 'second guy'], image: 'group image'};
+    let chat2 = {name: 'group', id: 2, isGroup: true, selected: false, participants: ['first guy', 'second guy'], picture: 'group image'};
     
     component.contactList = [chat1, chat2];
 
@@ -775,7 +823,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.mainChat = {name: 'chat name',id: 5};
+    component.mainChat = {name: 'chat name',id: 5, picture: 'pict'};
 
     component.connectToSocket();
 
@@ -848,7 +896,7 @@ describe('ChatComponent', () => {
 
     chatStubLog = "";
 
-    component.mainChat = {name: 'chat name',id: 5};
+    component.mainChat = {name: 'chat name',id: 5, picture: 'pict'};
 
     component.connectToSocket();
 
@@ -887,7 +935,7 @@ describe('ChatComponent', () => {
 
   it ("(messages) should mark seen messages as read", () => {
     component.username = "user";
-    component.mainChat = {name: 'chat name',id: 5};
+    component.mainChat = {name: 'chat name',id: 5, picture: 'pict'};
 
     chatStubLog = "";
 

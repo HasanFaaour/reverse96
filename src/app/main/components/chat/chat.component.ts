@@ -170,20 +170,18 @@ export class ChatComponent implements OnInit {
 
    
     guyId = this.route.snapshot.paramMap.get('guyId');
-    console.log('new guy:',guyId);
+    console.log('new guy:' + guyId);
 
     if (!guyId){
       //No guy(default message page), next step
       this.socketProgress = false;
+      this.mainChat = undefined;
       this.main = true;
       
       this.getContacts(false);
     }
     else
     {
-      console.log('norm '+guyId);
-      
-      // this.socketProgress = true;
       this.main = false;
 
       this.guyName = guyId;
@@ -267,7 +265,6 @@ export class ChatComponent implements OnInit {
 
         if (chats.length > 0) {
           for (let chat of chats) {
-           
               //Add it to contact list without marking it (process the string to get the chat's recipiant)
 
               if ((chat.name as string).includes(`@private ${this.username}`)) {
@@ -342,9 +339,7 @@ export class ChatComponent implements OnInit {
     console.log(this.mainChat);   
     
     if (this.mainChat) {
-      this.mainChat.selected = true; 
       this.connectToSocket();
-    
     }
 
     else this.chatService.createPV(this.username, this.guyName).subscribe({
@@ -365,6 +360,7 @@ export class ChatComponent implements OnInit {
       error: (error) => {
         console.log(error);
         this.socketError = true;
+        this.navigateTo('message');
         return;
       },
 
@@ -392,8 +388,7 @@ export class ChatComponent implements OnInit {
           console.log(`Valid user: ${member}`);
           let info = response.message;
           this.participantsInfo[member] = {name: info.name, image: this.chatService.server + info.picture, address: info.address, email: info.email};
-          this.mainChat = group;
-          this.connectToSocket();
+          
         },
 
         error: (response) => {
@@ -417,11 +412,13 @@ export class ChatComponent implements OnInit {
       });
 
     }
+    this.mainChat = group;
+    this.connectToSocket();
 
   }
 
   connectToSocket(chat?: any): void {
-    console.log('cts '+ chat);
+    console.log('cts '+ chat?.name);
 
     function findLastIndex (list: any[], condition: Function): number {
       for (let i = list.length - 1; i >= 0; i--) {
@@ -437,11 +434,11 @@ export class ChatComponent implements OnInit {
     // Other chats (not the main one)
     if (chat != undefined) {
       chat.selected = false;
-      if (! this.chatService.has(chat.id)) {
+      if (!this.chatService.has(chat.id) || chat.observable === undefined) {
         chat.observable = this.chatService.newChat(chat.id);
         console.log('no ' + chat.id);
-        
       }
+
       (chat.observable as Observable<{type: string, data: any}>).subscribe({
         next: (ev: {type: string, data: any}) => {
           if (ev.type == 'open') {
@@ -481,11 +478,13 @@ export class ChatComponent implements OnInit {
     }
 
     else {
+      if (this.mainChat === undefined) return;
       //Try to connect to the socket
       this.mainChat.selected = true;
-      if (! this.chatService.has(this.mainChat.id)) {
+      this.socketProgress = true;
+      if (! this.chatService.has(this.mainChat.id) || this.mainChat.observable === undefined) {
         this.mainChat.observable = this.chatService.newChat(this.mainChat.id);
-        console.log('no ' + chat.id);
+        console.log('(main) no ' + this.mainChat.id);
         
       }
 
@@ -497,9 +496,6 @@ export class ChatComponent implements OnInit {
           if (ev.type == 'open') {
             console.log("Socket initiated: " + ev.data);
             console.log(this.mainChat.id + " (main soc opened)")
-
-            this.socketError = false;
-            this.socketProgress = false;
 
             //Get past messages to display
             this.chatService.fetch(this.mainChat.id);
@@ -540,15 +536,11 @@ export class ChatComponent implements OnInit {
               this.messageList.push(message);            
             }
 
+            this.socketError = false;
             this.socketProgress = false;
 
             firstFetch? this.scrollChat():void 0;
 
-            // if (this.lastSelected != null) {
-            //   document.getElementById(`message-${this.lastSelected}`)!.classList.add('selected-message');
-            //   console.log('s');
-              
-            // }
 
           }
 
