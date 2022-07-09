@@ -44,6 +44,10 @@ import { AddPlaceComponent } from './components/add-place/add-place.component';
 import { NgxPhotoEditorModule } from 'ngx-photo-editor';
 
 import { NgbAlertModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReviewDetailsComponent } from './components/review-details/review-details.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from '../app-routing.module';
+import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 
 const routes: Routes = [
   {
@@ -132,10 +136,18 @@ const routes: Routes = [
     MapReviewComponent,
     UserInfoComponent,
     AddPlaceComponent,
-    NotificationComponent
+    NotificationComponent,
+    ReviewDetailsComponent,
+    RightSidebarComponent
   ],
-  entryComponents: [AddPlaceComponent],
+  entryComponents: [
+    AddPlaceComponent,
+    ReviewDetailsComponent
+  ],
   imports: [
+    HttpClientModule,
+    
+
     CommonModule,
     MatIconModule,
     RouterModule,

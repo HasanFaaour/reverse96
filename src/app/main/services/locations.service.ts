@@ -1,19 +1,25 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { BaseService } from '../components/services/base.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocationsService {
   userName: string | null = null;
-  baseUrl = "http://localhost:8000";
+  baseUrl = "";
+  //baseUrl = "http://localhost:8000";
+  //baseUrl = "https://reverse96-reverse96.fandogh.cloud";
   httpHeaders = new HttpHeaders ({'Content-Type' : 'application/json'});
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private baseSer: BaseService) {
+                this.baseUrl = this.baseSer.server;
+              }
   
   getMapLocations(model: any): Observable<any> {
-    return this.http.post<any>(`https://reverse96-reverse96.fandogh.cloud/api/category`, 
+    return this.http.post<any>(`${this.baseUrl}/api/category`, 
            model, {headers:{"Content-Type":"application/json"}, 
            responseType: 'json'});
   }
@@ -21,14 +27,24 @@ export class LocationsService {
 
   addPlace(model: any): Observable<any> {
     console.log("access" +localStorage.getItem('access'));
-    return this.http.post(`https://reverse96-reverse96.fandogh.cloud/api/add_location`, 
+    return this.http.post(`${this.baseUrl}/api/add_location`, 
+           model, { headers:{'authorization':`Bearer ${localStorage.getItem('access')}`}});
+  }
+
+  addCommentForReview(model: any , id: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/add_user_comment/${id}`, 
            model, { headers:{'authorization':`Bearer ${localStorage.getItem('access')}`}});
   }
 
   getReviewById(id: any): Observable<any> {
-    return this.http.get<any>(`https://reverse96-reverse96.fandogh.cloud/api/get_location_reviews/${id}`,
+    return this.http.get<any>(`${this.baseUrl}/api/get_location_reviews/${id}`,
     {headers:{"Content-Type":"application/json"}, 
     responseType: 'json'} );
+  }
+
+  getCommentsReview(id: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/api/get_user_comments/${id}`,
+    { headers:{'authorization':`Bearer ${localStorage.getItem('access')}`}});
   }
 
   getTopReviews(): Observable<any> {

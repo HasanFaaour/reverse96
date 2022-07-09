@@ -2,40 +2,44 @@ import { Injectable } from '@angular/core';
 import { Observable, of, Subscriber, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
+import { BaseService } from './main/components/services/base.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpRequestService {
-
-  db = "http://localhost:8000";
+  
+  //baseUrl = "https://reverse96-reverse96.fandogh.cloud"
+  baseUrl = "";
   rr = {};
 
-  constructor(private hC : HttpClient) { 
-    
+  constructor(private hC : HttpClient,
+              private baseSer: BaseService)
+  {
+    this.baseUrl = this.baseSer.server;  
   }
 
   // Defining the login post request method
   login(creds : {usermail: string, password: string, username?: string}): Observable<object>{
     creds["username"] = creds["usermail"];
-    return this.hC.post(`${this.db}/api/login`,creds,{headers:{"Content-Type":"application/json"},  responseType: 'json'});
+    return this.hC.post(`${this.baseUrl}/api/login`,creds,{headers:{"Content-Type":"application/json"},  responseType: 'json'});
   }
   
   //Defining the signup post request method
   signup(creds:Object):Observable<object>{
-    return this.hC.post(`${this.db}/api/register`,creds,{headers:{ "Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
+    return this.hC.post(`${this.baseUrl}/api/register`,creds,{headers:{ "Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
     
   }
 
   //Defining the e-mail valideation post request method
   validateEmail (email: string, code: number): Observable<object>{
-    return this.hC.post(`${this.db}/api/email-activision`,{email: email, code: code},{ headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
+    return this.hC.post(`${this.baseUrl}/api/email-activision`,{email: email, code: code},{ headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
   }
 
   //Defining the logout post request method
   logout(rToken: string|null):Observable<object>{
-    return this.hC.post(`${this.db}/api/logout`,{refresh: rToken},{ headers:{"Content-Type":"application/json","authorization":`Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    return this.hC.post(`${this.baseUrl}/api/logout`,{refresh: rToken},{ headers:{"Content-Type":"application/json","authorization":`Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
   }
 
   //Defining the refresh post request method (Errors not handled)
@@ -43,7 +47,7 @@ export class HttpRequestService {
     return new Observable( (observer: Subscriber<null>) => {
       let refresh = localStorage.getItem('refresh')
       if (refresh){
-        this.hC.post(`${this.db}/api/login/refresh`,{refresh: refresh},{ headers:{}, observe: 'body', responseType: 'json'}).subscribe({
+        this.hC.post(`${this.baseUrl}/api/login/refresh`,{refresh: refresh},{ headers:{}, observe: 'body', responseType: 'json'}).subscribe({
           next: (response) => {
             localStorage.setItem('access',Object.values(response)[0]);
             localStorage.setItem('refresh',Object.values(response)[1]);
@@ -82,37 +86,37 @@ export class HttpRequestService {
     console.log(user);
     body.append('user', user);
     */
-    return this.hC.post(`${this.db}/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
+    return this.hC.post(`${this.baseUrl}/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
   }
 
-  getReviews (mode: number): Observable<object> {
-    return this.hC.get(`${this.db}/api/get_reviews/${mode}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  getReviews (mode: number): Observable<any> {
+    return this.hC.get<any>(`${this.baseUrl}/api/get_reviews/${mode}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
   }
 
   likeReview (reviewId: number): Observable<object> {
-    return this.hC.post(`${this.db}/api/add_user_like/${reviewId}`,{},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+    return this.hC.post(`${this.baseUrl}/api/add_user_like/${reviewId}`,{},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
   }
 
-  addComent (reviewId: number, text: string): Observable<object> {
-    return this.hC.post(`${this.db}/api/add_user_comment/${reviewId}`,{comment_text: text},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  addComent (reviewId: number, text: string): Observable<any> {
+    return this.hC.post<any>(`${this.baseUrl}/api/add_user_comment/${reviewId}`,{comment_text: text},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
   }
 
   followUser (username: string): Observable<object> {
-    return this.hC.post(`${this.db}/api/send-follow-request`,{to_user: username},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+    return this.hC.post(`${this.baseUrl}/api/send-follow-request`,{to_user: username},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
   }
 
   unfollowUser (username: string): Observable<object> {
-    return this.hC.post(`${this.db}/api/unfollow-user`,{user: username},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+    return this.hC.post(`${this.baseUrl}/api/unfollow-user`,{user: username},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
   }
 
   acceptFollow (username:string, accept: boolean): any {
     console.log('accept',accept,username);
     
-    this.hC.post(`${this.db}/api/accept-follow-request`,{from_user: username, accept: accept},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'}).subscribe();
+    this.hC.post(`${this.baseUrl}/api/accept-follow-request`,{from_user: username, accept: accept},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'}).subscribe();
   }
 
   get server():string {
-    return this.db;
+    return this.baseUrl;
   }
 
 }
