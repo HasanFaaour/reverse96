@@ -4,8 +4,8 @@
     min-height: 80vh;
     max-height: 99vh;
 }
-/* 
-.dialog * {
+
+/* * {
     border: 1px solid green;
 } */
 
@@ -72,6 +72,7 @@
         overflow-y: scroll;
         max-height: 75vh;
         margin-top: 30px;
+        margin-bottom: 30px;
         height: max-content;
     }
 
@@ -188,4 +189,28 @@
 
         .edit-user-ff {
             width: 100%;
+        }
+
+        .edit-user-address {
+            max-height: 110px;
+        }
+
+    .actions-area {
+        display: flex;
+        position: absolute;
+        margin-top: 20px;
+        bottom: 15px;
+        right: 20px;
+        /* box-shadow: 0 0 2px 1px #bbb inset; */
+        border-radius: 4px;
+        width: 95%;
+        padding: 5px;
+    }
+
+        .action-button:enabled {
+            background-color: rgb(88, 99, 255);
+            color: white;
+            margin-bottom: 5px;
+            /* transform: scale(.9); */
+            /* margin-right: 0; */
         }

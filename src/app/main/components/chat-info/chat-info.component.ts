@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { UserInfoService } from '../../services/user-info.service';
 
 import { BigImage } from '../home/home.component';
@@ -23,6 +24,8 @@ export class ChatInfoComponent implements OnInit {
     public userInfoService: UserInfoService
   ) { }
 
+  processing = false;
+
   isGroup = true;
 
   user: any;
@@ -38,6 +41,7 @@ export class ChatInfoComponent implements OnInit {
   groupImage: any = null;
 
   displayedImage: string = selectImage;
+  cropImage: any;
 
   userFullName = new FormControl('',[Validators.minLength(3), Validators.maxLength(15)]);
   userBio = new FormControl("");
@@ -52,14 +56,14 @@ export class ChatInfoComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.data);
 
-    if (this.data.chatInfo == 'new') {
+    if (this.data.action == 'new_group') {
       this.editing = true;
       this.newGroup = true;
       this.data.chatInfo = {};
       return;
     }
 
-    if (this.data.action != 'edit_profile' && this.data.chatInfo.isGroup) {
+    if (!this.data.action.includes('profile') && this.data.chatInfo.isGroup) {
       this.displayedImage = this.data.chatInfo.image;
       this.groupName.setValue(this.data.chatInfo.name);
       this.groupMembers.setValue(this.data.chatInfo.participants);
@@ -80,28 +84,22 @@ export class ChatInfoComponent implements OnInit {
     }
 
     else {
-      console.log('ui');
-      
       this.isGroup = false;
       let askFor = this.data.chatInfo?.name;
 
-      if (this.data.action == 'edit_profile') {
-        console.log('ep');
-        
-        askFor = this.data.username;
-        this.editing = true;
-      }
+      if (this.data.action == 'edit_profile') this.editing = true;
+
+      if (this.data.action.includes('profile')) askFor = this.data.username;
+      
 
       this.userInfoService.getUserInfo(askFor).subscribe({
         next: (response: any) => {
-          console.log('sq');
           
           this.user = response.message;
           this.user.image = this.userInfoService.server + this.user.picture;
 
           if (this.user.username == this.data.username) {
-            console.log('pp');
-            
+
             // Prepare for edit profile
             this.userFullName.setValue(this.user.name);
             this.userBio.setValue(this.user.bio);
@@ -123,31 +121,44 @@ export class ChatInfoComponent implements OnInit {
 
   }
 
-  checkImage (ev: any) {
-    if (!ev.target.files[0]) {
-      this.groupImage = null;
-      this.userImage = null;
-      if (this.newGroup) {
-        this.displayedImage = selectImage;
+  checkImage (ev: any, mode = 'select') {
+
+    if (mode == 'select') {
+      if (!ev.target.files[0]) {
+        this.groupImage = null;
+        this.userImage = null;
+        if (this.newGroup) {
+          this.displayedImage = selectImage;
+          return;
+        }
+        if (this.isGroup) {
+          this.displayedImage = this.data.chatInfo?.image;
+          return;
+        }
+        this.displayedImage = this.user.image;
         return;
       }
-      if (this.isGroup) {
-        this.displayedImage = this.data.chatInfo?.image;
+      
+      this.cropImage = ev;
+
+      console.log('cp');
+
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        this.displayedImage = reader.result as string;
+        this.groupImage = ev.target?.files[0];
+        this.userImage = ev.target?.files[0];
         return;
       }
-      this.displayedImage = this.user.image;
-      return;
-    }
-    
-    let reader = new FileReader();
-    reader.onload = (e) => {
-      this.displayedImage = reader.result as string;
-      this.groupImage = ev.target?.files[0];
-      this.userImage = ev.target?.files[0];
-      return;
+
+      reader.readAsDataURL(ev.target.files[0]);
     }
 
-    reader.readAsDataURL(ev.target.files[0]);
+    else {
+      this.displayedImage = ev.base64;
+      this.groupImage = ev.file;
+      this.userImage = ev.file;
+    }
   }
 
   display(url: string) {
@@ -156,20 +167,50 @@ export class ChatInfoComponent implements OnInit {
 
   save() {
     if(!this.groupMembers.value.includes(this.data.username)) this.groupMembers.value.push(this.data.username);
-    console.log(`members: ${this.groupMembers.value}`);
-    console.log(`name: ${this.groupName.value}`);
-
+    
     this.thisRef.close({action: 'edit', chat: this.data.chatInfo, name: this.groupName.value, image: this.groupImage, members: this.groupMembers.value, description: this.groupDescription.value});
     
   }
 
   create() {
     if(!this.groupMembers.value.includes(this.data.username)) this.groupMembers.value.push(this.data.username);
-    console.log(`members: ${this.groupMembers.value}`);
-    console.log(`name: ${this.groupName.value}`);
-
+    
     this.thisRef.close({action: 'create', name: this.groupName.value, image: this.groupImage, members: this.groupMembers.value, description: this.groupDescription.value});
     
+  }
+
+  confirm() {
+    this.processing = true;
+    let data = [
+      {key: 'username', value: this.userUsername.value},
+      {key: 'name', value: this.userFullName.value},
+      {key: 'bio', value: this.userBio.value},
+      {key: 'email', value: this.userEmail.value},
+      {key: 'phone_number', value: this.userPhoneNumber.value},
+      {key: 'address', value: this.userAddress.value}
+    ]
+
+    let editObservable: Observable<any>;
+
+    if (this.userImage === null) editObservable = this.userInfoService.editProfile(data);
+
+    else editObservable = this.userInfoService.editProfile(data, this.userImage);
+
+    editObservable.subscribe({
+      next: (respone: any) => {
+        this.editing = false;
+        this.data.action = 'show_profile';
+        this.processing = false;
+        this.data.username = this.userUsername.value;
+
+        this.ngOnInit();
+  },
+
+      error: (err) => {
+        alert (`Edit failed. (${err.status})`);
+        this.processing = false;
+      }
+    })
   }
 
   cancelEdit() {

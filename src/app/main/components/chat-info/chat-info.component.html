@@ -1,3 +1,4 @@
+<!-- Displaying Group Info  -->
 <mat-card class="dialog display-info" *ngIf="isGroup && !editing" >
     <mat-card-header>
 
@@ -79,6 +80,13 @@
 
     </mat-card-content>
 
+    <!-- Actions -->
+    <mat-card-actions class="actions-area" align="end" >
+        <button class="action-button save-button" *ngIf="!newGroup" mat-button [disabled]="groupName.invalid || groupMembers.value.length < 1" (click)="save()" >Save Changes</button>
+        <button class="action-button create-button" *ngIf="newGroup" mat-button [disabled]="groupName.invalid || groupMembers.value.length < 1" (click)="create()" >Create Group</button>
+        <button class="action-button cancel-button" mat-button (click)="cancelEdit()" >Cancel</button>
+    </mat-card-actions>
+
 </mat-card>
 
 <!-- User Info -->
@@ -113,11 +121,11 @@
 
         <div class="members-title" >{{user?.username}}'s Followings</div>
 
-        <mat-action-list class="members-list" *ngIf="user.is_public" >
+        <mat-action-list class="members-list" *ngIf="user?.is_public" >
             <button mat-list-item mat-dialog-close="" class="members-item" *ngFor="let member of user?.followings" [routerLink]="'/user/'+member.username" ><img mat-list-avatar [src]="userInfoService.server + member.picture" /> <div class="member-username" >{{member.username}}</div> </button>
         </mat-action-list>
 
-        <div *ngIf="!user.is_public" style="color: gray;" >You can't see {{user?.username}}'s followings, becauser their account is private.</div>
+        <div *ngIf="!user?.is_public" style="color: gray;" >You can't see {{user?.username}}'s followings, becauser their account is private.</div>
 
     </mat-card-content>
 </mat-card>
@@ -129,12 +137,13 @@
         <mat-card-title class="title" >
 
             <!-- User Username Input -->
-            <mat-form-field class="edit-title-ff">
+            <!-- <mat-form-field class="edit-title-ff">
                 <mat-label *ngIf="userUsername.invalid" >
                     Username
                 </mat-label>
                 <input class="edit-title" matInput type="text" [formControl]="userUsername" spellcheck="false" >
-            </mat-form-field>
+            </mat-form-field> -->
+            {{user.username}}
         </mat-card-title>
 
         <!-- User Image -->
@@ -184,7 +193,7 @@
             <mat-label >
                 Phone Number
             </mat-label>
-            <input class="edit-user-pnumber" matInput type="number" [formControl]="userPhoneNumber" spellcheck="false" >
+            <input class="edit-user-pnumber" matInput type="tel" [formControl]="userPhoneNumber" spellcheck="false" >
             <mat-error *ngIf="userPhoneNumber.touched && userPhoneNumber.dirty && userPhoneNumber.invalid" >
                 Please enter a valid phone number.
             </mat-error>
@@ -200,17 +209,31 @@
             </mat-error>
         </mat-form-field>
 
-        
-
     </mat-card-content>
+
+    <!-- Actions -->
+    <mat-card-actions class="actions-area" align="end" >
+        <button class="action-button confirm-button" mat-button (click)="confirm()" >Confirm Changes</button>
+        <button class="action-button cancel-button" mat-button (click)="cancelEdit()" >Cancel</button>
+    </mat-card-actions>
 
 </mat-card>
 
+<!-- Options Menu -->
 <mat-menu #optionsMenu="matMenu" >
     <button mat-menu-item *ngIf="isGroup && !editing" (click)="editing = true;" >Edit Group</button>
     <button mat-menu-item *ngIf="isGroup && editing && !newGroup" [disabled]="groupName.invalid || groupMembers.value.length < 1" (click)="save()" >Save Changes</button>
     <button mat-menu-item *ngIf="isGroup && editing && newGroup" [disabled]="groupName.invalid || groupMembers.value.length < 1" (click)="create()" >Create Group</button>
     <button mat-menu-item mat-dialog-close="" *ngIf="!isGroup && !editing" [routerLink]="'user/'+user?.username">Visit Profile</button>
     <button mat-menu-item *ngIf="!isGroup && user?.username == data.username && !editing" (click)="editing=true" >Edit Profile</button>
+    <button mat-menu-item *ngIf="!isGroup && editing" (click)="confirm()" >Confirm Changes</button>
     <button mat-menu-item *ngIf="editing" (click)="cancelEdit()" >Cancel</button>
 </mat-menu>
+
+<!-- Photo Cropper -->
+<ngx-photo-editor
+    [imageChangedEvent]="cropImage"
+    (imageCropped)="checkImage($event, 'crop')"
+    [aspectRatio]="0"
+    [viewMode]="0"
+></ngx-photo-editor>
