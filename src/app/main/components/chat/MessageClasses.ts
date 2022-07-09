@@ -30,6 +30,7 @@ export class ChatMessage  {
     if (this._id != -5) {
       this._content = newContent;
       this.chatService.edit(this._id, chatId, this._content);
+      this._edited = true;
     }
   }
 
@@ -37,9 +38,6 @@ export class ChatMessage  {
     this.chatService.send(message.author, message.content, chatId, this._id);
   }
 
-  select ():void {
-    this._selected = true
-  }
 
   get author (): string {
     return this._author;

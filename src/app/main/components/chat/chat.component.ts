@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChatService } from '../../services/chat.service';
@@ -7,9 +6,10 @@ import { UserInfoService } from '../../services/user-info.service';
 import { ChatMessage, Bubble, MessageList } from './MessageClasses';
 import {Clipboard} from '@angular/cdk/clipboard';
 import { HttpRequestService } from 'src/app/http-service.service';
-import { MatList } from '@angular/material/list';
+// import { MatList } from '@angular/material/list';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ChatInfoComponent } from '../chat-info/chat-info.component';
+import { Observable } from 'rxjs';
 
 const groupDefaultIcon = 'assets/images/GroupChat.png';
 
@@ -32,8 +32,6 @@ export class ChatComponent implements OnInit {
     ) 
   {  }
 
-  // @ViewChild(MatMenuTrigger) trigger!: MatMenuTriggerof;
-
   cursorX: number = 0;
   cursorY: number = 0;
 
@@ -48,7 +46,6 @@ export class ChatComponent implements OnInit {
   socketProgress = false;
   socketError = false;
 
-  chatId : number = -5;
   contactList: any[] = [];
   userImage = "";
   guyImage = "";
@@ -57,6 +54,8 @@ export class ChatComponent implements OnInit {
   participantsImages: any = [];
   participantsAddresses: any = [];
   participantsInfo: any = [];
+
+  mainChat: any;
 
   clickedMessage!: ChatMessage;
   editingMessage: ChatMessage | null = null;
@@ -79,6 +78,7 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
 
     console.log('init');
+
     //Authenticate user
     this.userInfo.getUserInfo().subscribe({
 
@@ -91,7 +91,7 @@ export class ChatComponent implements OnInit {
         //record user's info
         this.username = info.username;
         this.userImage = this.chatService.server + info.picture;
-        this.participantsInfo[this.username] = {name: info.name, image: this.userImage, address: info.address, email: info.email};
+        this.participantsInfo[this.username] = {name: info.name, image: this.userImage};
 
         this.followers = [];
         for (let follower of info.followers) {
@@ -114,7 +114,7 @@ export class ChatComponent implements OnInit {
       },
 
       //Invalid user
-      error: (response) => {
+      error: (response: any) => {
         if (response.status == 401){
           // alert('Token expired, please login again! (' + response.status + ')');
           // this.router.navigate(['logout']);
@@ -146,6 +146,11 @@ export class ChatComponent implements OnInit {
             }
           });
         }
+
+        else {
+          alert(`Authentication error (${response.status}). Please login again.`);
+          this.router.navigate(['logout']);
+        }
         
       },
 
@@ -166,7 +171,7 @@ export class ChatComponent implements OnInit {
     if (guyName == "@@") {
       //Get guy id/username from URL
       guyId = this.route.snapshot.paramMap.get('guyId');
-      console.log('new guy:',guyId);
+      // console.log('new guy:',guyId);
     }
 
     else{
@@ -178,14 +183,16 @@ export class ChatComponent implements OnInit {
       this.socketProgress = false;
       this.main = true;
       
-      this.getPrivateChat();
+      this.getContacts(false);
     }
     else
     {
+      console.log('norm '+guyId);
+      
       this.socketProgress = true;
       this.main = false;
 
-      console.log("asking for",guyId);
+      // console.log("asking for",guyId);
       this.userInfo.getUserInfo(guyId).subscribe({
 
         //Successful authetication of guys
@@ -201,9 +208,9 @@ export class ChatComponent implements OnInit {
 
           //next step
           if (guyName == "@@") {
-            this.getPrivateChat();
+            this.getContacts(true);
           }else{
-            this.connectToSocket();
+            this.getPV();
           }
         },
 
@@ -212,17 +219,7 @@ export class ChatComponent implements OnInit {
 
           //User's token is expired
           if (response.status == 401) {
-            // alert('Token expired, please login again! (' + response.status + ')');
-            // this.router.navigate(['logout']);           
-            // if (this.lastRefreshed != null) {
-            //   let timePassed = new Date().valueOf() - this.lastRefreshed.valueOf();
-            //   if (timePassed < 60000) {
-            //     console.log(timePassed);
-            //     alert("This session is expired. Please login again.");
-            //     this.router.navigate(['logout']);
-            //     return;
-            //   }
-            // }
+            
             this.authService.refresh().subscribe({
               next: (v) => {
                 this.timesRefreshed ++;
@@ -245,8 +242,10 @@ export class ChatComponent implements OnInit {
           }
 
           //Unkown reason
-          alert('Invalid guy id! (' + response.status + ')');
-          this.router.navigate(['message']);
+          else {
+            alert('Invalid guy id! (' + response.status + ')');
+            this.router.navigate(['message']);
+          }
         },
 
         //complete...
@@ -257,132 +256,70 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  getPrivateChat (chat: any = "@@"): void {
-
-    if (chat != "@@") {
-      this.chatId = chat.id;
-      chat.selected = true;
-
-      this.connectToSocket();
-      return;
-    }
+  getContacts (next: boolean): void {
 
     //Get user's contacts
     this.chatService.getContacts(this.username).subscribe({
 
       //Got contacts
+      //Got contacts
       next: (chats) => {
-
-        let chatExists = false;
         this.contactList = [];
 
-        for (let chat of chats) {
+        if (chats.length > 0) {
+          for (let chat of chats) {
+           
+              //Add it to contact list without marking it (process the string to get the chat's recipiant)
 
-          //Check if the (private) chat already exists (previously created)
-          if (!chatExists && this.guyName && chat.name == `${this.username} @private ${this.guyName}` || chat.name == `${this.guyName} @private ${this.username}`) {
+              if ((chat.name as string).includes(`@private ${this.username}`)) {
 
-
-            //Add it to contact list and mark it 
-            chat.image = this.guyImage;
-            chat.name = this.guyName;
-            chat.selected = true;
-            chat.link = chat.name;
-            chat.isGroup = false;
-            chat.description = this.participantsInfo[this.guyName].bio;
-            this.contactList.push(chat);
-
-            //Initiate socket for existing (private) chat
-            this.chatId = chat.id;
-
-            //next step
-            this.connectToSocket();
-            
-
-            //Signal that there is no need to create a new chat
-            chatExists = true;
-            
-          }
-          else
-          {
-            //Add it to contact list without marking it (process the string to get the chat's recipiant)
-            if ((chat.name as string)?.includes(`@private ${this.username}`)) {
-
-              chat.name = (chat.name as string).slice(0,(chat.name as string).indexOf('@'));
-              chat.link = chat.name;
-              chat.isGroup = false;
-            }
-
-            else if ((chat.name as string)?.includes(`${this.username} @private`)) {
-              chat.name = (chat.name as string).slice((chat.name as string).indexOf('@')+9);
-              chat.link = chat.name;
-              chat.isGroup = false;
-            }
-
-            else {
-              chat.link = chat.name;
-              chat.isGroup = true;
-              chat.image = chat.picture.includes("/default.png")? groupDefaultIcon: chat.picture;
-              this.contactList.push(chat);
-              continue;
-            }
-
-            //Get the chat image to display
-            this.userInfo.getUserInfo(chat.name).subscribe({
-              //Recipiant exists
-              next: (response: any) => {
-                chat.image = this.chatService.server + response.message.picture;
-                chat.description = response.message.bio;
-                this.contactList.push(chat);
-              },
-
-              //Invalid recipiant
-              error: (response) => {
-                console.log(`User unavailable: "${chat.name} (${response.status})`);
-              },
-
-              //complete...
-              complete: () => {
-                return;
+                chat.name = (chat.name as string).slice(0,(chat.name as string).indexOf('@')-1);
+                chat.link = chat.name;
+                chat.isGroup = false;
+                chat.selected = false;
               }
-            });
+
+              else if ((chat.name as string).includes(`${this.username} @private`)) {
+                chat.name = (chat.name as string).slice((chat.name as string).indexOf('@')+9);
+                chat.link = chat.name;
+                chat.isGroup = false;
+                chat.selected = false;
+              }
+
+              else {
+                chat.link = chat.name;
+                chat.isGroup = true;
+                chat.image = (chat.picture as string).includes("/default.png")? groupDefaultIcon: chat.picture;
+                chat.selected = false;
+                this.contactList.push(chat);
+                this.connectToSocket(chat);
+                continue;
+              }
+
+              //Get the chat image to display
+              this.contactList.push(chat);
+              this.connectToSocket(chat);
+              this.userInfo.getUserInfo(chat.name).subscribe({
+                //Recipiant exists
+                next: (response: any) => {
+                  chat.image = this.chatService.server + response.message.picture;
+                  chat.description = response.message.bio;                 
+                },
+
+                //Invalid recipiant
+                error: (response) => {
+                  console.log(`User unavailable: "${chat.name} (${response.status})`);
+                },
+
+                //complete...
+                complete: () => {
+                  return;
+                }
+              });
+            
           }
         }
-
-        
-
-        //(private) Chat doesn't exist (isn't previously created)
-        if (!chatExists && this.guyName){
-
-          //Create the (private) chat
-          this.chatService.createPV(this.username, this.guyName).subscribe({
-
-            //Succressful creation
-            next: (response: any) => {
-
-              //record chat's id
-              this.chatId = response.id;
-
-              //Add the new chat to contact list
-              this.contactList.push({name: this.guyName, participants: [this.username, this.guyName], image: this.guyImage, selected: true, id: response.id});
-
-              //next step
-              this.connectToSocket();
-            },
-
-            //Unsuccessful creation
-            error: (error) => {
-              console.log(error);
-              this.socketError = true;
-              return;
-            },
-
-            //complete...
-            complete: () => {
-              return;
-            }
-
-          });
-        }
+        if (next) this.getPV();
       },
 
       //Failed at getting contacts
@@ -399,12 +336,32 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  getPV () {
+    console.log('getting ' + this.guyName);
+    
+    this.mainChat = this.contactList.find((chat: any) => chat.name == this.guyName);
+    console.log(this.mainChat);    
+    
+    if (this.mainChat) {
+      this.mainChat.selected = true; 
+      this.connectToSocket();
+    
+    }
+
+    else this.socketError = true;
+
+    this.socketProgress = false;
+  }
+
+  addChat(chat: any, main: boolean) {
+
+  }
+
   getGroupChat (group: any): void {
 
     group.selected = true;
 
     //Save general info
-    this.chatId = group.id;
     this.groupName = group.name;
 
     //get participants' info
@@ -416,6 +373,8 @@ export class ChatComponent implements OnInit {
           console.log(`Valid user: ${member}`);
           let info = response.message;
           this.participantsInfo[member] = {name: info.name, image: this.chatService.server + info.picture, address: info.address, email: info.email};
+          this.mainChat = group;
+          this.connectToSocket();
         },
 
         error: (response) => {
@@ -442,82 +401,159 @@ export class ChatComponent implements OnInit {
 
   }
 
-  connectToSocket(): void {
+  connectToSocket(chat?: any): void {
+    console.log('cts '+ chat);
 
-    //Try to connect to the socket
-    this.chatService.connect(this.chatId.toString()).subscribe( {
-
-      //Successfil connection
-      next: (ev: {type: string, data: any}) => {
-
-        //Confirming connection
-        if (ev.type == 'open') {
-          console.log("Socket initiated: " + ev.data);
-
-          this.socketError = false;
-          this.socketProgress = false;
-
-          //Get past messages to display
-          this.chatService.fetch(this.chatId);
-          this.scrollChat();
-        }
-
-        //Message recieved/sent
-        else if (ev.type == 'message') {
-          let message = new ChatMessage(ev.data.author, ev.data.content, this.chatService, ev.data.edited, ev.data.timestamp, ev.data.id, ev.data.reply, ev.data.reply_id, ev.data.reply_user, ev.data.flag);
-
-          this.messageList.push(message);
-
-          //Scroll to last message
-          this.scrollChat();
+    function findLastIndex (list: any[], condition: Function): number {
+      for (let i = list.length - 1; i >= 0; i--) {
+        if (condition(list[i])) {
+          console.log(chat?.name + ' i: ' + i);
           
+          return i;
         }
-
-        //Fetching all messages
-        else if (ev.type == 'fetch') {
-          let firstFetch = this.messageList.length == 0;
-
-          this.messageList = new MessageList();
-          let fetched = ev.data;
-
-          for (let item of fetched ) {
-              let message = new ChatMessage(item.author, item.content, this.chatService, item.edited, item.timestamp, item.id, item.reply, item.reply_id, item.reply_user, item.flag);
-            if (this.lastSelected == item.id) {
-              message = new ChatMessage(item.author, item.content, this.chatService, item.edited, item.timestamp, item.id, item.reply, item.reply_id, item.reply_user, item.flag,true);
-              this.lastSelected = null;
-            }
-            
-            this.messageList.push(message);            
-          }
-
-          firstFetch? this.scrollChat():void 0;
-
-          if (this.lastSelected != null) {
-            document.getElementById(`message-${this.lastSelected}`)!.classList.add('selected-message');
-            console.log('s');
-            
-          }
-
-        }
-
-      },
-
-      //Socket Error
-      error: (ev: {type: string, data: string}) => {
-
-        //Web socket closed
-        if (ev.type == 'close') {
-
-          console.log("Socket closed: "+ev.data);
-
-          if (ev.data != 'Switch' ) {
-            this.socketError = true;
-          }
-          }
-
       }
-      
-    });
+      return -1;
+    }
+    
+    // Other chats (not the main one)
+    if (chat != undefined) {
+      chat.selected = false;
+      if (! this.chatService.has(chat.id)) {
+        chat.observable = this.chatService.newChat(chat.id);
+        console.log('no ' + chat.id);
+        
+      }
+      (chat.observable as Observable<{type: string, data: any}>).subscribe({
+        next: (ev: {type: string, data: any}) => {
+          if (ev.type == 'open') {
+            console.log(chat.name + '(soc opened)'); 
+            this.chatService.fetch(chat.id);
+          }
+
+          else if (ev.type == 'message') {
+            chat.lastMessage = ev.data.content;
+            if (typeof(chat.newMessages) == 'number') chat.newMessages ++;
+          }
+
+          else if (ev.type == 'fetch') {
+            console.log('fet '+chat.name);
+            
+            let fetched = (ev.data as any[]);
+            if (fetched.length <= 0) return;
+            
+            // console.log(chat.name + ': ln-> ' + fetched.length + ', last index -> ' + fetched.slice().reverse().findIndex((item:any) => item.seen || item.author == this.username));
+            
+            chat.lastMessage = fetched.slice(-1)[0]?.content;
+            chat.newMessages = fetched.length - findLastIndex(fetched,(message: any) => message.author == this.username || message.flag) - 1;
+          }
+
+          else if (ev.type == 'close' && ev.data == "") {
+            this.socketError = true; 
+            console.log(chat.name + " soc closed");
+          }
+        },
+        error: (err) => {
+          
+        },
+        complete: () => {
+          
+        },
+      })
+    }
+
+    else {
+      //Try to connect to the socket
+      this.mainChat.selected = true;
+      if (! this.chatService.has(this.mainChat.id)) {
+        this.mainChat.observable = this.chatService.newChat(this.mainChat.id);
+        console.log('no ' + chat.id);
+        
+      }
+
+      (this.mainChat.observable as Observable<{type: string, data: any}>).subscribe( {
+        //Successfil connection
+        next: (ev: {type: string, data: any}) => {
+
+          //Confirming connection
+          if (ev.type == 'open') {
+            console.log("Socket initiated: " + ev.data);
+            console.log(this.mainChat.id + " (main soc opened)")
+
+            this.socketError = false;
+            this.socketProgress = false;
+
+            //Get past messages to display
+            this.chatService.fetch(this.mainChat.id);
+            this.scrollChat();
+          }
+
+          //Message recieved/sent
+          else if (ev.type == 'message') {
+            this.mainChat.lastMessage = ev.data.content;
+            let message = new ChatMessage(ev.data.author, ev.data.content, this.chatService, ev.data.edited, ev.data.timestamp, ev.data.id, ev.data.reply, ev.data.reply_id, ev.data.reply_user, ev.data.flag);
+
+            this.messageList.push(message);
+
+            //Scroll to last message
+            this.scrollChat();
+            
+          }
+
+          //Fetching all messages
+          else if (ev.type == 'fetch') {
+            console.log('fet main');
+            
+            let firstFetch = this.messageList.length == 0;
+
+            this.messageList = new MessageList();
+            let fetched = ev.data;
+
+            this.mainChat.lastMessage = fetched.slice(-1)[0]?.content;
+            this.mainChat.newMessages = fetched.length - findLastIndex(fetched,(message: any) => message.author == this.username || message.flag) - 1;
+
+            for (let item of fetched ) {
+                let message = new ChatMessage(item.author, item.content, this.chatService, item.edited, item.timestamp, item.id, item.reply, item.reply_id, item.reply_user, item.flag);
+              if (this.lastSelected == item.id) {
+                message = new ChatMessage(item.author, item.content, this.chatService, item.edited, item.timestamp, item.id, item.reply, item.reply_id, item.reply_user, item.flag,true);
+                this.lastSelected = null;
+              }
+              
+              this.messageList.push(message);            
+            }
+
+            this.socketProgress = false;
+
+            firstFetch? this.scrollChat():void 0;
+
+            // if (this.lastSelected != null) {
+            //   document.getElementById(`message-${this.lastSelected}`)!.classList.add('selected-message');
+            //   console.log('s');
+              
+            // }
+
+          }
+
+        },
+
+        //Socket Error
+        error: (ev: {type: string, data: string}) => {
+
+          //Web socket closed
+          if (ev.type == 'close') {
+
+            console.log("Socket closed: "+ev.data);
+
+            if (ev.data == "" ) {
+              this.socketError = true;
+              console.log(this.mainChat.id + " main soc closed")
+            }
+          }
+
+        }
+        
+      });
+      this.chatService.fetch(this.mainChat.id);
+    }
   }
 
   sendMessage(): void {
@@ -529,11 +565,11 @@ export class ChatComponent implements OnInit {
       if (this.replyTo == null) {
 
         //Send the message
-        message.send(this.chatId);
+        message.send(this.mainChat.id);
 
       }
       else {
-        this.replyTo.reply(this.chatId, message);
+        this.replyTo.reply(this.mainChat.id, message);
         this.replyTo = null;
 
       }
@@ -541,7 +577,7 @@ export class ChatComponent implements OnInit {
 
     else {
       if (this.editingMessage.content != this.newMessage) {
-        this.editingMessage.edit(this.chatId, this.newMessage);
+        this.editingMessage.edit(this.mainChat.id, this.newMessage);
       }
       this.editingMessage = null;
     }
@@ -555,6 +591,18 @@ export class ChatComponent implements OnInit {
 
   switchTo (chat: any): void {
     console.log("Switch-------------------------------------");
+
+    if (this.mainChat && chat.id == this.mainChat.id) {
+      // console.log("-- back --");
+      
+      // this.guyName = "";
+      // this.groupName = "";
+      // this.chatId = -5;
+      // this.socketProgress = false;
+      // this.main = true;
+      // window.history.pushState("", "", 'message');
+      return;
+    }
     
     this.messageList = new MessageList();
     this.socketError = false;
@@ -564,54 +612,41 @@ export class ChatComponent implements OnInit {
     this.editingMessage = null;
     this.newMessage = "";
 
-    for (let item of this.contactList) {
-      item.selected = false; 
-    }
+    // for (let item of this.contactList) {
+    //   item.selected = false; 
+    // }
 
-    if (chat.id == this.chatId) {
-      console.log("-- back --");
-      
-      this.guyName = "";
-      this.groupName = "";
-      this.chatId = -5;
-      this.socketProgress = false;
-      this.main = true;
-      window.history.pushState("", "", 'message');
-      return;
-    }
+    if(this.mainChat) this.connectToSocket(this.mainChat);
 
     if (chat.isGroup) {
       this.getGroupChat(chat);
-      this.connectToSocket();
       window.history.pushState("","",'message');
 
     }
 
     else {
-      this.chatId = chat.id;
       chat.selected = true;
-      this.authenticateGuy(chat.name);
+      this.mainChat = chat;
+      this.connectToSocket();
       window.history.pushState("","",`message/${chat.name.trim()}`);
     }
   }
 
-  cM(event: MouseEvent, message: ChatMessage, trigger:any, mode = "real"): void {
+  cM(event: MouseEvent, message: ChatMessage, trigger:any): void {
     event.preventDefault();
 
-    if (mode == "real") {
-      this.clickedMessage = message;
-      this.cursorX = event.clientX;
-      this.cursorY = event.clientY;
-      // this.trigger.openMenu();
-      trigger.click();
-    }
+    this.clickedMessage = message;
+    this.cursorX = event.clientX;
+    this.cursorY = event.clientY;
+    // this.trigger.openMenu();
+    trigger.click();
     
   }
 
   deleteMessage (): void {
-    this.clickedMessage.delete(this.chatId);
+    this.clickedMessage.delete(this.mainChat.id);
     this.snack.open("1 message deleted","undo",{horizontalPosition:'left', duration: 3000, announcementMessage: "adsada"}).onAction().subscribe(() => {
-      this.chatService.undo(this.chatId);
+      this.chatService.undo(this.mainChat.id);
     })
   }
 
@@ -630,7 +665,13 @@ export class ChatComponent implements OnInit {
   }
 
   copyText (): void {
+    console.log(this.clickedMessage.content);
+    
     this.clipboard.copy(this.clickedMessage.content);
+
+    navigator.clipboard.writeText(this.clickedMessage.content).then((vs) => {
+      navigator.clipboard.readText().then((text) => void 0);
+    })
   }
 
   setReplyTo (): void {
@@ -652,7 +693,7 @@ export class ChatComponent implements OnInit {
   }
 
   markAsRead (): void {
-    this.chatService.setSeen(this.chatId, this.username);    
+    this.chatService.setSeen(this.mainChat.id, this.username);    
   }
 
   chatInfo (ev: MouseEvent, chat: any): void {
@@ -662,12 +703,16 @@ export class ChatComponent implements OnInit {
 
     let dialog_ref: any;
 
-    if (!chat.isGroup) {
-      dialog_ref = this.dialog.open(ChatInfoComponent, {data: {chatInfo: chat, mutuals: this.mutuals, username: this.username}, closeOnNavigation: true});
+    if(chat  == 'new') {
+      dialog_ref = this.dialog.open(ChatInfoComponent, {data: {action: 'new_group', mutuals: this.mutuals, username: this.username}, closeOnNavigation: true});
+    }
+
+    else if (!chat.isGroup) {
+      dialog_ref = this.dialog.open(ChatInfoComponent, {data: {action: 'show_user', chatInfo: chat, mutuals: this.mutuals, username: this.username}, closeOnNavigation: true});
     }
 
     else {
-    dialog_ref = this.dialog.open(ChatInfoComponent, {data: {chatInfo: chat, mutuals: this.mutuals, username: this.username}, closeOnNavigation: true});
+      dialog_ref = this.dialog.open(ChatInfoComponent, {data: {action: 'show_group', chatInfo: chat, mutuals: this.mutuals, username: this.username}, closeOnNavigation: true});
     }
 
     dialog_ref.afterClosed().subscribe((result: any) => {
@@ -678,19 +723,22 @@ export class ChatComponent implements OnInit {
 
       // Creating new group
       if (result.action == 'create') {
-
+        
         this.socketProgress = true;
 
         // with Image
         if (result.image) {
           this.chatService.createGroup(result.members, result.name, result.description, result.image).subscribe({
             next: (response: any) => {
-      
+
               //Add the new chat to contact list
               let newChat = {name: response.name, participants: response.participants, id: response.id, isGroup: true, image: response.picture, description: response.description};
-              let tmp = this.contactList[0];
-              this.contactList[0] = newChat;
-              this.contactList.push(tmp);
+              if (this.contactList.length > 0) {
+                let tmp = this.contactList[0];
+                this.contactList[0] = newChat;
+                this.contactList.push(tmp);
+              }
+              else this.contactList.push(newChat);
       
               //next step
               this.socketProgress = false;
@@ -716,12 +764,15 @@ export class ChatComponent implements OnInit {
         else {
           this.chatService.createGroup(result.members, result.name, result.description).subscribe({
             next: (response: any) => {
-      
+              
               //Add the new chat to contact list
               let newChat = {name: response.name, participants: response.participants, id: response.id, isGroup: true, image: groupDefaultIcon, description: response.description};
-              let tmp = this.contactList[0];
-              this.contactList[0] = newChat;
-              this.contactList.push(tmp);
+              if (this.contactList.length > 0) {
+                let tmp = this.contactList[0];
+                this.contactList[0] = newChat;
+                this.contactList.push(tmp);
+              }
+              else this.contactList.push(newChat);
       
               //next step
               this.socketProgress = false;

@@ -93,15 +93,46 @@
                     }
 
             
-                    .chat-name {
+                    .chat-text {
                         margin-left: 10px;
                         margin-right: 10px;
                         width: auto;
                         margin-bottom: 5px;
                         height: 100%;
-                        display: flex;
+                        display: block;
                         align-items: center;
-                        
+                    }
+
+                        .chat-title {
+                            margin-top: 10px;
+                            margin-bottom: 4px;
+                        }
+
+                        .chat-last-message {
+                            font-size: small;
+                            color: gray;
+                            margin-bottom: 15px;
+                        }
+
+                .unread-count {
+                    position: absolute;
+                    right: 40px;
+                    top: 23px;
+                    color: white;
+                    font-size: small;
+                    background-color: rgb(88,99,255);
+                    height: 15px;
+                    width: max-content;
+                    min-width: 15px;
+                    border-radius: 7px;
+                    display: flex;
+                    justify-content: center;
+                    padding: 0 5px 0 5px;
+                    align-content: flex-start;
+                }
+
+                    .num {
+                        margin-top: -3px;
                     }
 
                 .chat-options {

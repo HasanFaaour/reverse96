@@ -22,13 +22,18 @@
                     <!-- Image -->
                     <img class="chat-img" [src]="chat.image? chat.image:'assets/images/profile-image.png'" />
 
-                    <!-- More Options -->
-                    <button mat-icon-button class="chat-options" (click)="chatInfo($event, chat)" matTooltip="More Info" matTooltipShowDelay="500" ><mat-icon >more_horiz</mat-icon></button>
+                    <div class="unread-count" *ngIf="chat.newMessages && chat.newMessages > 0" ><div class="num" >{{chat.newMessages}}</div></div>
+
+                    <!-- More Info -->
+                    <button mat-icon-button class="chat-options" (click)="chatInfo($event, chat)" matTooltip="More Info" matTooltipShowDelay="500" ><mat-icon class="material-icons-outlined" >info</mat-icon></button>
 
                 </div>
 
                 <!-- Text -->
-                <div class="chat-name" >{{chat.name.trim() == username?'Saved Messages':chat.name}}</div>
+                <div class="chat-text" >
+                    <div class="chat-title" >{{chat.name == username?'Saved Messages':chat.name}}</div>
+                    <div class="chat-last-message" [matTooltip]="chat?.lastMessage" [matTooltipDisabled]="chat.lastMessage?.length <= 40" [matTooltipShowDelay]="700" matTooltipPosition="right" >{{chat.lastMessage?.length > 40? chat.lastMessage.slice(0,38) + '...': chat.lastMessage}}</div>
+                </div>
 
                 <!-- Divider -->
                 <mat-divider></mat-divider>
@@ -36,9 +41,6 @@
             </button>
 
         </mat-action-list>
-
-        <!-- Add More Button -->
-        <!-- <button class="add-more" mat-button>Add more</button> -->
 
     </div>
 
@@ -49,7 +51,7 @@
         <div [ngClass]="{'chat-bubble-area':true, 'my-bubble-area': bubble.author==username, 'their-bubble-area': bubble.author!= username}" *ngFor="let bubble of messageList.bubbles">
 
             <!-- Avatar area -->
-            <div class="avatar" ><img (click)="chatInfo($event,{name: bubble.author, isGroup: false})" [src]="bubble.author==username? userImage: participantsInfo[bubble.author]?.image" [ngClass]="{'avatar-image': true, 'user-image': bubble.author == username, 'guy-image': bubble.author != username}" /></div>
+            <div class="avatar" ><img (click)="chatInfo($event,{name: bubble.author, isGroup: false})" [src]="bubble.author==username? userImage: mainChat.isGroup? participantsInfo[bubble.author]?.image: mainChat.image" [ngClass]="{'avatar-image': true, 'user-image': bubble.author == username, 'guy-image': bubble.author != username}" /></div>
 
             <!-- Messages Area -->
             <div class="chat-bubble">
@@ -166,7 +168,8 @@
 <div #trigger style="visibility: hidden; position: fixed;"
 [style.left.px]="cursorX"
 [style.top.px]="cursorY"
-[matMenuTriggerFor]="context"></div>
+[matMenuTriggerFor]="context"
+></div>
 
 <!-- Context Menu -->
 <mat-menu #context="matMenu" class="context-menu" [hasBackdrop]="true">

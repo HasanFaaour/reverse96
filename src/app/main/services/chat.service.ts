@@ -7,33 +7,49 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ChatService {
 
-  wSUrl = "ws://localhost:8000/ws/chat"
-  api = "http://localhost:8000"
-  socket: WebSocket|null = null;
+  wSUrl = "ws://localhost:8000/ws/chat";
+  api = "http://localhost:8000";
+  // socket: WebSocket|null = null;
   username = "";
 
-  constructor(private http: HttpClient) {
+  chats: {id: number, socket: WebSocket, subscriber: Subscriber<{type: string, data: string}>}[] = [];
+
+  constructor(public http: HttpClient) {
    }
 
   getContacts(username: string): Observable<any> {
     return this.http.get(`${this.api}/api/chat/?username=${username}`,{observe: 'body', responseType: 'json' });
   }
 
-  connect(roomID: string):Observable<{type: string, data: string}> {
-    if (this.socket) {
-      this.disconnect('switch');
+  newChat(roomID: number):Observable<{type: string, data: string}> {
+    let existingChat = this.chats.find((chat) => chat.id == roomID);
+
+    if(existingChat) {
+      console.log("Duplicate Call!");
+      
+      return new Observable((sub) => {
+        sub.error({message: 'Duplicate Call'});
+      });
     }
+    
     return new Observable( (observer: Subscriber<{type: string, data: any}>) => {
-      this.socket = new WebSocket(`${this.wSUrl}/${roomID}/`);
-      this.socket.onclose = (ev: CloseEvent) => {
+      console.log('nC: '+ `${this.wSUrl}/${roomID}/`);
+      
+      let chat = this.chats.find((chat) => chat.id == roomID);
+      if (chat === undefined) {
+        chat = {id: roomID, socket: new WebSocket(`${this.wSUrl}/${roomID}/`), subscriber: observer};
+        this.chats.push(chat);
+      }
+      else chat.subscriber = observer;
+
+      chat.socket.onclose = (ev: CloseEvent) => {
         console.log('close,', ev);
-        
         observer.error({type: 'close', data: ev.reason});
       }
-      this.socket.onopen = (ev: Event) => {
+      chat.socket.onopen = (ev: Event) => {
         observer.next({type: 'open', data: ev.type});
       }
-      this.socket.onmessage = (ev: MessageEvent) => {
+      chat.socket.onmessage = (ev: MessageEvent) => {
         let json = JSON.parse(ev.data);
         if(json.command == 'new_message') {
           console.log(json.message);
@@ -44,12 +60,16 @@ export class ChatService {
         }
         if (json.command == 'fetch_message') {
           console.log('fch');
-          this.fetch(Number(roomID));
+          this.fetch(roomID);
         }
 
       }
       return;
     });
+  }
+
+  has (chatId: number): boolean {
+    return this.chats.some((chat) => chat.id == chatId);
   }
 
   createPV (username: string, guyName: string): Observable<any> {
@@ -97,41 +117,51 @@ export class ChatService {
   }
 
   fetch (chatId: number): void {
-    if (this.socket && this.socket.readyState == WebSocket.OPEN) {
+    let socket = this.chats.find((chat) => chat.id == chatId)?.socket;
+    if (socket && socket.readyState == WebSocket.OPEN) {
       let json = JSON.stringify({'command': 'fetch_messages', 'chatId': chatId});
-      this.socket.send(json);
+      socket.send(json);
     }
     return;
   }
 
   send (username: string, message: string, chatId: number, replyTo: number = -5): void{
-      if (this.socket && this.socket.readyState == WebSocket.OPEN) {
-        if (replyTo == -5) {
-          console.log(`user: ${username}, message: ${message}, chatId: ${chatId}`)
-          this.socket.send(JSON.stringify({command: 'new_message', message: message, from: username, chatId: chatId}));
-        }
+    let socket = this.chats.find((chat) => chat.id == chatId)?.socket;
 
-        else {
-          this.socket.send(JSON.stringify({command: 'new_message', message: message, from: username, chatId: chatId, reply: replyTo}));
-        }
-      }
-      return;
+    console.log(username, message, chatId);
     
+
+    if (socket && socket.readyState == WebSocket.OPEN) {
+      if (replyTo == -5) {
+        console.log(`user: ${username}, message: ${message}, chatId: ${chatId}`)
+        socket.send(JSON.stringify({command: 'new_message', message: message, from: username, chatId: chatId}));
+      }
+
+      else {
+        socket.send(JSON.stringify({command: 'new_message', message: message, from: username, chatId: chatId, reply: replyTo}));
+      }
+    }
+    return;
+  
   }
 
   delete (messageId: number, chatId: number): void{
-    if (this.socket && this.socket.readyState == WebSocket.OPEN) {
+    let socket = this.chats.find((chat) => chat.id == chatId)?.socket;
+
+    if (socket && socket.readyState == WebSocket.OPEN) {
       console.log(`delete: message ${messageId} from chat ${chatId}`);
-      this.socket.send(JSON.stringify({command: 'delete_message', id: messageId, chatId: chatId}));
+      socket.send(JSON.stringify({command: 'delete_message', id: messageId, chatId: chatId}));
     }
     return;
   
   }
 
   edit (messageId: number, chatId: number, message: string): void{
-    if (this.socket && this.socket.readyState == WebSocket.OPEN) {
+    let socket = this.chats.find((chat) => chat.id == chatId)?.socket;
+
+    if (socket && socket.readyState == WebSocket.OPEN) {
       console.log(`edit: message ${messageId} from chat ${chatId} to ${message}`);
-      this.socket.send(JSON.stringify({command: 'edit_message', id: messageId, chatId: chatId, message: message}));
+      socket.send(JSON.stringify({command: 'edit_message', id: messageId, chatId: chatId, message: message}));
       this.fetch(chatId);
     }
     return;
@@ -142,15 +172,19 @@ export class ChatService {
   }
 
   setSeen (chatId: number, user: string): void {
-    if (this.socket && this.socket.readyState == WebSocket.OPEN) {
-      this.socket.send(JSON.stringify({command: 'set_seen_messages', chatId: chatId, from: user}));
+    let socket = this.chats.find((chat) => chat.id == chatId)?.socket;
+
+    if (socket && socket.readyState == WebSocket.OPEN) {
+      socket.send(JSON.stringify({command: 'set_seen_messages', chatId: chatId, from: user}));
     }
   }
 
-  disconnect(reason = 'manual'): void {
-    console.log(this.socket?.readyState,WebSocket.OPEN,'-> dc ->',reason);
+  disconnect( chatId: number, reason = 'manual'): void {
+    let socket = this.chats.find((chat) => chat.id == chatId)?.socket;
+
+    console.log(socket?.readyState,WebSocket.OPEN,'-> dc ->',reason);
     
-    this.socket?.close(3900,'manual');
+    socket?.close(3900,'manual');
     return;
   }
 
