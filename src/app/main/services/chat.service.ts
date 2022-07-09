@@ -18,7 +18,7 @@ export class ChatService {
 
    constructor(private baseUrl: BaseService, public http: HttpClient) {
     this.apiUrl = baseUrl.apiServer;
-    this.wsUrl = baseUrl.wsServer;
+    this.wsUrl = baseUrl.wsServer+'/ws/chat';
    }
 
   getContacts(username: string): Observable<any> {
