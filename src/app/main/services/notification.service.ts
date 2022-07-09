@@ -1,17 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscriber, TeardownLogic } from 'rxjs';
+import { BaseService } from '../components/services/base.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
 
-  constructor(  ) { }
+  constructor(private baseUrl: BaseService) {
+    this.apiUrl = baseUrl.apiServer;
+    this.wsUrl = baseUrl.wsServer;
+   }
 
   socket: WebSocket|null = null;
   
-  apiURL = "http://localhost:8000"
-  wsUrl = "ws://localhost:8000"
+  apiUrl: string;
+  wsUrl: string;
 
   notificationCount = -5;
   notificationList: any[] = [];

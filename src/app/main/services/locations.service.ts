@@ -15,7 +15,7 @@ export class LocationsService {
   
   constructor(private http: HttpClient,
               private baseSer: BaseService) {
-                this.baseUrl = this.baseSer.server;
+                this.baseUrl = this.baseSer.apiServer;
               }
   
   getMapLocations(model: any): Observable<any> {

@@ -17,7 +17,7 @@ export class HttpRequestService {
   constructor(private hC : HttpClient,
               private baseSer: BaseService)
   {
-    this.baseUrl = this.baseSer.server;  
+    this.baseUrl = this.baseSer.apiServer;  
   }
 
   // Defining the login post request method

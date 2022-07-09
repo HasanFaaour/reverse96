@@ -1,24 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Subscriber } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { BaseService } from '../components/services/base.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
-  wSUrl = "ws://localhost:8000/ws/chat";
-  api = "http://localhost:8000";
+  wsUrl: string;
+  apiUrl: string;
   // socket: WebSocket|null = null;
   username = "";
 
   chats: {id: number, socket: WebSocket, subscriber: Subscriber<{type: string, data: string}>}[] = [];
 
-  constructor(public http: HttpClient) {
+
+   constructor(private baseUrl: BaseService, public http: HttpClient) {
+    this.apiUrl = baseUrl.apiServer;
+    this.wsUrl = baseUrl.wsServer;
    }
 
   getContacts(username: string): Observable<any> {
-    return this.http.get(`${this.api}/api/chat/?username=${username}`,{observe: 'body', responseType: 'json' });
+    return this.http.get(`${this.apiUrl}/api/chat/?username=${username}`,{observe: 'body', responseType: 'json' });
   }
 
   newChat(roomID: number):Observable<{type: string, data: string}> {
@@ -33,11 +37,11 @@ export class ChatService {
     }
     
     return new Observable( (observer: Subscriber<{type: string, data: any}>) => {
-      console.log('nC: '+ `${this.wSUrl}/${roomID}/`);
+      console.log('nC: '+ `${this.wsUrl}/${roomID}/`);
       
       let chat = this.chats.find((chat) => chat.id == roomID);
       if (chat === undefined) {
-        chat = {id: roomID, socket: new WebSocket(`${this.wSUrl}/${roomID}/`), subscriber: observer};
+        chat = {id: roomID, socket: new WebSocket(`${this.wsUrl}/${roomID}/`), subscriber: observer};
         this.chats.push(chat);
       }
       else chat.subscriber = observer;
@@ -73,14 +77,14 @@ export class ChatService {
   }
 
   createPV (username: string, guyName: string): Observable<any> {
-    return this.http.post(`${this.api}/api/chat/create/`,{participants: [username, guyName], name: `${username} @private ${guyName}`, description: ''},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    return this.http.post(`${this.apiUrl}/api/chat/create/`,{participants: [username, guyName], name: `${username} @private ${guyName}`, description: ''},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
   }
 
   createGroup (members: string[], name: string, description: string, image: any = null): Observable<any>{
     
     // No Image
     if (image === null) {
-      return this.http.post(`${this.api}/api/chat/create/`,{participants: members, name: name, description: description},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+      return this.http.post(`${this.apiUrl}/api/chat/create/`,{participants: members, name: name, description: description},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
     }
 
     // Create Form Data
@@ -93,14 +97,14 @@ export class ChatService {
     data.append('description', description);
 
     // Send Request
-    return this.http.post(`${this.api}/api/chat/create/`,data,{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    return this.http.post(`${this.apiUrl}/api/chat/create/`,data,{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
   }
 
   editGroup (groupId: number, members: string[], name: string, description: string, image: any = null): Observable<any>{
 
     // No Image
     if (image === null) {
-      return this.http.patch(`${this.api}/api/chat/${groupId}/update/`,{participants: members, name: name, description: description},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+      return this.http.patch(`${this.apiUrl}/api/chat/${groupId}/update/`,{participants: members, name: name, description: description},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
     }
 
     // Create Form Data
@@ -113,7 +117,7 @@ export class ChatService {
     data.append('description', description);
 
     // Send Request
-    return this.http.patch(`${this.api}/api/chat/${groupId}/update/`,data,{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    return this.http.patch(`${this.apiUrl}/api/chat/${groupId}/update/`,data,{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
   }
 
   fetch (chatId: number): void {
@@ -189,7 +193,7 @@ export class ChatService {
   }
 
   get server():string {
-    return this.api;
+    return this.apiUrl;
   }
 
   

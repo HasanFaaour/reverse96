@@ -17,7 +17,7 @@ export class UserInfoService {
   constructor(private http: HttpClient,
               private baseSer: BaseService)
                {
-    this.baseUrl = this.baseSer.server;
+    this.baseUrl = this.baseSer.apiServer;
   }
   getUserInfo(userId = ""): Observable<any> {
     if (userId){
