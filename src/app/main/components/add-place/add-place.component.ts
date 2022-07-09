@@ -48,8 +48,11 @@ export class AddPlaceComponent implements OnInit {
   disblyImage = false;
   message: string = "";
   name: any;
+  listLength: number = 0;
   invalude = false;
   notification = false;
+  isAdded = false;
+  isClosed = false;
 
   constructor(private formBuilder: FormBuilder, private locSer: LocationsService,
               public dialogRef: MatDialogRef<AddPlaceComponent>,
@@ -68,6 +71,7 @@ export class AddPlaceComponent implements OnInit {
   }
 
   uploadFile(event: any) {
+    console.log(event);
     if (event.target.files.length > 0) {
       this.disblyImage = true;
       this.image = event.target.files[0];
@@ -117,18 +121,24 @@ export class AddPlaceComponent implements OnInit {
   }
 
   closeDialog() {
+    this.isClosed = false
     this.dialogRef.close({ event: 'close', data: this.fromDialog });
+    this.isClosed = true;
   }
   
   addLocation(model: any) : void {
+    this.isAdded = false;
     this.locSer.addPlace(model).subscribe({
       next: (data) => {
         this.resp = data.message;
+        console.log(data);
+        console.log("response message: " + this.resp);
       },
       error: (err) => {
         console.log(err);
       }
     });
+    this.isAdded = true;
   }
 
 

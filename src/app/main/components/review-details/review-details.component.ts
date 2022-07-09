@@ -1,5 +1,7 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { HttpRequestService } from 'src/app/http-service.service';
 import { LocationsService } from '../../services/locations.service';
 
 @Component({
@@ -17,6 +19,8 @@ export class ReviewDetailsComponent implements OnInit {
 
   constructor(private locSer : LocationsService,
               private dialog: MatDialog,
+              private router: Router,
+              private http: HttpRequestService,
               @Optional() @Inject(MAT_DIALOG_DATA) public data: any ) 
   { 
     this.fromHomePage = data.pageValue[0];
@@ -24,9 +28,30 @@ export class ReviewDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getComments(this.fromHomePage.id);
+   // this.getComments(this.fromHomePage.id);
   }
   
+  onLike(item : any) {
+    item.liked = !item.liked;
+    let d = -1;
+    if (item.liked) {
+      d = 1;
+    }
+    item.likes += d;
+    this.http.likeReview(item.id).subscribe({
+      error: (error) => {
+        item.likes -= d;
+        item.liked = !item.liked;
+        if (error.status == 401) {
+          alert("Token expired. Please login again.");
+          this.router.navigate(['logout']);
+        }
+      }
+    })
+  }
+
+
+
   addComment(id: number) {
     this.showProg = true;
     this.comment.comment_text = this.commentText;
@@ -52,7 +77,7 @@ export class ReviewDetailsComponent implements OnInit {
       next: (data: any) => {  
         this.commentsList = data.message;
         console.log("comments:")
-        console.log(this.commentsList);
+        console.log(data);
       },
       error: (err) => {
         console.log(err.status);

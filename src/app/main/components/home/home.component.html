@@ -10,7 +10,7 @@
   <div class="icon-list">
     <a *ngIf ="!item.liked" (click)="onLike(item)" class="ico"><span class="fav1"><mat-icon >favorite_border</mat-icon></span></a>
     <a *ngIf ="item.liked" (click)="onLike(item)"  class="ico"><span class="fav2"><mat-icon >favorite</mat-icon></span></a>
-    <a (click)="openDialog(item.title , item.picture , item.id)" class="ico"><mat-icon >chat_bubble_outline</mat-icon></a>
+    <a (click)="openDialog(item , item.title ,item.text , item.picture , item.id)" class="ico"><mat-icon >chat_bubble_outline</mat-icon></a>
     <a href="#" class="ico"><mat-icon >share</mat-icon></a>
   </div>
   <div class="info">

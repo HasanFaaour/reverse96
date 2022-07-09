@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddPlaceComponent } from '../add-place/add-place.component';
 import {NgbAlertConfig} from '@ng-bootstrap/ng-bootstrap';
 import { UserInfoService } from '../../services/user-info.service';
+import { BaseService } from '../services/base.service';
 
 @Component({
   selector: 'app-map-review',
@@ -33,7 +34,8 @@ export class MapReviewComponent implements AfterViewInit  {
   iconName: string = '';
   iconColor: string = '';
   locId: string = '';
-  baseUrl = "https://reverse96-reverse96.fandogh.cloud";
+  baseUrl = "";
+  //baseUrl = "https://reverse96-reverse96.fandogh.cloud";
   sendValue: any;
   dialogValue!: string;
   map: any;
@@ -83,6 +85,7 @@ export class MapReviewComponent implements AfterViewInit  {
   component = this.resolver.resolveComponentFactory(AddReviewComponent).create(this.injector);
   @Input() public alerts: Array<string> = [];
   constructor(private locationSer: LocationsService,
+              private baseSer: BaseService,
               private useInfo : UserInfoService,
               private injector: Injector,
               private resolver : ComponentFactoryResolver,
@@ -92,7 +95,7 @@ export class MapReviewComponent implements AfterViewInit  {
   { 
     alertConfig.type = 'success';
     alertConfig.dismissible = false;
-    this.baseUrl = this.useInfo.server;
+    this.baseUrl = this.baseSer.server;
   }
   
   addReview() {
@@ -207,7 +210,9 @@ export class MapReviewComponent implements AfterViewInit  {
 
   getLocations() : void {
     this.locationSer.getMapLocations(this.latLngCorners).subscribe({
-      next: (data) => {  
+      next: (data: any) => {  
+        console.log("Ya hosien salam");
+        console.log(data);
         this.locations = [];
         this.filteredLocations = data.message;
         if(this.slectedValue != 19){
@@ -266,6 +271,7 @@ export class MapReviewComponent implements AfterViewInit  {
         this.locId = i.id;
         this.reviews = i.reviews;
         for(let review of this.reviews){
+          console.log(review);
           if(!review.picture.includes(this.baseUrl)) {
             review.picture = `${this.baseUrl}${review.picture}`;
           }

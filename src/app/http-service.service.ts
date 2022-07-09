@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, Subscriber, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
+import { BaseService } from './main/components/services/base.service';
 
 
 @Injectable({
@@ -9,12 +10,14 @@ import {HttpClient} from '@angular/common/http';
 })
 export class HttpRequestService {
   
-  baseUrl = "https://reverse96-reverse96.fandogh.cloud"
-  //baseUrl = "http://localhost:8000";
+  //baseUrl = "https://reverse96-reverse96.fandogh.cloud"
+  baseUrl = "";
   rr = {};
 
-  constructor(private hC : HttpClient) { 
-    
+  constructor(private hC : HttpClient,
+              private baseSer: BaseService)
+  {
+    this.baseUrl = this.baseSer.server;  
   }
 
   // Defining the login post request method
@@ -83,19 +86,19 @@ export class HttpRequestService {
     console.log(user);
     body.append('user', user);
     */
-    return this.hC.post(`https://reverse96-reverse96.fandogh.cloud/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
+    return this.hC.post(`${this.baseUrl}/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
   }
 
-  getReviews (mode: number): Observable<object> {
-    return this.hC.get(`${this.baseUrl}/api/get_reviews/${mode}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  getReviews (mode: number): Observable<any> {
+    return this.hC.get<any>(`${this.baseUrl}/api/get_reviews/${mode}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
   }
 
   likeReview (reviewId: number): Observable<object> {
     return this.hC.post(`${this.baseUrl}/api/add_user_like/${reviewId}`,{},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
   }
 
-  addComent (reviewId: number, text: string): Observable<object> {
-    return this.hC.post(`${this.baseUrl}/api/add_user_comment/${reviewId}`,{comment_text: text},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
+  addComent (reviewId: number, text: string): Observable<any> {
+    return this.hC.post<any>(`${this.baseUrl}/api/add_user_comment/${reviewId}`,{comment_text: text},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
   }
 
   followUser (username: string): Observable<object> {

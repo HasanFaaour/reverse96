@@ -29,7 +29,7 @@
 }
 .comments-container {
     width: 100%;
-    height: 80%;
+    height: 68%;
     overflow-y: scroll;
 }
 .comment-content {
@@ -46,9 +46,52 @@
 .comment-content .auth {
   font-weight: 500;
 }
-/* .comments-container::-webkit-scrollbar {
-    display: none;
-} */
+
+/*--------- icon-list*----------*/
+mat-icon {
+  color: rgb(83, 81, 81);
+  vertical-align: middle;
+  width: 36px;
+  height: 36px;
+  /*border-radius: 100%;*/
+  padding-left: 6px;
+  padding-top: 6px;
+}
+.icon-list {
+  margin-left: 3%;
+}
+.icon-list a {
+  display: inline-block;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  text-decoration: none;
+}
+.icon-lista:hover {
+  background-color: rgb(163, 33, 33);
+}
+.icon-list .ico {
+  margin-right: 4%;
+  margin-top: 10px;
+}
+.fav1 mat-icon {
+  color: rgb(88, 87, 87);
+  vertical-align: middle;
+  bottom: 3px;
+  cursor: pointer;
+}
+.fav2 mat-icon {
+  color: rgb(252, 64, 64);;
+  vertical-align: middle;
+  bottom: 3px;
+  cursor: pointer;
+}
+.icon-list a:hover > * {
+  color: #1da1f2;
+}
+.fav1:hover > * {
+  color: #1da1f2;
+}
+/*------end---------*/
 
 
 .input-container {

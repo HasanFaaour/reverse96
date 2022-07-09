@@ -12,7 +12,7 @@ import { UserInfoService } from '../../services/user-info.service';
 export class RightSidebarComponent implements OnInit {
   topreviews:any[] = [];
   extendedTopreviews:any[] = [];
-  followers: any = [];
+  followers: any ;
   extendedFollowers: any = [];
   user: any = [];
 
@@ -32,7 +32,7 @@ export class RightSidebarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getReviews();
+    this.getReviews(1);
     this.getFollows();
   }
 
@@ -43,9 +43,13 @@ export class RightSidebarComponent implements OnInit {
   onViewLess1(){
     this.topreviews = [];
     this.viewLess = !this.viewLess;
+    if(this.extendedTopreviews.length<=2){
+      this.topreviews = this.extendedTopreviews; 
+   }else {
     for(let i=0; i<2; i++){
       this.topreviews.push(this.extendedTopreviews[i]);
     } 
+  }
   }
   onViewMore2(){
     this.viewLess2 = !this.viewLess2;
@@ -54,16 +58,23 @@ export class RightSidebarComponent implements OnInit {
   onViewLess2(){
     this.followers = [];
     this.viewLess2 = !this.viewLess2;
+    if(this.extendedFollowers.length<=2){
+      this.followers = this.extendedFollowers; 
+   }else {
     for(let i=0; i<2; i++){
       this.followers.push(this.extendedFollowers[i]);
     }
+   }
   }
 
-  getReviews():void {
-    this.http.getReviews(1).subscribe({
+  getReviews(id: number):void {
+    this.http.getReviews(id).subscribe({
       next: (response: any) => {
         for (let review of response.message) {
-          review.picture = `${this.http.server}${review.picture}`;
+          if(!review.picture.includes(this.baseUrl)) {
+            review.picture = `${this.http.server}${review.picture}`;
+          }
+          
           review.liked = review.liked_by.includes(this.userId);
           review.likes = review.liked_by.length;
           this.date = review.date_created.split('T');
@@ -77,6 +88,7 @@ export class RightSidebarComponent implements OnInit {
             this.topreviews.push(this.extendedTopreviews[i]);
           }
         }
+        console.log(response);
       },
       error: (error) => {
         if (error.status == 401){
@@ -105,6 +117,8 @@ export class RightSidebarComponent implements OnInit {
            this.followers.push(this.extendedFollowers[i]);
          }
        }
+       console.log("data:");
+       console.log(data);
       },
       error: (err) => {
         console.log(err.status);

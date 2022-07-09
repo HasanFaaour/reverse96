@@ -35,12 +35,14 @@ export class HomeComponent implements OnInit {
   reviewPicture: any;
 
   date: any;
-  list: any[] = [];
+  test: any = [];
+  list: any = [];
   sideBarList:any[] = [];
   topReviews: any[] = [];
-  commentsList: any;
+  commentsList: any[] = [];
   
   serverConnection = 'connecting';
+  addCommentMessage = '';
  
   pageValue: any;
   dialogValue: any;
@@ -55,10 +57,12 @@ export class HomeComponent implements OnInit {
   extended2 = false;
   viewLess2 = false;
   isReadMore = true;
+  getcomm = false;
   status: any[] = [{isReadMore : false},{isReadMore : false}];
  
-  openDialog(tit: string , pic: any , reviewId: number) {
-    this.pageValue = [{title: tit , picture: pic , id: reviewId }];
+  openDialog(ite: any , tit: string , tex: string , pic: any , reviewId: number) {
+    this.pageValue = [{item: ite , title: tit , text: tex, picture: pic , id: reviewId }];
+    console.log(ite);
     const dialogRef = this.dialog.open(ReviewDetailsComponent, {
       width:'900px', height: 'auto',
       panelClass: 'custom-dialog-container',
@@ -83,11 +87,6 @@ export class HomeComponent implements OnInit {
     this.extended2 = !this.extended2;
     this.viewLess2 = !this.viewLess2;
   }
-   /*for delete */
-  showText(id : any) {
-     this.status[id].isReadMore = ! this.status[id].isReadMore;
-     this.isReadMore = !this.isReadMore
-  }
 
   onLike(item : any) {
     item.liked = !item.liked;
@@ -109,20 +108,18 @@ export class HomeComponent implements OnInit {
   }
 
   /*for delete */
-  onClick() {
+ /*  onClick() {
     this.isClicked = !this.isClicked;
     this.enaColor = !this.enaColor;
     if(this.enaColor == false)
     this.likeNum = this.likeNum - 1;
     else
     this.likeNum = this.likeNum + 1;
-  }
-  decLike(){
+  } */
+  /* decLike(){
     this.likeNum = - this.likeNum;
-  }
+  } */
   ngOnInit(): void {
-   /*  this.getComments(1); */
-    //this.getFollows();
     if (!localStorage.getItem('access')){
       console.log("Not logged in, redirecting to login page...");
       this.router.navigate(['../login']);
@@ -130,9 +127,11 @@ export class HomeComponent implements OnInit {
     else {
       this.userInfo.getUserInfo().subscribe({
         next: (response) => {
-          this.userId = Object.values(response)[0]['id'];
-          this.username = Object.values(response)[0]['username'];
-          this.getReviews();
+          this.userId = response.message.id;
+          this.username = response.message.username;
+         /*  this.userId = Object.values(response)[0]['id'];
+          this.username = Object.values(response)[0]['username']; */
+          this.getReviews(2);
         },
         error: (error) => {
           this.serverConnection = 'lost';
@@ -144,8 +143,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getReviews():void {
-    this.http.getReviews(2).subscribe({
+  getReviews(id: number) {
+    this.http.getReviews(id).subscribe({
       next: (response: any) => {
         this.serverConnection = "connected"
         for (let review of response.message) {
@@ -155,9 +154,11 @@ export class HomeComponent implements OnInit {
           review.liked = review.liked_by.includes(this.userId);
           review.likes = review.liked_by.length;
           this.list.push(review);
-          console.log("reviews:::");
-          console.log(response);
         }
+        this.test = response;
+        console.log("reviews:::");
+        console.log(response);
+        console.log(this.list);
       },
       error: (error) => {
         this.serverConnection = 'lost';
@@ -167,69 +168,28 @@ export class HomeComponent implements OnInit {
         }
       }
     });
-
-   /*  this.http.getReviews(1).subscribe({
-      next: (response: any) => {
-        for (let review of response.message) {
-          // console.log("review",review);
-          review.picture = `${this.http.server}${review.picture}`;
-          // console.log(review.liked_by,this.userId);
-          review.liked = review.liked_by.includes(this.userId);
-          review.likes = review.liked_by.length;
-          this.date = review.date_created.split('T');
-          review.date_created = this.date[0];
-          this.sideBarList.push(review);
-        }
-        console.log("top:")
-        console.log(this.sideBarList);
-        
-      },
-      error: (error) => {
-        if (error.status == 401){
-          alert("Session expired. Please login again.");
-          this.router.navigate(['logout']);
-        }
-      }
-    }); */
   }
 
- /*  getFollows() {
-    this.userInfo.getUserInfo().subscribe({
-      next: (data: any) => {  
-        this.user = data.message;
-        this.user.picture = `${this.baseUrl}${this.user.picture}`;
-        this.followers = this.user.followers;
-        console.log("Ya aba abd allah alhosien");
-        console.log(this.followers);
-        for(let follower of this.followers) {
-          if(!follower.picture.includes(this.baseUrl)) {
-            follower.picture = `${this.baseUrl}${follower.picture}`;
-          }
-        }
-        console.log(this.followers);
-      },
-      error: (err) => {
-        console.log(err.status);
-      }
-    });
-  }
- */
   getComments(id: number){
+    this.getcomm = false;
     this.locationSer.getCommentsReview(id).subscribe({
-      next: (data: any) => {  
-        this.commentsList = data.message;
+      next: (data: any[])=> {  
+        this.commentsList = data;
         this.pageValue = [{title: this.reviewTitle , picture: this.reviewPicture , id: this.reviewId , comments: this.commentsList}];
         console.log("comments:")
-        console.log(this.commentsList);
+        console.log("length"+ this.commentsList.length);
       },
       error: (err) => {
         console.log(err.status);
       }
     });
+    this.getcomm = true;
   }
 
   addComent (item: any) {
+    console.log(item);
     if (!item.newComment){
+      //this.addCommentMessage = "comment submited ";
       console.log("ignored");
       return;
     }
@@ -237,7 +197,9 @@ export class HomeComponent implements OnInit {
     this.http.addComent(item.id, item.newComment).subscribe({
       next: (response: any) => {
         item.newComment = "";
+        this.addCommentMessage = response.message;
         console.log(response);
+        console.log(this.addCommentMessage);
         //this.serverConnection = '';
         if(response.message === "comment submited "){
           console.log("comment added successful!");
@@ -252,7 +214,7 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  search() {
+ /*  search() {
     for(let i=0; i<this.list.length; i++){
 
       if(this.list[i].name.localeCompare(this.name) < 1){
@@ -261,7 +223,7 @@ export class HomeComponent implements OnInit {
       }
       this.list = this.searchList;
     }
-  }
+  } */
 
   display(url: string) {
 

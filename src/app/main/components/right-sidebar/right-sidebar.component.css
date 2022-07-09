@@ -28,17 +28,19 @@
    height: auto;
    background-color: white;
    margin-bottom: 20px;
+   border: 1px solid #ddd;
    border-bottom-left-radius: 10px;
    border-bottom-right-radius: 10px;
-   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+   box-shadow: 0 3px 6px 0 rgba(204, 204, 204, 0.164), 0 6px 20px 0 rgba(167, 166, 166, 0.103);
  }
  .container2 {
    width: 100%;
    height: auto;
    background-color: white;
    margin-bottom: 7px;
+   border: 1px solid #ddd;
    border-radius: 10px;
-   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+   box-shadow: 0 3px 6px 0 rgba(204, 204, 204, 0.164), 0 6px 20px 0 rgba(167, 166, 166, 0.103);
  }
  .right-side .top-rev {
    width: 100%;

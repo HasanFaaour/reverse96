@@ -1,17 +1,22 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { BaseService } from '../components/services/base.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocationsService {
   userName: string | null = null;
+  baseUrl = "";
   //baseUrl = "http://localhost:8000";
-  baseUrl = "https://reverse96-reverse96.fandogh.cloud";
+  //baseUrl = "https://reverse96-reverse96.fandogh.cloud";
   httpHeaders = new HttpHeaders ({'Content-Type' : 'application/json'});
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private baseSer: BaseService) {
+                this.baseUrl = this.baseSer.server;
+              }
   
   getMapLocations(model: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/category`, 
