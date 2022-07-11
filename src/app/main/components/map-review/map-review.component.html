@@ -49,7 +49,7 @@
         <div class="likes">{{location.no_of_likes}} likes</div>
         <div class="review-number">{{location.no_of_reviews}} reviews</div>
         <button class="addReview" (click)="addReview()">add review</button>
-        <app-add-review *ngIf="!dlg" [locationID]="locId"></app-add-review>
+        <app-add-review *ngIf="!dlg" [locationID]="locId" [locationName]="location.name" (reviewAdded)="getReviews(locId)" style="display: flex;" ></app-add-review>
       </div>
       <div *ngFor="let r of reviews;" class="review" >
         <!-- <div class="description2"> -->

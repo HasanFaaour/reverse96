@@ -25,6 +25,7 @@
           <div class="name">
               <a class="tit2" routerLink="../userInfo/{{follower.username}}">{{follower.username}}</a>
           </div>
+          <div class="notif-count" *ngIf="follower.notifCount > 0" ><div class="num" >{{follower.notifCount}}</div></div>
         </div>
       </div>
       <div style="width: 100%; height: 30px; background-color: white; border-bottom-left-radius: 10px;" *ngIf="!viewLess2" class="view" (click)="onViewMore2()">View more</div>

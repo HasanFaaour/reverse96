@@ -1,7 +1,12 @@
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { HttpRequestService } from 'src/app/http-service.service';
 
 import { SignupComponent } from './signup.component';
@@ -10,31 +15,79 @@ describe('SignupComponent', () => {
   let component: SignupComponent;
   let fixture: ComponentFixture<SignupComponent>;
 
-  let rStub, hStub, aStub : any;
+  let validName = "validname";
+  let validUsername = "validusername";
+  let validPassword = "validpassword";
+  let validPhoneNumber = "09123456789";
+  let validEmail = "examplaryemail@somehost.com";
+  let validAdress = "Planet - Continent - Country - City - Street - Number";
+
+
+  let httpLog = "";
+  let response: Observable<any> = of({message: {access: "acs tkn", refresh: "rfrsh tkn", name: "name", username: "uname"}});
+  let httpStub = {
+    signup: (creds: any) => {
+
+      httpLog += 'signup(';
+      Object.keys(creds).forEach((key) => httpLog += `${key}: ${creds[key]}, `);
+      httpLog += ') - ';
+
+      return response;
+    },
+
+    validateEmail: (email: string, code: number) => {
+      
+      httpLog += `validate(email: ${email}, code: ${code}) - `;
+
+      return response;
+    }
+  };
+
+  let routerLog = "";
+  let routerStub = {
+    navigate: (s:any) => {
+      if (s.length > 1) routerLog += s[0] + ';' + Object.keys(s[1])[0] + ': ' + Object.values(s[1])[0] + ' ,';
+      else routerLog += s[0] + ', ';
+    }
+  };
+
+  let urlParam = "";
+  let activatedRouteStub = {
+    snapshot:{
+      paramMap:{
+        get:(email: 'email') => urlParam
+      }
+    }
+  };
 
   beforeEach(async () => {
-    hStub = {
-      signup: () => of({mock:'up'})
-    };
-    rStub = {
-      navigate: (s:any) => {     }
-    };
-    aStub = {
-      snapshot:{
-        paramMap:{
-          get:() => ''
-        }
-      }
-    };
+    
 
     await TestBed.configureTestingModule({
       declarations: [ SignupComponent ],
-      providers: [{provide: HttpRequestService, useValue: hStub}, {provide: Router, useValue: rStub}, {provide: ActivatedRoute, useValue: aStub}]
+      providers: [
+        {provide: HttpRequestService, useValue: httpStub},
+        {provide: Router, useValue: routerStub},
+        {provide: ActivatedRoute, useValue: activatedRouteStub}
+      ],
+      imports: [
+        BrowserAnimationsModule,
+        NoopAnimationsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        ReactiveFormsModule
+      ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
+    response = of({message: {access: "acs tkn", refresh: "rfrsh tkn", name: "name", username: "uname"}});
+    urlParam = "";
+    httpLog = "";
+    routerLog = "";
+
     fixture = TestBed.createComponent(SignupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -44,14 +97,15 @@ describe('SignupComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  //Signup fields validations
+  it ("should show email validation form if there is a url param", () => {
+    urlParam = validEmail;
 
-  let validName = "validname";
-  let validUsername = "validusername";
-  let validPassword = "validpassword";
-  let validPhoneNumber = "09123456789";
-  let validEmail = "examplaryemail@somehost.com";
-  let validAdress = "Planet - Continent - Country - City - Street - Number";
+    component.ngOnInit();
+
+    expect(component.submittedEmail).toBe(validEmail);
+  });
+
+  //Signup fields validations
 
   //Name Field Validation
   it('should count short name (<= 2 characters) as invalid', () => {
@@ -375,5 +429,192 @@ describe('SignupComponent', () => {
     expect(component.codeGroup.invalid).toBeFalse();
   
   })
+
+  it ("should clear errors when values change", () => {
+    component.validateStatus = 12;
+    component.signupStatus = 901;
+
+    component.checkEntry();
+
+    expect(component.validateStatus).toBe(0);
+    expect(component.signupStatus).toBe(0);
+  });
+
+  it("should submit and handle success properly", () => {
+    component.name?.setValue(validName);
+    component.username?.setValue(validUsername);
+    component.password?.setValue(validPassword);
+    component.phone?.setValue(validPhoneNumber);
+    component.email?.setValue(validEmail);
+    component.address?.setValue(validAdress);
+
+    component.submittedEmail = "";
+
+    component.submit();
+
+    expect(httpLog).toContain('signup(');
+    expect(httpLog).toContain(`name: ${validName},`);
+    expect(httpLog).toContain(`username: ${validUsername},`);
+    expect(httpLog).toContain(`password: ${validPassword},`);
+    expect(httpLog).toContain(`phone_number: ${validPhoneNumber},`);
+    expect(httpLog).toContain(`email: ${validEmail},`);
+    expect(httpLog).toContain(` address: ${validAdress},`);
+    
+    expect(component.submittedEmail).toBe(validEmail);
+  });
+
+  it("should submit and handle failure (username) properly", () => {
+    component.name?.setValue(validName);
+    component.username?.setValue(validUsername);
+    component.password?.setValue(validPassword);
+    component.phone?.setValue(validPhoneNumber);
+    component.email?.setValue(validEmail);
+    component.address?.setValue(validAdress);
+
+    component.submittedEmail = "";
+
+    response = throwError(() => {return {error:{username: ['already exists']}};})
+
+    component.submit();
+
+    expect(httpLog).toContain('signup(');
+    expect(httpLog).toContain(`name: ${validName},`);
+    expect(httpLog).toContain(`username: ${validUsername},`);
+    expect(httpLog).toContain(`password: ${validPassword},`);
+    expect(httpLog).toContain(`phone_number: ${validPhoneNumber},`);
+    expect(httpLog).toContain(`email: ${validEmail},`);
+    expect(httpLog).toContain(` address: ${validAdress},`);
+    
+    expect(component.submittedEmail).toBeFalsy();
+    expect(component.signupStatus).toBe(1);
+    expect(component.signupMessage.toLowerCase()).toContain('username');
+  });
+
+  it("should submit and handle failure (email) properly", () => {
+    component.name?.setValue(validName);
+    component.username?.setValue(validUsername);
+    component.password?.setValue(validPassword);
+    component.phone?.setValue(validPhoneNumber);
+    component.email?.setValue(validEmail);
+    component.address?.setValue(validAdress);
+
+    component.submittedEmail = "";
+
+    response = throwError(() => {return {error:{email: ['already exists']}};})
+
+    component.submit();
+
+    expect(component.submittedEmail).toBeFalsy();
+    expect(component.signupStatus).toBe(1);
+    expect(component.signupMessage.toLowerCase()).toContain('e-mail');
+  });
+
+  it("should submit and handle failure (phone_number) properly", () => {
+    component.name?.setValue(validName);
+    component.username?.setValue(validUsername);
+    component.password?.setValue(validPassword);
+    component.phone?.setValue(validPhoneNumber);
+    component.email?.setValue(validEmail);
+    component.address?.setValue(validAdress);
+
+    component.submittedEmail = "";
+
+    response = throwError(() => {return {error:{phone_number: ['already exists']}};})
+
+    component.submit();
+    
+    expect(component.submittedEmail).toBeFalsy();
+    expect(component.signupStatus).toBe(1);
+    expect(component.signupMessage.toLowerCase()).toContain('phone number');
+  });
+
+  it("should submit and handle failure (other) properly", () => {
+    component.name?.setValue(validName);
+    component.username?.setValue(validUsername);
+    component.password?.setValue(validPassword);
+    component.phone?.setValue(validPhoneNumber);
+    component.email?.setValue(validEmail);
+    component.address?.setValue(validAdress);
+
+    component.submittedEmail = "";
+
+    response = throwError(() => {return {error:{other: ['already exists']}};})
+
+    component.submit();
+
+    expect(component.submittedEmail).toBeFalsy();
+    expect(component.signupStatus).toBe(1);
+    expect(component.signupMessage.toLowerCase()).toContain('contact support');
+  });
+
+  it("should validate and handle success properly", () => {
+    component.code?.setValue(1234);
+    component.submittedEmail = validEmail;
+
+    component.validateStatus = 0;
+    component.validateMessage = '';
+
+    response = of({message: 'go to login'})
+
+    component.validate();
+
+    expect(httpLog).toContain(`validate(email: ${validEmail}, code: 1234)`);
+
+    expect(component.validateStatus).toBe(1);
+    expect(component.validateMessage.toLowerCase()).toContain("congrat");
+  });
+
+  it("should validate and handle failure (wrong code) properly", () => {
+    component.code?.setValue(8179);
+    component.submittedEmail = validEmail;
+
+    component.validateStatus = 0;
+    component.validateMessage = '';
+
+    response = throwError(() => {return {error:{message: 'wrong code'}}});
+
+    component.validate();
+
+    expect(httpLog).toContain(`validate(email: ${validEmail}, code: 8179)`);
+
+    expect(component.validateStatus).toBe(2);
+    expect(component.validateMessage.toLowerCase()).toContain("correct");
+  });
+
+  it("should validate and handle failure (wrong code) properly", () => {
+    component.code?.setValue(1208);
+    component.submittedEmail = validEmail;
+
+    component.validateStatus = 0;
+    component.validateMessage = '';
+
+    response = throwError(() => {return {error:{message: 'Invalid email or username'}}});
+
+    component.validate();
+
+    expect(httpLog).toContain(`validate(email: ${validEmail}, code: 1208)`);
+
+    expect(component.validateStatus).toBe(2);
+    expect(component.validateMessage.toLowerCase()).toContain("login");
+    expect(component.validateMessage.toLowerCase()).toContain("again");
+  });
+
+  it("should validate and handle failure (other) properly", () => {
+    component.code?.setValue(8712);
+    component.submittedEmail = validEmail;
+
+    component.validateStatus = 0;
+    component.validateMessage = '';
+
+    response = throwError(() => {return {error:{message: 'uexpected'}}});
+
+    component.validate();
+
+    expect(httpLog).toContain(`validate(email: ${validEmail}, code: 8712)`);
+
+    expect(component.validateStatus).toBe(2);
+    expect(component.validateMessage.toLowerCase()).toContain("unexpected");
+    expect(component.validateMessage.toLowerCase()).toContain("later");
+  });
 
 });

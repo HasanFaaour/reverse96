@@ -22,24 +22,23 @@ export class HttpRequestService {
 
   // Defining the login post request method
   login(creds : {usermail: string, password: string, username?: string}): Observable<object>{
-    creds["username"] = creds["usermail"];
-    return this.hC.post(`${this.baseUrl}/api/login`,creds,{headers:{"Content-Type":"application/json"},  responseType: 'json'});
+    creds.username = creds.usermail;
+    return this.hC.post(`${this.baseUrl}/api/login`,creds,{headers:{}, observe: 'body',  responseType: 'json'});
   }
   
   //Defining the signup post request method
   signup(creds:Object):Observable<object>{
-    return this.hC.post(`${this.baseUrl}/api/register`,creds,{headers:{ "Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
-    
+    return this.hC.post(`${this.baseUrl}/api/register`,creds,{headers:{}, observe: 'body', responseType: 'json'});
   }
 
   //Defining the e-mail valideation post request method
-  validateEmail (email: string, code: number): Observable<object>{
-    return this.hC.post(`${this.baseUrl}/api/email-activision`,{email: email, code: code},{ headers:{"Content-Type":"application/json"}, observe: 'body', responseType: 'json'});
+  validateEmail (email: string, code: string): Observable<object>{
+    return this.hC.post(`${this.baseUrl}/api/email-activision`,{email: email, code: code},{ headers:{}, observe: 'body', responseType: 'json'});
   }
 
   //Defining the logout post request method
   logout(rToken: string|null):Observable<object>{
-    return this.hC.post(`${this.baseUrl}/api/logout`,{refresh: rToken},{ headers:{"Content-Type":"application/json","authorization":`Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    return this.hC.post(`${this.baseUrl}/api/logout`,{refresh: rToken},{ headers:{"authorization":`Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
   }
 
   //Defining the refresh post request method (Errors not handled)
@@ -48,9 +47,9 @@ export class HttpRequestService {
       let refresh = localStorage.getItem('refresh')
       if (refresh){
         this.hC.post(`${this.baseUrl}/api/login/refresh`,{refresh: refresh},{ headers:{}, observe: 'body', responseType: 'json'}).subscribe({
-          next: (response) => {
-            localStorage.setItem('access',Object.values(response)[0]);
-            localStorage.setItem('refresh',Object.values(response)[1]);
+          next: (response: any) => {
+            localStorage.setItem('access',response.access);
+            localStorage.setItem('refresh',response.refresh);
             observer.next();
             console.log('token refreshed');
             return;   
@@ -74,18 +73,7 @@ export class HttpRequestService {
     body.append('title', data.title);
     body.append('text', data.text);
     body.append('picture', data.image, data.image.name);
-    /*
-    let user = localStorage.getItem('userID');
-    if (!user){
-      let result = new Observable <object> ( (sub) => {
-        sub.error({message: "not logged in!"});
-      });
-      return result;
-    }
-
-    console.log(user);
-    body.append('user', user);
-    */
+    
     return this.hC.post(`${this.baseUrl}/api/review`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, reportProgress: true, observe: 'events', responseType: 'json'});
   }
 

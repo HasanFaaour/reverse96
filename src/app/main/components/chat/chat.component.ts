@@ -57,7 +57,7 @@ export class ChatComponent implements OnInit {
 
   mainChat: any;
 
-  clickedMessage!: ChatMessage;
+  clickedMessage: ChatMessage|null = null;
   editingMessage: ChatMessage | null = null;
   replyTo: ChatMessage | null = null;
 
@@ -74,6 +74,8 @@ export class ChatComponent implements OnInit {
   mutuals: any[] = [];
 
   newGroupName = "";
+
+  scrollNext = false;
 
   ngOnInit(): void {
 
@@ -170,20 +172,18 @@ export class ChatComponent implements OnInit {
 
    
     guyId = this.route.snapshot.paramMap.get('guyId');
-    console.log('new guy:',guyId);
+    console.log('new guy:' + guyId);
 
     if (!guyId){
       //No guy(default message page), next step
       this.socketProgress = false;
+      this.mainChat = undefined;
       this.main = true;
       
       this.getContacts(false);
     }
     else
     {
-      console.log('norm '+guyId);
-      
-      // this.socketProgress = true;
       this.main = false;
 
       this.guyName = guyId;
@@ -267,7 +267,6 @@ export class ChatComponent implements OnInit {
 
         if (chats.length > 0) {
           for (let chat of chats) {
-           
               //Add it to contact list without marking it (process the string to get the chat's recipiant)
 
               if ((chat.name as string).includes(`@private ${this.username}`)) {
@@ -288,7 +287,8 @@ export class ChatComponent implements OnInit {
               else {
                 chat.link = chat.name;
                 chat.isGroup = true;
-                chat.image = (chat.picture as string).includes("/default.png")? groupDefaultIcon: chat.picture;
+                if (chat.picture) chat.image = (chat.picture as string).includes("/default.png")? groupDefaultIcon: chat.picture;
+                else chat.image = groupDefaultIcon;
                 chat.selected = false;
                 this.contactList.push(chat);
                 this.connectToSocket(chat);
@@ -342,9 +342,7 @@ export class ChatComponent implements OnInit {
     console.log(this.mainChat);   
     
     if (this.mainChat) {
-      this.mainChat.selected = true; 
       this.connectToSocket();
-    
     }
 
     else this.chatService.createPV(this.username, this.guyName).subscribe({
@@ -365,6 +363,7 @@ export class ChatComponent implements OnInit {
       error: (error) => {
         console.log(error);
         this.socketError = true;
+        this.navigateTo('message');
         return;
       },
 
@@ -392,8 +391,7 @@ export class ChatComponent implements OnInit {
           console.log(`Valid user: ${member}`);
           let info = response.message;
           this.participantsInfo[member] = {name: info.name, image: this.chatService.server + info.picture, address: info.address, email: info.email};
-          this.mainChat = group;
-          this.connectToSocket();
+          
         },
 
         error: (response) => {
@@ -417,11 +415,13 @@ export class ChatComponent implements OnInit {
       });
 
     }
+    this.mainChat = group;
+    this.connectToSocket();
 
   }
 
   connectToSocket(chat?: any): void {
-    console.log('cts '+ chat);
+    console.log('cts '+ chat?.name);
 
     function findLastIndex (list: any[], condition: Function): number {
       for (let i = list.length - 1; i >= 0; i--) {
@@ -437,11 +437,11 @@ export class ChatComponent implements OnInit {
     // Other chats (not the main one)
     if (chat != undefined) {
       chat.selected = false;
-      if (! this.chatService.has(chat.id)) {
+      if (!this.chatService.has(chat.id) || chat.observable === undefined) {
         chat.observable = this.chatService.newChat(chat.id);
         console.log('no ' + chat.id);
-        
       }
+
       (chat.observable as Observable<{type: string, data: any}>).subscribe({
         next: (ev: {type: string, data: any}) => {
           if (ev.type == 'open') {
@@ -481,11 +481,13 @@ export class ChatComponent implements OnInit {
     }
 
     else {
+      if (this.mainChat === undefined) return;
       //Try to connect to the socket
       this.mainChat.selected = true;
-      if (! this.chatService.has(this.mainChat.id)) {
+      this.socketProgress = true;
+      if (! this.chatService.has(this.mainChat.id) || this.mainChat.observable === undefined) {
         this.mainChat.observable = this.chatService.newChat(this.mainChat.id);
-        console.log('no ' + chat.id);
+        console.log('(main) no ' + this.mainChat.id);
         
       }
 
@@ -497,9 +499,6 @@ export class ChatComponent implements OnInit {
           if (ev.type == 'open') {
             console.log("Socket initiated: " + ev.data);
             console.log(this.mainChat.id + " (main soc opened)")
-
-            this.socketError = false;
-            this.socketProgress = false;
 
             //Get past messages to display
             this.chatService.fetch(this.mainChat.id);
@@ -540,15 +539,14 @@ export class ChatComponent implements OnInit {
               this.messageList.push(message);            
             }
 
+            this.socketError = false;
             this.socketProgress = false;
 
-            firstFetch? this.scrollChat():void 0;
+            if(firstFetch || this.scrollNext) {
+              this.scrollChat();
+              this.scrollNext = false;
+            }
 
-            // if (this.lastSelected != null) {
-            //   document.getElementById(`message-${this.lastSelected}`)!.classList.add('selected-message');
-            //   console.log('s');
-              
-            // }
 
           }
 
@@ -650,8 +648,21 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  cM(event: MouseEvent, message: ChatMessage, trigger:any): void {
+  goToMain () {
+    this.socketProgress = true;
+    if (this.mainChat) this.mainChat.selected = false;
+    this.mainChat = undefined;
+    this.main = true;
+    this.messageList = new MessageList();
+    this.editingMessage = null;
+    this.replyTo = null;
+    window.history.pushState("", "", 'message');
+    this.socketProgress = false;
+  }
+
+  cM(event: MouseEvent, message: ChatMessage|null, trigger:any): void {
     event.preventDefault();
+    event.stopImmediatePropagation();
 
     this.clickedMessage = message;
     this.cursorX = event.clientX;
@@ -662,17 +673,20 @@ export class ChatComponent implements OnInit {
   }
 
   deleteMessage (): void {
-    this.clickedMessage.delete(this.mainChat.id);
-    this.snack.open("1 message deleted","undo",{horizontalPosition:'left', duration: 3000, announcementMessage: "adsada"}).onAction().subscribe(() => {
-      this.chatService.undo(this.mainChat.id);
-    })
+    if (this.clickedMessage) {
+      this.clickedMessage.delete(this.mainChat.id);
+      this.snack.open("1 message deleted","Undo",{horizontalPosition:'left', duration: 10000, announcementMessage: "adsada"}).onAction().subscribe(() => {
+        this.chatService.undo(this.mainChat.id);
+        // this.scrollNext = true;
+      });
+    }
   }
 
   editMessage (): void {
     this.replyTo = null;
 
     this.editingMessage = this.clickedMessage;
-    this.newMessage = this.editingMessage.content;
+    this.newMessage = this.editingMessage!.content;
     this.scrollChat();
     document.getElementsByName("message")[0].focus();
   }
@@ -683,13 +697,15 @@ export class ChatComponent implements OnInit {
   }
 
   copyText (): void {
-    console.log(this.clickedMessage.content);
-    
-    this.clipboard.copy(this.clickedMessage.content);
+    if (this.clickedMessage) {
+      console.log(this.clickedMessage.content);
+      
+      this.clipboard.copy(this.clickedMessage.content);
 
-    navigator.clipboard.writeText(this.clickedMessage.content).then((vs) => {
-      navigator.clipboard.readText().then((text) => void 0);
-    })
+      navigator.clipboard.writeText(this.clickedMessage.content).then((vs) => {
+        navigator.clipboard.readText().then((text) => void 0);
+      });
+    }
   }
 
   setReplyTo (): void {
@@ -820,9 +836,15 @@ export class ChatComponent implements OnInit {
         if (result.image) {
           this.chatService.editGroup(result.chat.id, result.members, result.name,  result.description, result.image).subscribe({
             next: (response: any) => {
-              chat = response;
+              console.log('next');
+              console.log(response.picture);
+              
+              
+              chat.name = response.name;
+              chat.participants = response.participants;
+              chat.description = response.description;
               chat.isGroup = true;
-              chat.image = chat.picture;
+              chat.image = response.picture;
             },
 
             error: (err) => {
@@ -837,7 +859,10 @@ export class ChatComponent implements OnInit {
         else {
           this.chatService.editGroup(result.chat.id, result.members, result.name, result.description).subscribe({
             next: (response: any) => {
-              chat = response;
+              console.log('next');
+              chat.name = response.name;
+              chat.participants = response.participants;
+              chat.description = response.description;
               chat.isGroup = true;
               chat.image = chat.picture.includes('/default.png')? groupDefaultIcon: chat.picture;
             },

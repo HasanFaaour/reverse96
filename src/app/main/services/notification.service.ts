@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable, Subscriber, TeardownLogic } from 'rxjs';
 import { BaseService } from '../components/services/base.service';
 
+type WS = WebSocket;
+let WS: any = WebSocket;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,15 +13,19 @@ export class NotificationService {
   constructor(private baseUrl: BaseService) {
     this.apiUrl = baseUrl.apiServer;
     this.wsUrl = baseUrl.wsServer;
-   }
+  }
 
-  socket: WebSocket|null = null;
+  mockWebSocket (stub: any) {
+    WS = stub;
+  }
+
+  socket: any = null;
   
   apiUrl: string;
   wsUrl: string;
 
-  notificationCount = -5;
-  notificationList: any[] = [];
+  private notificationCount = -5;
+  private notificationList: any[] = [];
 
   private obs: Observable<{type: string, data: any}> = new Observable();
 
@@ -27,7 +34,7 @@ export class NotificationService {
     console.log('Asked to connect');
     
     
-    if (this.socket && this.socket.readyState == WebSocket.OPEN){
+    if (this.socket && this.socket.readyState == WS.OPEN){
       console.log("Already connected. duplicate call");
       
       return;
@@ -37,21 +44,21 @@ export class NotificationService {
       
       let subscribersList: Subscriber<{type: string, data: any}>[] = [];
 
-      _this.socket = new WebSocket(`${_this.wsUrl}/ws/notification/${url}/`);
+      _this.socket = new WS(`${_this.wsUrl}/ws/notification/${url}/`);
       
       return (observer: Subscriber<{type: string, data: any}>): TeardownLogic => {
 
         subscribersList.push(observer);
 
-        if (subscribersList.length === 1) {
+        if (subscribersList.length == 1) {
 
-          _this.socket!.onclose = (ev) => {
-            subscribersList.forEach((obs) => obs.error({type:'colse',data: ev.reason}));
+          _this.socket!.onclose = (ev: any) => {
+            subscribersList.forEach((obs) => obs.error({type:'close',data: ev.reason}));
             console.log("closed");
             
           };
 
-          _this.socket!.onopen = (ev) => {
+          _this.socket!.onopen = (ev: any) => {
             console.log("Socket opened");
             
             subscribersList.forEach((obs) => obs.next({type: 'open', data: ev}));
@@ -59,7 +66,10 @@ export class NotificationService {
           };
 
           _this.socket!.onmessage = (ev: MessageEvent) => {
+            
             let json = JSON.parse(ev.data).message;
+
+            
 
             if (json.command == "on_connect") {
               console.log('received on_connect @ socket: ', json);
@@ -76,7 +86,7 @@ export class NotificationService {
               _this.notificationList.push(json.messages);
               console.log("(in service)notif list now: ", _this.notificationList);
 
-              subscribersList.forEach((obs) => obs.next({type: 'message', data: json}));
+              subscribersList.forEach((obs) => obs.next({type: 'message', data: json.messages}));
             }
           };
 
@@ -104,16 +114,30 @@ export class NotificationService {
   }
 
   markAsRead (list: number[]): void {
-    if (this.socket && this.socket.readyState == WebSocket.OPEN && list.length > 0){
-      this.socket.send(JSON.stringify({received_id:list}));
-      // this.notificationList = this.notificationList.map((notif)=>list.includes(notif.id)?notif:void 0);
+    console.log('mAR: '+list);
+    
+    if (this.socket && this.socket.readyState == WS.OPEN && list.length > 0){
+      this.socket.send(JSON.stringify({received_id: list}));
       this.notificationCount -= list.length;
-      
+      let i = 0;
+      while (i < this.notificationList.length) {
+        if (list.includes(this.notificationList[i].notif_id)) {
+          console.log(i);
+          this.notificationList.splice(+i,1);
+          i--;
+        }
+        i++;
+      }
     }
+    console.log(this.notificationCount, this.notificationList);
+    
+    
   }
 
   get notifications (): {count: number, list: any[]} {
-    return {count: this.notificationCount, list: this.notificationList};
+    console.log('(in service) asked for notifs: ' + this.notificationList);
+    
+    return {count: this.notificationCount, list: this.notificationList.slice()};
   }
 
   get observe(): Observable<{type: string, data: any}> {
@@ -121,7 +145,7 @@ export class NotificationService {
   }
 
   get isActive(): boolean {
-    return (this.socket && this.socket.readyState==WebSocket.OPEN)?true: false;
+    return (this.socket && this.socket.readyState==WS.OPEN)?true: false;
   }
 
 

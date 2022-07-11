@@ -16,7 +16,7 @@ export class ChatService {
   chats: {id: number, socket: WebSocket, subscriber: Subscriber<{type: string, data: string}>}[] = [];
 
 
-   constructor(private baseUrl: BaseService, public http: HttpClient) {
+   constructor(public baseUrl: BaseService, public http: HttpClient) {
     this.apiUrl = baseUrl.apiServer;
     this.wsUrl = baseUrl.wsServer+'/ws/chat';
    }
@@ -25,26 +25,23 @@ export class ChatService {
     return this.http.get(`${this.apiUrl}/api/chat/?username=${username}`,{observe: 'body', responseType: 'json' });
   }
 
-  newChat(roomID: number):Observable<{type: string, data: string}> {
-    let existingChat = this.chats.find((chat) => chat.id == roomID);
-
-    if(existingChat) {
-      console.log("Duplicate Call!");
-      
-      return new Observable((sub) => {
-        sub.error({message: 'Duplicate Call'});
-      });
-    }
+  newChat(roomID: number):Observable<{type: string, data: any}> {
+    if (this.chats.find((chat) => chat.id == roomID)) console.log('duplicate ' + roomID);
     
     return new Observable( (observer: Subscriber<{type: string, data: any}>) => {
       console.log('nC: '+ `${this.wsUrl}/${roomID}/`);
       
       let chat = this.chats.find((chat) => chat.id == roomID);
       if (chat === undefined) {
-        chat = {id: roomID, socket: new WebSocket(`${this.wsUrl}/${roomID}/`), subscriber: observer};
-        this.chats.push(chat);
+          chat = {id: roomID, socket: new WebSocket(`${this.wsUrl}/${roomID}/`), subscriber: observer};
+          this.chats.push(chat);
       }
+
       else chat.subscriber = observer;
+
+      if (chat.socket.readyState != WebSocket.OPEN) {
+        chat.socket = new WebSocket(`${this.wsUrl}/${roomID}/`);
+      }
 
       chat.socket.onclose = (ev: CloseEvent) => {
         console.log('close,', ev);
@@ -55,6 +52,7 @@ export class ChatService {
       }
       chat.socket.onmessage = (ev: MessageEvent) => {
         let json = JSON.parse(ev.data);
+        
         if(json.command == 'new_message') {
           console.log(json.message);
           observer.next({type: 'message', data: json.message});
@@ -68,6 +66,7 @@ export class ChatService {
         }
 
       }
+      this.fetch(roomID);
       return;
     });
   }
@@ -154,8 +153,10 @@ export class ChatService {
 
     if (socket && socket.readyState == WebSocket.OPEN) {
       console.log(`delete: message ${messageId} from chat ${chatId}`);
-      socket.send(JSON.stringify({command: 'delete_message', id: messageId, chatId: chatId}));
+      socket.send(JSON.stringify({command: 'delete_message', id: messageId, chatId: chatId, undo: false}));
+      this.fetch(chatId);
     }
+
     return;
   
   }
@@ -171,8 +172,15 @@ export class ChatService {
     return;
   }
 
-  undo(chatId: number): void {                          //NOT IMPLEMENTED
-    console.log("Undo")  
+  undo(chatId: number): void {
+    console.log("Undo");
+    let socket = this.chats.find((chat) => chat.id == chatId)?.socket;
+
+    if(socket && socket.readyState == WebSocket.OPEN) {
+      socket.send(JSON.stringify({command: 'delete_message', undo: true, chatId: chatId}));
+      console.log('sent');
+      
+    }
   }
 
   setSeen (chatId: number, user: string): void {

@@ -276,7 +276,7 @@ export class MapReviewComponent implements AfterViewInit  {
   getReviews(id: any) {
     this.locationSer.getReviewById(id).subscribe({
       next: (data) => {  
-        this.reviews = data.message;
+        this.reviews = data.message.reverse();
         //console.log(this.reviews);
         for(let review of this.reviews){
           review.picture = `${this.baseUrl}${review.picture}`;
@@ -286,6 +286,7 @@ export class MapReviewComponent implements AfterViewInit  {
         console.log(err);
       }
     });
+    this.dlg = true;
   }
 
   clikOnLocation(loc: any){
@@ -297,9 +298,11 @@ export class MapReviewComponent implements AfterViewInit  {
       if(loc === i.id /* i.latt */ /* && loc.long === i.long */){
         console.log("Hosien");
         this.location = i;
+
         //this.locId = i.id;
         this.locId = loc.toString();
         this.reviews = i.reviews;
+
         for(let review of this.reviews){
           console.log(review);
           if(!review.picture.includes(this.baseUrl)) {

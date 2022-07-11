@@ -16,17 +16,19 @@ export class NotificationComponent implements AfterContentChecked {
   checked = false;
 
   username = "@@";
+  server = "";
 
   constructor(
     private notifService: NotificationService,
     private httpService: HttpRequestService,
     private userInfoService: UserInfoService
-  ) { }
+  ) {this.server = userInfoService.server}
 
   ngOnInit(): void {
     this.checked = false;
     this.seen = [];
-
+    console.log('-----------------------init--------------------');
+    
     this.userInfoService.getUserInfo().subscribe({
 
       next: (response: any) => {
@@ -34,6 +36,8 @@ export class NotificationComponent implements AfterContentChecked {
 
         if (this.notifService.isActive) {
           console.log("already active");
+
+          this.notificationList = this.notifService.notifications.list;
           
           this.notifService.observe.subscribe({
             next: (ev) => {
@@ -77,24 +81,25 @@ export class NotificationComponent implements AfterContentChecked {
     });
   }
 
-  ngAfterContentChecked(): void {
-    
-    this.notificationList = this.notifService.notifications.list;
-    
+  ngAfterContentChecked(): void {    
   }
 
   check(): void {
     console.log(`Check(${this.checked})`);
     
     if (!this.checked) {
+      console.log(('go in'));
+      
+      this.seen = [];
       for (let notif of this.notificationList) {
         if (notif && notif.notif != 'follow_request') {
+          console.log('add ' + notif.notif_id);
           this.seen.push(+notif.notif_id);
+          this.checked = true;
         }
       }
-      this.notifService.markAsRead(this.seen);
+      if(this.seen.length > 0) this.notifService.markAsRead(this.seen);
     }
-    this.checked = true;
   }
 
   accept (from: string, ev: MouseEvent, notif: any): void {

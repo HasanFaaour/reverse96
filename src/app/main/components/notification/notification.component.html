@@ -1,6 +1,8 @@
+<app-right-sidebar></app-right-sidebar>
 <div class="container" (mousemove)="check()" >
     <mat-list>
         <a class="notif" mat-list-item *ngFor="let notif of notificationList" routerLink="/user/{{notif?.from}}" >
+            <img class="avatar" [src]="server + notif.picture" />
             <div class="from">
                 {{notif?.from}}
             </div>

@@ -1,3 +1,4 @@
+<app-right-sidebar></app-right-sidebar>
 <div class="container" >
 
   <!-- Info Card -->
@@ -79,9 +80,9 @@
     <div *ngFor="let review of reviews" (mouseenter)="showDescription(review)" (mouseleave)="hideDescription(review)" style="width: max-content; height: max-content;display: inline-block;padding: 7px; margin: 3px; padding-top: 10px; padding-bottom: 20px; margin-top: 0; margin-bottom: 0;">
 
       <!-- Single Review -->
-      <mat-card class="single-review" >
+      <mat-card class="single-review" (click)="openPopup(review)" >
 
-        <mat-card-header class="review-header">
+        <mat-card-header class="review-header" (click)="openPopup(review)">
 
           <!-- Title -->
           <mat-card-title class="review-title">
@@ -94,15 +95,15 @@
           </mat-card-subtitle>
 
           <!-- Place Image -->
-          <img mat-card-avatar class="place-image" [src]="review.location_picture" (click)="display(review.location_picture)" >
+          <img mat-card-avatar class="place-image" [src]="review.location_picture" (click)="openPopup(review)" >
 
         </mat-card-header>
 
         <!-- Review Image -->
-        <img mat-card-image class="review-image" [src]="review.picture" (click)="display(review.picture)" />
+        <img mat-card-image class="review-image" [src]="review.picture" (click)="openPopup(review)" />
 
         <!-- Review Text (Displayed Based on Display Model) -->
-        <mat-card-content *ngIf="reviewDisplayModel == 'alwaysShowDes' || reviewDisplayModel == 'extendButton' && (review.extended) || reviewDisplayModel == 'pin' && (review.pinned != 2 && (review.pinned == 1 || review.showText))" class="review-content">
+        <mat-card-content *ngIf="reviewDisplayModel == 'alwaysShowDes' || reviewDisplayModel == 'extendButton' && (review.extended) || reviewDisplayModel == 'pin' && (review.pinned != 2 && (review.pinned == 1 || review.showText))" class="review-content" (click)="openPopup(review)" >
 
           <div class="review-text"  >
             {{review.text}}
@@ -110,7 +111,7 @@
         
         </mat-card-content>
 
-        <mat-card-actions class="review-actions-area" align="end" >
+        <mat-card-actions class="review-actions-area" align="end" (click)="$event.stopImmediatePropagation()" >
 
           <!-- Pin Button (if review display model is set to pin) -->
           <button mat-icon-button [ngClass]="{'review-action': true, 'review-pin': true, 'active': review.pinned > 0}" *ngIf="reviewDisplayModel == 'pin'" (click)="pinDescription(review)" [matTooltip]="review.pinned == 2? 'Unpin': review.pinned == 1?'Hide':'Pin' " >
@@ -126,7 +127,8 @@
           </button>
 
           <!-- Comments -->
-          <button class="review-action review-comments" mat-icon-button >
+          <button class="review-action review-comments" mat-icon-button (click)="openPopup(review)" >
+            {{review.comment_no}}
             <mat-icon>chat_bubble_outline</mat-icon>
           </button>
 
@@ -163,15 +165,15 @@
         
         <!-- User's Username -->
         <mat-card-title>
-          {{user?.username}}
+          {{user.username}}
         </mat-card-title>
 
         <!-- User's Image -->
-        <img mat-card-avatar class="follow-user-image" [src]="user?.picture">
+        <img mat-card-avatar class="follow-user-image" [src]="user.picture">
 
         <!-- User's Full Name -->
         <mat-card-subtitle>
-          Arash
+          {{user.name}}
         </mat-card-subtitle>
 
       </mat-card-header>
@@ -184,7 +186,7 @@
         
         <!-- User's Bio/Description -->
         <div class="follow-user-bio" *ngIf="user.showDescription" >
-          d;lsalk s dsl;a lslk jsdjsalkdaslk salk klsda ljk ldad ssj dlk slk lkasd sd lks adlkd hlkdashalks d.
+          {{user.bio}}
         </div>
       </mat-card-content>
     </mat-card>

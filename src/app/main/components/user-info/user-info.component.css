@@ -2,13 +2,13 @@
   position: absolute;
   left: 22%;
   top: 90px;
-  right: 1%;
+  right: 27%;
   bottom: 0;
   width: auto;
   height: auto;
   /* border: 1px blueviolet solid; */
   display: block;
-  /* justify-content: center; */
+  justify-content: center;
 }
 
   /* .user-info-card * {
@@ -16,9 +16,9 @@
   } */
 
   .user-info-card {
-    margin-left: 20px;
+    margin-left: auto;
     margin-right: auto;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     width: 500px;
     max-width: 60%;
     height: max-content;
@@ -26,6 +26,8 @@
     border-radius: 15px;
     /* font-family: MV Boli; */
     cursor: default;
+    /* justify-content: center; */
+    /* display: flex; */
   }
 
     .avatar {
@@ -90,9 +92,13 @@
       }
 
   .review-model-select {
-    position: absolute;
-    right: 1vw;
-    top: 30px;
+    /* position: absolute; */
+    /* right: 1vw; */
+    /* top: 30px; */
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    width: min-content;
     transform: scale(.5);
   }
 
@@ -120,6 +126,7 @@
       height: max-content;
       background-color: rgb(238, 244, 252);
       vertical-align: top;
+      cursor: pointer;
       /* font-family: MV Boli; */
       /* overflow-y: scroll; */
       /* border: 1px solid salmon; */

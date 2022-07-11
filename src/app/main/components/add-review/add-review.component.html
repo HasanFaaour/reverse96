@@ -22,13 +22,13 @@
             <!-- Image Field -->
             <div class="image-div" (dragenter)="startDrag($event)" (dragleave)="endDrag($event)" >
                 <input #Image class="image-input" type="file" accept="image/*" (input)="checkImage($event)" />
-                <!--<ngx-photo-editor
+                <ngx-photo-editor
                     [imageChangedEvent]="cropImage"
                     (imageCropped)="checkImage($event, 'crop')"
                     [aspectRatio]="0"
                     [viewMode]="0"
                 ></ngx-photo-editor>
-                -->
+               
                 <input class="image-display" type="image" alt="Choose an image" src="{{imageDisplay}}" (click)="Image.click()" (click)="$event.preventDefault()" />
                 
                 <mat-hint class="image-hint" *ngIf="(image && image.invalid) || uploading" >{{imageHint}} <mat-progress-bar *ngIf="uploading" value="{{uploadedPercent}}"></mat-progress-bar> </mat-hint><br/>
