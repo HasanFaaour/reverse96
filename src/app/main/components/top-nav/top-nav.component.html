@@ -19,10 +19,10 @@
         <button mat-menu-item routerLink="/user" routerLinkActive="active" >profile</button>
         <a  href="message" style="text-decoration: none;" ><button mat-menu-item *ngIf="isLogin" >message</button></a>
       </mat-menu>
-      <a style="color: rgb(80, 223, 248); margin-left: 2.5%;" class="logo" routerLink="/home"><img src="assets\images\sidebar\logo.png" style="width: 30px; height: 30px; margin-right: 15px; margin-bottom: 4px;">LogoName</a>  
-      <div class="search-border">
-        <mat-icon>search</mat-icon>
-        <input name="name" type="search"  class="search-box" placeholder="search...">
+      <a  class="log" routerLink="/home"><img src="assets\images\logo3.png" style="width: 40px; height: 40px; margin-right: 15px; margin-bottom: 10px;">Reverse96</a>  
+      <div *ngIf="showSerch && isLogin" class="search-border">
+        <mat-icon  (click)="search()">search</mat-icon>
+        <input name="name" type="search"  class="search-box" placeholder="search..." [(ngModel)]="searchText">
       </div>
       <a *ngIf="!isLogin" routerLink="/login" class="login">log in</a>
       <a *ngIf="isLogin" (click)="onLogout()" class="login"><mat-icon style="color: red;">logout</mat-icon></a>

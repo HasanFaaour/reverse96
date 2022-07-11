@@ -11,8 +11,9 @@ export class MainComponent implements OnInit {
   ishide: boolean = true;
   va: boolean = true;
 
-  constructor(/*private router: Router*/){
+  constructor(private router: Router){
     //this.router.navigate(['/login']);
+
   }
   title = 'new-app';
   ngOnInit(): void {

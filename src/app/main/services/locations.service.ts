@@ -9,7 +9,7 @@ import { BaseService } from '../components/services/base.service';
 export class LocationsService {
   userName: string | null = null;
   baseUrl = "";
-  //baseUrl = "http://localhost:8000";
+  baseUrl2 = "http://localhost:8000";
   //baseUrl = "https://reverse96-reverse96.fandogh.cloud";
   httpHeaders = new HttpHeaders ({'Content-Type' : 'application/json'});
   
@@ -52,5 +52,10 @@ export class LocationsService {
     {headers:{"Content-Type":"application/json"}, 
     responseType: 'json'} );
   }
-
+  
+  generalSearch(mode: any): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/api/search/${mode}`,
+    {headers:{"Content-Type":"application/json"}, 
+    responseType: 'json'} );
+  }
 }

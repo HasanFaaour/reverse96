@@ -28,7 +28,7 @@ export class ReviewDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   // this.getComments(this.fromHomePage.id);
+    this.getComments(this.fromHomePage.id);
   }
   
   onLike(item : any) {
