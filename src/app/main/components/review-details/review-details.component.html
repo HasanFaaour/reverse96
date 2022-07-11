@@ -5,11 +5,12 @@
         <div class="title">{{fromHomePage.title}}</div>
         <div class="comments-container">
           <div class="comment-content">
-            <img [src]="fromHomePage.picture" style="width: 35px; height: 35px; border-radius: 100px; float: left;" >  
-            <div class="text"><span class="auth">{{fromHomePage.title}} </span> {{fromHomePage.text}}</div>
+            <img [src]="fromHomePage.picture" style="width: 45px; height: 45px; border-radius: 10px; float: left;" >  
+            <div class="text1"><span class="auth">{{fromHomePage.title}} </span> {{fromHomePage.text}}</div>
           </div>
+          <hr>
           <div *ngFor="let c of commentsList" class="comment-content">
-            <img [src]="fromHomePage.picture" style="width: 35px; height: 35px; border-radius: 100px; float: left;" >  
+            <img src="assets/images/pr9.png" style="width: 36px; height: 36px; border-radius: 100px; float: left;" >  
             <div class="text"><span class="auth">{{c.auth}} </span> {{c.text}}</div>
           </div>
         </div>
@@ -19,6 +20,7 @@
           <a  class="ico"><mat-icon >chat_bubble_outline</mat-icon></a>
           <a  class="ico"><mat-icon >share</mat-icon></a>
         </div>
+        <div class="likes">2 likes</div>
         <div class="input-container">
             <input type="text" class="add-comment" placeholder="Add a comment" [(ngModel)]="commentText">
             <a (click)="addComment(fromHomePage.id)"><mat-icon>add</mat-icon></a>

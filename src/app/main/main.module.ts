@@ -53,6 +53,10 @@ import { NgbAlertModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap'
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from '../app-routing.module';
 
+import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
+import { SearchResultComponent } from './components/search-result/search-result.component';
+
+
 const routes: Routes = [
   {
     path: '',
@@ -89,7 +93,7 @@ const routes: Routes = [
         component: LogoutComponent
       },
       {
-        path: 'map-reviws',
+        path: 'map-reviws/:locationid',
         component: MapReviewComponent
       },
       {
@@ -119,6 +123,10 @@ const routes: Routes = [
       {
         path: 'notifications',
         component: NotificationComponent
+      },
+      {
+        path: 'search/:searchtext',
+        component: SearchResultComponent
       }
     ],
   },
@@ -143,7 +151,8 @@ const routes: Routes = [
     AddPlaceComponent,
     NotificationComponent,
     ReviewDetailsComponent,
-    RightSidebarComponent
+    RightSidebarComponent,
+    SearchResultComponent
   ],
   entryComponents: [
     AddPlaceComponent,

@@ -20,7 +20,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div *ngFor="let l of locations; let i = index" (click)=clikOnLocation(l) class="list-reviews-container" >
+      <div *ngFor="let l of locations; let i = index" (click)=clikOnLocation(l.id) class="list-reviews-container" >
         <div class="image"><img [src]="l.picture" ></div>
         <div class="description">
             <div class="email">{{l.name}}</div>

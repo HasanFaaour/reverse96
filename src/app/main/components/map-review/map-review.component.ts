@@ -10,6 +10,7 @@ import { AddPlaceComponent } from '../add-place/add-place.component';
 import {NgbAlertConfig} from '@ng-bootstrap/ng-bootstrap';
 import { UserInfoService } from '../../services/user-info.service';
 import { BaseService } from '../services/base.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-map-review',
@@ -34,6 +35,7 @@ export class MapReviewComponent implements AfterViewInit  {
   iconName: string = '';
   iconColor: string = '';
   locId: string = '';
+  locationId: any;
   baseUrl = "";
   //baseUrl = "https://reverse96-reverse96.fandogh.cloud";
   sendValue: any;
@@ -53,6 +55,7 @@ export class MapReviewComponent implements AfterViewInit  {
   useInfSer: any;
   image: any;
   open: boolean = true;
+  isLoaded = false;
 
   latLngCorners = { coordinates: [-3,-3,2,2]};
   reviews: any;
@@ -86,6 +89,7 @@ export class MapReviewComponent implements AfterViewInit  {
   @Input() public alerts: Array<string> = [];
   constructor(private locationSer: LocationsService,
               private baseSer: BaseService,
+              private activatedRoute: ActivatedRoute,
               private useInfo : UserInfoService,
               private injector: Injector,
               private resolver : ComponentFactoryResolver,
@@ -95,7 +99,9 @@ export class MapReviewComponent implements AfterViewInit  {
   { 
     alertConfig.type = 'success';
     alertConfig.dismissible = false;
+
     this.baseUrl = this.baseSer.apiServer;
+
   }
   
   addReview() {
@@ -106,18 +112,26 @@ export class MapReviewComponent implements AfterViewInit  {
   }
   onSelect() {
     this.getLocations();
-   console.log(this.slectedValue);
   }
 
   showReviewsList() {
     this.showReviewList = true;
     this.showLocationDetail = false;
     this.reviews =  [];
+    if(this.isMarkerCreated){
+      this.map.removeLayer(this.marker);
+      this.isEnabled = true;
+    }
   }
 
   ngAfterViewInit(): void {
     this.loadMap();
     this.toggle(); 
+    this.locationId = this.activatedRoute.snapshot.paramMap.get('locationid');
+    this.getLocations();
+    console.log(this.locationId);
+    console.log(this.locations);
+   
   }
   
   hideButton() {
@@ -164,15 +178,19 @@ export class MapReviewComponent implements AfterViewInit  {
   }
 
   private loadMap(): void {
+   
+    this.isLoaded = true;
+    
     this.map = new L.Map('map').locate({setView: true, maxZoom: 15});
     this.makCirOnCurPos();
     this.addTileLayer();
+    console.log("befor");
+    console.log(this.latLngCorners);
    /*  const icon = this.createIcon("marker.png", "red"); */
     this.getCorners();
     this.map.on('moveend', (event: any) => {   
       this.getLocations();
     });
-    
     this.map.on('click',  (e: any) => {
       console.log(this.sidebarOpen);
       if(this.sidebarOpen){
@@ -242,6 +260,12 @@ export class MapReviewComponent implements AfterViewInit  {
         }else{
           this.locationsIsEmpty = true;
         }
+        if(this.isLoaded && this.locationId !== '0'){
+          this.clikOnLocation(+this.locationId);
+          this.locationId = 0;
+        }
+        this.isLoaded = false;
+        
       },
       error: (err) => {
         console.log(err);
@@ -266,11 +290,19 @@ export class MapReviewComponent implements AfterViewInit  {
   }
 
   clikOnLocation(loc: any){
+    if(this.isMarkerCreated){
+      this.map.removeLayer(this.marker);
+      this.isEnabled = true;
+    }
     for(let i of this.locations){
-      if(loc.id === i.id /* i.latt */ /* && loc.long === i.long */){
+      if(loc === i.id /* i.latt */ /* && loc.long === i.long */){
+        console.log("Hosien");
         this.location = i;
-        this.locId = i.id;
-        this.reviews = i.reviews.reverse();
+
+        //this.locId = i.id;
+        this.locId = loc.toString();
+        this.reviews = i.reviews;
+
         for(let review of this.reviews){
           console.log(review);
           if(!review.picture.includes(this.baseUrl)) {
@@ -294,6 +326,7 @@ export class MapReviewComponent implements AfterViewInit  {
       console.log("ya aba abd allah");
     },3000)
     console.log(this.location);
+   
   }
 
   private createIcon(iconName: any, iconColor: any) {

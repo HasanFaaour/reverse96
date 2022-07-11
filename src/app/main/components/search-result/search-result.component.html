@@ -1,0 +1,30 @@
+<p>search-result works!</p>
+<app-right-sidebar></app-right-sidebar>
+<div class="arrow" (click)="back()"><mat-icon>arrow_back</mat-icon></div>
+
+
+ 
+<div class="container">
+<div class="container-title">Locations</div>   
+<div *ngFor="let location of locations" class="locations-container">
+  <img [src]="location.picture" style="width: 74px; height: 74px; border-radius: 10px;">
+  <div class="loc-des">
+      <div class="title" (click)="navigateToMap(location.id)">{{location.name}}</div>
+      <div class="row">{{location.no_of_likes}} likes</div>
+      <div class="row">{{location.no_of_reviews}} reviews</div>
+  </div>
+</div>
+</div>
+
+<div class="container">
+<div class="container-title">Reviews</div> 
+<div *ngFor="let review of reviews" class="locations-container">
+  <img [src]="review.picture" style="width: 74px; height: 74px; border-radius: 10px;">
+  <div class="loc-des">
+      <div class="title">{{review.title}}</div>
+      <div class="row">{{review.liked_by.length}} likes</div>
+      <div class="row"></div>
+  </div>
+</div>
+</div>   
+
