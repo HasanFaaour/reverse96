@@ -16,9 +16,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { LogoutComponent } from './components/logout/logout.component';
+import { MapReviewComponent } from './components/map-review/map-review.component';
+import { AddPlaceComponent } from './components/add-place/add-place.component';
 import { AddReviewComponent } from './components/add-review/add-review.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ChatInfoComponent } from './components/chat-info/chat-info.component';
 import { NotificationComponent } from './components/notification/notification.component';
+import { UserInfoComponent } from './components/user-info/user-info.component';
+import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
+import { ReviewDetailsComponent } from './components/review-details/review-details.component';
+
+import { AppComponent } from '../app.component';
+import { ComponentsComponent } from './components/components.component';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,9 +35,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatInputModule } from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
-import { ComponentsComponent } from './components/components.component';
-import { MapReviewComponent } from './components/map-review/map-review.component';
-import { AppComponent } from '../app.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -37,18 +43,19 @@ import {MatListModule} from '@angular/material/list';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatBadgeModule} from '@angular/material/badge';
-import {MatTabsModule} from '@angular/material/tabs'
-import { UserInfoComponent } from './components/user-info/user-info.component';
-import { AddPlaceComponent } from './components/add-place/add-place.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatButtonToggleModule} from '@angular/material/button-toggle'
+
 
 import { NgxPhotoEditorModule } from 'ngx-photo-editor';
-
 import { NgbAlertModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { ReviewDetailsComponent } from './components/review-details/review-details.component';
+
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from '../app-routing.module';
+
 import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 import { SearchResultComponent } from './components/search-result/search-result.component';
+
 
 const routes: Routes = [
   {
@@ -138,6 +145,7 @@ const routes: Routes = [
     AddReviewComponent,
     ComponentsComponent,
     ChatComponent,
+    ChatInfoComponent,
     MapReviewComponent,
     UserInfoComponent,
     AddPlaceComponent,
@@ -175,6 +183,7 @@ const routes: Routes = [
     MatTooltipModule,
     MatBadgeModule,
     MatTabsModule,
+    MatButtonToggleModule,
     FormsModule,
     NgxPhotoEditorModule,
     MatProgressSpinnerModule,

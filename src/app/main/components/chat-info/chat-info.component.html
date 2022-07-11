@@ -1,0 +1,239 @@
+<!-- Displaying Group Info  -->
+<mat-card class="dialog display-info" *ngIf="isGroup && !editing" >
+    <mat-card-header>
+
+        <mat-card-title class="title" >
+            {{data.chatInfo?.name}}
+        </mat-card-title>
+
+        <mat-card-subtitle>
+            {{data.chatInfo?.participants?.length}} member{{data.chatInfo && data.chatInfo.participants && data.chatInfo.participants.length > 1?'s':''}}
+        </mat-card-subtitle>
+
+        <img mat-card-avatar class="avatar" [src]="displayedImage" (click)="display(displayedImage)" >
+
+        <button mat-icon-button class="options" [matMenuTriggerFor]="optionsMenu" ><mat-icon fontIcon="outlined" >more_vert</mat-icon></button>
+
+    </mat-card-header>
+
+    <mat-divider class="header-divider" ></mat-divider>
+
+    <mat-card-content class="content" >
+
+        <div class="desc-area" >
+            <div class="desc-title" >Description</div>
+            <div class="desc-text" > {{data.chatInfo?.description}} </div>
+        </div>
+
+        <hr class="desc-divider" />
+
+        <div class="members-title" >Group Members</div>
+
+        <mat-action-list class="members-list" >
+            <button mat-list-item mat-dialog-close="hi" class="members-item" *ngFor="let member of members" [routerLink]="'/user/'+member.username" ><img mat-list-avatar [src]="member.image" /> <div class="member-username" >{{member.username}}</div> </button>
+        </mat-action-list>
+
+    </mat-card-content>
+</mat-card>
+
+<!-- Editing Group -->
+<mat-card class="dialog edit-info" *ngIf="isGroup && editing" >
+    <mat-card-header>
+
+        <mat-card-title class="title" >
+
+            <!-- Group Name Input -->
+            <mat-form-field class="edit-title-ff">
+                <mat-label *ngIf="groupName.invalid" >
+                    Group Name
+                </mat-label>
+                <input class="edit-title" matInput type="text" [formControl]="groupName" spellcheck="false" >
+            </mat-form-field>
+        </mat-card-title>
+
+        <!-- Group Image -->
+        <input #Input type="file" (input)="checkImage($event)" class="file-input" accept="image/*" />
+        <input type="image" mat-card-avatar class="avatar edit-avatar" [class]="!groupImage? 'default': ''" [src]="displayedImage" (click)="Input.click()" >
+
+        <button mat-icon-button class="options" [matMenuTriggerFor]="optionsMenu" ><mat-icon fontIcon="outlined" >more_vert</mat-icon></button>
+
+    </mat-card-header>
+
+    <mat-divider class="header-divider" ></mat-divider>
+
+    <mat-card-content class="content" >
+        
+        <!-- Description -->
+        <mat-form-field class="desc-ff" appearance="outline" >
+            <mat-label>Description</mat-label>
+            <textarea matNativeControl class="desc-text" [formControl]="groupDescription" ></textarea>
+        </mat-form-field>
+
+        <hr class="desc-divider"/>
+
+        <!-- Members -->
+        <div class="members-title" >Group Members</div>
+
+        <mat-selection-list [formControl]="groupMembers" class="members-list" >
+            <mat-list-option class="members-item" *ngFor="let user of data?.mutuals" [value]="user.username" [disabled]="!newGroup && data.chatInfo.participants.includes(user.username)" ><div><img mat-card-avatar class="member-image" [src]="user.picture"> {{user.username}}</div></mat-list-option>
+        </mat-selection-list>
+
+    </mat-card-content>
+
+    <!-- Actions -->
+    <mat-card-actions class="actions-area" align="end" >
+        <button class="action-button save-button" *ngIf="!newGroup" mat-button [disabled]="groupName.invalid || groupMembers.value.length < 1" (click)="save()" >Save Changes</button>
+        <button class="action-button create-button" *ngIf="newGroup" mat-button [disabled]="groupName.invalid || groupMembers.value.length < 1" (click)="create()" >Create Group</button>
+        <button class="action-button cancel-button" mat-button (click)="cancelEdit()" >Cancel</button>
+    </mat-card-actions>
+
+</mat-card>
+
+<!-- User Info -->
+<mat-card class="dialog display-info" *ngIf="!isGroup && !editing" >
+
+    <mat-card-header>
+
+        <mat-card-title class="title" >
+            {{user?.name}}
+        </mat-card-title>
+
+        <mat-card-subtitle>
+            {{user?.username}}
+        </mat-card-subtitle>
+        
+        <img mat-card-avatar class="avatar" [src]="user?.image" (click)="display(user?.image)" />
+
+        <button mat-icon-button class="options" [matMenuTriggerFor]="optionsMenu" ><mat-icon fontIcon="outlined" >more_vert</mat-icon></button>
+
+    </mat-card-header>
+
+    <mat-divider class="header-divider" ></mat-divider>
+
+    <mat-card-content class="content" >
+
+        <div class="desc-area" >
+            <div class="desc-title" >Bio</div>
+            <div class="desc-text" > {{user?.bio}} </div>
+        </div>
+
+        <hr class="desc-divider" />
+
+        <div class="members-title" >{{user?.username}}'s Followings</div>
+
+        <mat-action-list class="members-list" *ngIf="user?.is_public" >
+            <button mat-list-item mat-dialog-close="" class="members-item" *ngFor="let member of user?.followings" [routerLink]="'/user/'+member.username" ><img mat-list-avatar [src]="userInfoService.server + member.picture" /> <div class="member-username" >{{member.username}}</div> </button>
+        </mat-action-list>
+
+        <div *ngIf="!user?.is_public" style="color: gray;" >You can't see {{user?.username}}'s followings, becauser their account is private.</div>
+
+    </mat-card-content>
+</mat-card>
+
+<!-- Editing User Profile -->
+<mat-card class="dialog edit-info" *ngIf="!isGroup && editing" >
+    <mat-card-header>
+
+        <mat-card-title class="title" >
+
+            <!-- User Username Input -->
+            <!-- <mat-form-field class="edit-title-ff">
+                <mat-label *ngIf="userUsername.invalid" >
+                    Username
+                </mat-label>
+                <input class="edit-title" matInput type="text" [formControl]="userUsername" spellcheck="false" >
+            </mat-form-field> -->
+            {{user.username}}
+        </mat-card-title>
+
+        <!-- User Image -->
+        <input #Input type="file" (input)="checkImage($event)" class="file-input" accept="image/*" />
+        <input type="image" mat-card-avatar class="avatar edit-avatar" [class]="!groupImage? 'default': ''" [src]="displayedImage" (click)="Input.click()" >
+
+        <button mat-icon-button class="options" [matMenuTriggerFor]="optionsMenu" ><mat-icon fontIcon="outlined" >more_vert</mat-icon></button>
+
+    </mat-card-header>
+
+    <mat-divider class="header-divider" ></mat-divider>
+
+    <mat-card-content class="content" >
+        
+        <!-- Description -->
+        <mat-form-field class="desc-ff" appearance="outline" >
+            <mat-label>Bio</mat-label>
+            <textarea matNativeControl class="desc-text" [formControl]="userBio" ></textarea>
+        </mat-form-field>
+
+        <hr class="desc-divider"/>
+
+        <!-- Info -->
+        <div class="members-title" >Personal Information</div>
+
+        <mat-form-field class="edit-user-ff edit-user-fname-ff">
+            <mat-label >
+                Full Name
+            </mat-label>
+            <input class="edit-user-fname" matInput type="text" [formControl]="userFullName" spellcheck="false" >
+            <mat-error *ngIf="userFullName.touched && userFullName.dirty && userFullName.invalid" >
+                Full name has to be between 3 to 15 characters.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="edit-user-ff edit-user-fname-ff">
+            <mat-label >
+                Email
+            </mat-label>
+            <input class="edit-user-ff edit-user-email-ff" matInput type="email" [formControl]="userEmail" spellcheck="false" >
+            <mat-error *ngIf="userEmail.touched && userEmail.dirty && userEmail.invalid" >
+                Please enter a valid email address.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="edit-user-ff edit-user-pnumber-ff">
+            <mat-label >
+                Phone Number
+            </mat-label>
+            <input class="edit-user-pnumber" matInput type="tel" [formControl]="userPhoneNumber" spellcheck="false" >
+            <mat-error *ngIf="userPhoneNumber.touched && userPhoneNumber.dirty && userPhoneNumber.invalid" >
+                Please enter a valid phone number.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="edit-user-ff edit-user-address-ff">
+            <mat-label >
+                Address
+            </mat-label>
+            <textarea class="edit-user-address" matInput [formControl]="userAddress" spellcheck="false" ></textarea>
+            <mat-error *ngIf="userAddress.touched && userAddress.dirty && userAddress.invalid" >
+                Full name has to be between 10 to 115 characters.
+            </mat-error>
+        </mat-form-field>
+
+    </mat-card-content>
+
+    <!-- Actions -->
+    <mat-card-actions class="actions-area" align="end" >
+        <button class="action-button confirm-button" mat-button (click)="confirm()" >Confirm Changes</button>
+        <button class="action-button cancel-button" mat-button (click)="cancelEdit()" >Cancel</button>
+    </mat-card-actions>
+
+</mat-card>
+
+<!-- Options Menu -->
+<mat-menu #optionsMenu="matMenu" >
+    <button mat-menu-item *ngIf="isGroup && !editing" (click)="editing = true;" >Edit Group</button>
+    <button mat-menu-item *ngIf="isGroup && editing && !newGroup" [disabled]="groupName.invalid || groupMembers.value.length < 1" (click)="save()" >Save Changes</button>
+    <button mat-menu-item *ngIf="isGroup && editing && newGroup" [disabled]="groupName.invalid || groupMembers.value.length < 1" (click)="create()" >Create Group</button>
+    <button mat-menu-item mat-dialog-close="" *ngIf="!isGroup && !editing" [routerLink]="'user/'+user?.username">Visit Profile</button>
+    <button mat-menu-item *ngIf="!isGroup && user?.username == data.username && !editing" (click)="editing=true" >Edit Profile</button>
+    <button mat-menu-item *ngIf="!isGroup && editing" (click)="confirm()" >Confirm Changes</button>
+    <button mat-menu-item *ngIf="editing" (click)="cancelEdit()" >Cancel</button>
+</mat-menu>
+
+<!-- Photo Cropper -->
+<ngx-photo-editor
+    [imageChangedEvent]="cropImage"
+    (imageCropped)="checkImage($event, 'crop')"
+    [aspectRatio]="0"
+    [viewMode]="0"
+></ngx-photo-editor>

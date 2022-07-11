@@ -54,13 +54,10 @@ export class SideBarComponent implements OnInit {
     this.userInfo.getUserInfo().subscribe( {
       next: (response: any) => {
         this.username = response.message.username;
-        if (this.notificationService.isActive) {
-          this.trackNotifications();
-        }
-        else {
-          this.notificationService.connect(this.username);
-          this.trackNotifications();
-        }
+        console.log('(sied-bar call) Active State: '+this.notificationService.isActive);
+                
+        this.trackNotifications();
+        
       },
       error: (err) => {
         if (err.status == 401) {
@@ -87,20 +84,42 @@ export class SideBarComponent implements OnInit {
       return
     }
 
-    this.notificationService.observe.subscribe({
+    if (this.notificationService.isActive) {
+      this.notificationService.observe.subscribe({
 
-      next: (mess) => {
-        console.log("mess:",this.notificationService.notifications.count);
-        // if (mess.type == 'message') {
-        this.notificationCount = this.notificationService.notifications.count;
-         
-      },
+        next: (message) => {
+          console.log("(side-bar) next: ",message);
+          if (['message','fetch'].includes(message.type)) {
+            this.notificationCount = this.notificationService.notifications.count;
+            console.log("notif count: ", this.notificationCount);
+          }
+          
+        },
 
-      error: (err) => {
-        console.log(err);
-      }
+        error: (err) => {
+          console.log(err);
+        }
 
-    })
+      });
+    }
+
+    else {
+      this.notificationService.connect(this.username)?.subscribe({
+
+        next: (message) => {
+          console.log("(side-bar) next: ",message)
+          if (['message','fetch'].includes(message.type)) {
+            this.notificationCount = this.notificationService.notifications.count;
+            console.log("notif count: ", this.notificationCount);
+          }
+        },
+
+        error: (err) => {
+          console.log(err);
+        }
+
+      });
+    }
   }
 
 }

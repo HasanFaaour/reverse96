@@ -244,17 +244,23 @@ export class AddReviewComponent implements OnInit {
     //Remove the error message
     this.errorStatus = false;
 
-    let textFieldStyle:any = document.getElementById('text-field')!.style;
+    let textFieldStyle = document.getElementById('text-field')!.style;
     //Check if the user has manually changed the text field's size (don't change it in that case)
     if (['', '130px'].includes(textFieldStyle.getPropertyValue('height'))){
 
       if (this.text!.value){
         //maximize the text field's size
         textFieldStyle.setProperty('height','130px');
+        textFieldStyle.setProperty('transition','height .1s ease-in-out');
+        setTimeout( () => {
+          textFieldStyle.removeProperty('transition')
+        },200);
 
       }else{
         //minimize the text field's size
         textFieldStyle.setProperty('height','');
+        textFieldStyle.setProperty('transition','height .1s ease-in-out');
+
       }
     }
   }

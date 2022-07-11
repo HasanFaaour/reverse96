@@ -1,8 +1,20 @@
+import { CommonModule } from '@angular/common';
 import { HttpEventType } from '@angular/common/http';
 import { DebugElement} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { NgxPhotoEditorModule } from 'ngx-photo-editor';
 import { Observable, of, Subscriber } from 'rxjs';
 import { HttpRequestService } from 'src/app/http-service.service';
 
@@ -53,8 +65,23 @@ describe('AddReviewComponent', () => {
     await TestBed.configureTestingModule({
 
       declarations: [ AddReviewComponent ],
-      providers: [{provide: Router, useValue: routerStub}, {provide: HttpRequestService, useValue: httpStub}]
-
+      providers: [{provide: Router, useValue: routerStub}, {provide: HttpRequestService, useValue: httpStub}],
+      imports: [
+        MatMenuModule,
+        MatIconModule,
+        MatDividerModule,
+        MatProgressSpinnerModule,
+        MatInputModule,
+        MatCardModule,
+        MatButtonToggleModule,
+        MatTooltipModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        NgxPhotoEditorModule,
+        BrowserAnimationsModule,
+        NoopAnimationsModule
+      ]
     })
     .compileComponents();
   });
@@ -283,8 +310,6 @@ describe('AddReviewComponent', () => {
     expect(component.image?.value).toBeFalsy();
   });
   
-
-
   it('(Validators: General) should function', () => {
     component.title?.setValue(validTitle);
     component.image?.setValue(validImage);
@@ -359,7 +384,6 @@ describe('AddReviewComponent', () => {
 
   });
 
-  
   it("(Request: Fail) should show proper error if location id isn't valid", () => {
     //Signal to our stub to throw an error containing location, when it's subscribed to
     message = {type: 'error', response: {error: {location: "bad location id"}, status: 400}};
@@ -383,8 +407,6 @@ describe('AddReviewComponent', () => {
     expect(component.errorStatus).toBeTrue();
     expect(component.errorMessage).toContain("unavailable");
   })
-
-  
 
 it("(Requests: Success) should show success message if it recieves a successful resutl", () => {
     //Signal to our stub to return a successful response, when subscribed to

@@ -17,7 +17,7 @@ export class HttpRequestService {
   constructor(private hC : HttpClient,
               private baseSer: BaseService)
   {
-    this.baseUrl = this.baseSer.server;  
+    this.baseUrl = this.baseSer.apiServer;  
   }
 
   // Defining the login post request method
@@ -109,9 +109,7 @@ export class HttpRequestService {
     return this.hC.post(`${this.baseUrl}/api/unfollow-user`,{user: username},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'});
   }
 
-  acceptFollow (username:string, accept: boolean): any {
-    console.log('accept',accept,username);
-    
+  acceptFollow (username:string, accept: boolean): any {    
     this.hC.post(`${this.baseUrl}/api/accept-follow-request`,{from_user: username, accept: accept},{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType:'json'}).subscribe();
   }
 

@@ -99,8 +99,9 @@ export class MapReviewComponent implements AfterViewInit  {
   { 
     alertConfig.type = 'success';
     alertConfig.dismissible = false;
-    this.baseUrl = this.baseSer.server;
-  
+
+    this.baseUrl = this.baseSer.apiServer;
+
   }
   
   addReview() {
