@@ -63,7 +63,7 @@
   </mat-card>
 
   <!-- Cahnge Review Display Model -->
-  <mat-button-toggle-group class="review-model-select" [(ngModel)]="reviewDisplayModel" [disabled]="!(public || following)" >
+  <mat-button-toggle-group class="review-model-select" [class]="view != 0?'hide':''" [(ngModel)]="reviewDisplayModel" [disabled]="!(public || following)" >
     <mat-button-toggle value="pin" matTooltip="Pin Model" [matTooltipDisabled]="!(public || following)" ><mat-icon>push_pin</mat-icon></mat-button-toggle>
     <mat-button-toggle value="extendButton" matTooltip="Extend Button Model" [matTooltipDisabled]="!(public || following)" ><mat-icon>notes</mat-icon></mat-button-toggle>
     <mat-button-toggle value="alwaysShowDes" matTooltip="Always Show" [matTooltipDisabled]="!(public || following)" ><mat-icon>visibility</mat-icon></mat-button-toggle>

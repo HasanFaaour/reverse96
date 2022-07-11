@@ -45,13 +45,13 @@ export class SearchResultComponent implements OnInit {
         this.reviews = error.error.reviews;
         this.locations = error.error.locations;
         for(let l of this.locations){
-          if(!l.picture.includes(this.baseSer.server)){
-            l.picture = `${this.baseSer.server}${l.picture}`;
+          if(!l.picture.includes(this.baseSer.wsServer)){
+            l.picture = `${this.baseSer.wsServer}${l.picture}`;
           }
         }
         for(let r of this.reviews){
-          if(!r.picture.includes(this.baseSer.server)){
-            r.picture = `${this.baseSer.server}${r.picture}`;
+          if(!r.picture.includes(this.baseSer.wsServer)){
+            r.picture = `${this.baseSer.wsServer}${r.picture}`;
           }
         }
         console.log(this.reviews);

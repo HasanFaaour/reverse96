@@ -102,6 +102,10 @@
     transform: scale(.5);
   }
 
+  .review-model-select.hide {
+    display: none;
+  }
+
   .view-area {
     display: inline-block;
     margin-left: 20px;
@@ -306,6 +310,10 @@
   .follow-users-area {
     border: green 1px solid;
   } */
+
+  .follow-users-area h4 {
+    color: rgb(81, 187, 248);
+  }
 
    .single-follow-user {
     display: inline-block; 

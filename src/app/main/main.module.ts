@@ -25,6 +25,7 @@ import { NotificationComponent } from './components/notification/notification.co
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
 import { ReviewDetailsComponent } from './components/review-details/review-details.component';
+import { SearchResultComponent } from './components/search-result/search-result.component';
 
 import { AppComponent } from '../app.component';
 import { ComponentsComponent } from './components/components.component';
@@ -53,8 +54,6 @@ import { NgbAlertModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap'
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from '../app-routing.module';
 
-import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
-import { SearchResultComponent } from './components/search-result/search-result.component';
 
 
 const routes: Routes = [
