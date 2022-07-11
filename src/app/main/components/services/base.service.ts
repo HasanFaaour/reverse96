@@ -5,9 +5,9 @@ import { Injectable } from '@angular/core';
 })
 export class BaseService {
 
-  apiUrl = "http://localhost:8000";
+  //apiUrl = "http://localhost:8000";
   wsUrl = "ws://localhost:8000";
-  //baseUrl = "https://reverse96-reverse96.fandogh.cloud"
+  apiUrl = "https://reverse96-reverse96.fandogh.cloud"
 
 
   constructor() { }
