@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpRequestService } from 'src/app/http-service.service';
 import { LocationsService } from '../../services/locations.service';
 import { UserInfoService } from '../../services/user-info.service';
@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router,
               private http: HttpRequestService,
               private userInfo: UserInfoService,
+              private activatedRoute: ActivatedRoute,
               private locationSer: LocationsService,
               private dialog: MatDialog) 
   {
@@ -107,6 +108,7 @@ export class HomeComponent implements OnInit {
     })
   }
 
+ 
   /*for delete */
  /*  onClick() {
     this.isClicked = !this.isClicked;
@@ -214,6 +216,20 @@ export class HomeComponent implements OnInit {
     })
   }
 
+ /*  search() { 
+    console.log(this.searchText);
+    this.locationSer.generalSearch(this.searchText).subscribe({
+      next: (data: any) => {
+        //console.log(data);
+      },
+      error:(error) => {
+        console.log(error);
+        this.list = error.error.reviews;
+        console.log(this.list);
+
+      }
+    });
+  } */
  /*  search() {
     for(let i=0; i<this.list.length; i++){
 

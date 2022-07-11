@@ -1,6 +1,6 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
 <mat-progress-bar *ngIf="show" mode="indeterminate"></mat-progress-bar>
-<div class = "sidenav" >
+<div *ngIf="isLogin" class = "sidenav" >
     <a class="side-icon" routerLink="/home" routerLinkActive="active">
         <mat-icon class="material-icons-outlined"> home</mat-icon>
         <span class="ic">Home</span>
@@ -13,7 +13,7 @@
         <mat-icon fontIcon="outline" [matBadge]="notificationCount" matBadgePosition="before" matBadgeColor="accent" matBadgeSize="small" [matBadgeHidden]="notificationCount<1" >notifications_none</mat-icon>
         <span class="ic">Notifications</span>
     </a>
-    <a routerLink="/map-reviws" routerLinkActive="active" *ngIf="isLogin" routerLinkActive="active">
+    <a routerLink="/map-reviws/0" routerLinkActive="active" *ngIf="isLogin" routerLinkActive="active">
         <mat-icon class="material-icons-outlined">place</mat-icon>
         <span class="ic">Map</span>
     </a>

@@ -24,11 +24,11 @@
     visibility: hidden;
   }
 
-  .top-nav .logo {
+  .top-nav .log {
     margin-top: 8px;
-    margin-left: 11%;
-    color: rgb(104, 232, 255);
-    font-size: 20px;
+    margin-left: 2%;
+    color: rgb(63, 63, 63);
+    font-size: 23px;
     font-weight: 500;
     float: left;
   }
@@ -44,14 +44,15 @@
     display: inline-block;
   }
   .search-box {
-    width: 86%;
+    width: 89.5%;
     height: 100%;
     margin-bottom: 10px;
     margin-left: 1px;
     display: block;
     background-color: rgb(248, 247, 247);
     border: none;
-    border-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
     padding-left: 15px;
     float: left;
   } 
