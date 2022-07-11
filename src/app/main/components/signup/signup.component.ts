@@ -67,10 +67,9 @@ export class SignupComponent implements OnInit {
         this.processing = false;
 
         if ("message" in response){
-            this.submittedEmail = this.email?.value;
+            this.submittedEmail = this.email!.value;
         }
 
-        sub.unsubscribe();
         return;
       },
 
@@ -99,8 +98,6 @@ export class SignupComponent implements OnInit {
         else {
           this.signupMessage = `Something went wrong. Please contact support.`;
         }
-
-        sub.unsubscribe();
         return;
       }
     });
@@ -111,7 +108,7 @@ export class SignupComponent implements OnInit {
     this.processing = true;
     this.validateStatus = 0;
 
-    let sub = this.Request.validateEmail(this.submittedEmail,this.code?.value).subscribe({
+    let sub = this.Request.validateEmail(this.submittedEmail,this.code!.value).subscribe({
 
       //Sucessful activation
       next: (response) =>{
@@ -126,7 +123,6 @@ export class SignupComponent implements OnInit {
             this.validateMessage = "Congratulations! You can now ";
             this.validateStatus = 1;
 
-            sub.unsubscribe();
             return;
           }
         }
@@ -144,7 +140,6 @@ export class SignupComponent implements OnInit {
           this.validateMessage = "Make sure to enter the correct code."
           this.validateStatus = 2;
 
-          sub.unsubscribe();
           return;
         }
 
@@ -153,14 +148,14 @@ export class SignupComponent implements OnInit {
           console.log("Invalid email/username");
           this.validateMessage = "Invalid action. Please login to your account again."
           this.validateStatus = 2;
-          sub.unsubscribe();
+
           return;
         }
 
         //None of the above / Unexpected error
         this.validateMessage = "Something unexpected happened. Please try again later."
         this.validateStatus = 2;
-        sub.unsubscribe();
+
         return;
       }
     });

@@ -154,7 +154,36 @@
      margin-top: 5px;
      display: inline-block;
      vertical-align: middle;
- }
+    }
+/* 
+    .title2 * {
+      border: green 1px solid;
+    } */
+
+    .notif-count {
+      /* position: absolute; */
+      /* right:15px; */
+      /* top: 17px; */
+      margin-left: auto;
+      margin-right: 20px;
+      margin-top: 5px;
+      color: white;
+      font-size: medium;
+      background-color: rgb(88,99,255);
+      height: 20px;
+      width: max-content;
+      min-width: 20px;
+      border-radius: 10px;
+      display: inline-flex;
+      justify-content: center;
+      padding: 0 5px 0 5px;
+      align-content: center;
+      }
+
+      .num {
+            /* margin-top: -2px; */
+        }
+
  .top-rev .name {
    width: 60%;
    height: 100%;

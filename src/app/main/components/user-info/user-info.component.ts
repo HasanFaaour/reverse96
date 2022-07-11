@@ -5,6 +5,7 @@ import { HttpRequestService } from 'src/app/http-service.service';
 import { BigImage } from '../home/home.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ChatInfoComponent } from '../chat-info/chat-info.component';
+import { ReviewDetailsComponent } from '../review-details/review-details.component';
 
 enum Pinned {
   unset,
@@ -370,6 +371,20 @@ export class UserInfoComponent implements OnInit {
     window.history.pushState("","",`user/${username}`);
     this.ngOnInit(username);
   }
+
+  openPopup (review: any) {
+    let pageValue = [{
+      item: review,
+      title: review.title,
+      text: review.description,
+      picture: review.picture,
+      id: review.id
+    }]
+    const dialogRef = this.dialog.open(ReviewDetailsComponent, {
+      width:'900px', height: 'auto',
+      panelClass: 'custom-dialog-container',
+      data: {pageValue}
+    });  }
 
   display (url: string): void {
     this.dialog.open(BigImage, {data: {url:url}, panelClass: 'full-picture', maxWidth: '97vw', maxHeight: '99vh', backdropClass: 'full-picture-backdrop' });

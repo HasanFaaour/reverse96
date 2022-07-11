@@ -1,5 +1,5 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -20,6 +20,7 @@ export class AddReviewComponent implements OnInit {
   //Input from parent component
   @Input() locationID: string = '-5';
   @Input() locationName: string = "No Location";
+  @Output() reviewAdded = new EventEmitter<string>();
 
   //Defining the logic variables
   userToken :string|null = null;
@@ -121,7 +122,9 @@ export class AddReviewComponent implements OnInit {
             this.successStatus = true;  
             
             //Done
-            this.sub.unsubscribe();
+            setTimeout( () => {
+              this.reviewAdded.emit(JSON.stringify(response));
+            }, 3000);
             return;
           }
         },

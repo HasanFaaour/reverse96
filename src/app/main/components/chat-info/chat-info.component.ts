@@ -38,7 +38,7 @@ export class ChatInfoComponent implements OnInit {
   groupName = new FormControl("",[Validators.required, Validators.minLength(3), Validators.pattern('[A-Za-z0-9 -._()]*')]);
   groupDescription = new FormControl("");
   groupMembers = new FormControl([],[Validators.required]);
-  groupImage: any = null;
+  groupImage: File | null = null;
 
   displayedImage: string = selectImage;
   cropImage: any;
@@ -50,7 +50,7 @@ export class ChatInfoComponent implements OnInit {
   userEmail = new FormControl('',[Validators.required, Validators.email]);
   userUsername = new FormControl('',[Validators.required, Validators.minLength(3), Validators.maxLength(15)]);
   // userPassword = new FormControl('',[Validators.required, Validators.minLength(6), Validators.maxLength(24)]);
-  userImage: any = null;
+  userImage: File | null = null;
 
 
   ngOnInit(): void {

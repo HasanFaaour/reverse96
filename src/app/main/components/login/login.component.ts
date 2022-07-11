@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit {
 
   //Lookin for the '@' character in the "username or e-mail" input to determine if the user is trying to enter a username or an e-mail address 
   checkUserEntry():void{
-    if (this.usermail?.value.includes("@")){
+    if (this.usermail!.value.includes("@")){
       this.userEnteredEmail = true;
     }else{
       this.userEnteredEmail = false;
@@ -96,13 +96,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['home']);
   
         }
-        
-        //Idk (Weird server resonse, Ig?)
-        else{
-          console.log("wrong!");
-          this.problemStatus = 1;
-        }
-        this.sub.unsubscribe();
+                
       },
 
       //Handling the response in case of an unsuccessful request
@@ -115,7 +109,6 @@ export class LoginComponent implements OnInit {
           if (response['error']['message'] == "invalid username or email"){
             this.problem = `${this.userEnteredEmail ? "Email address" : "Username"} doesn't exist.`;
             this.problemStatus = 2;
-            this.sub.unsubscribe();
             return;
 
           }
@@ -124,15 +117,13 @@ export class LoginComponent implements OnInit {
           if (response['error']['message'] == "wrong password"){
             this.problem = "Wrong username or password! Please try again.";
             this.problemStatus = 1;
-            this.sub.unsubscribe();
             return;
 
           }
           
           //Account is not activated
           if (response['error']['message'] == "validate your email"){
-            this.router.navigate(['../signup',{email: this.usermail?.value}]);
-            this.sub.unsubscribe();
+            this.router.navigate(['../signup',{email: this.usermail!.value}]);
             return; 
           }
         }
@@ -140,13 +131,11 @@ export class LoginComponent implements OnInit {
         //None of the above / Unexpected Error
         this.problem = "Something unexpected happened. Please try again later.";
         this.problemStatus = 3;
-        this.sub.unsubscribe;
         return;
         
       },
 
       complete: () => {
-        this.sub.unsubscribe();
         return;
       }
     });

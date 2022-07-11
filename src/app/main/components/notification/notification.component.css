@@ -1,7 +1,7 @@
 .container {
     margin-left: 22%;
     margin-top: 80px;
-    width: 77%;
+    width: 51%;
     /* border: 1px green solid; */
 }
 
@@ -14,6 +14,19 @@
     .notif:hover {
         box-shadow: 0 0 2px 1px black;
     }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 2px 1px gray;
+            margin-right: 10px;
+        }
+
+        .notif:hover .avatar {
+            box-shadow: 0 0 2px 2px #aaf;
+        }
 
         .notif:hover .from {
             color: rgb(88, 99, 255);

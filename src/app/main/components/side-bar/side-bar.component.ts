@@ -85,8 +85,9 @@ export class SideBarComponent implements OnInit {
     }
 
     if (this.notificationService.isActive) {
-      this.notificationService.observe.subscribe({
+      this.notificationCount = this.notificationService.notifications.count;
 
+      this.notificationService.observe.subscribe({
         next: (message) => {
           console.log("(side-bar) next: ",message);
           if (['message','fetch'].includes(message.type)) {

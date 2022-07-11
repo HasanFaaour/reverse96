@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpRequestService } from 'src/app/http-service.service';
 import { LocationsService } from '../../services/locations.service';
+import { NotificationService } from '../../services/notification.service';
 import { UserInfoService } from '../../services/user-info.service';
 
 @Component({
@@ -12,7 +13,7 @@ import { UserInfoService } from '../../services/user-info.service';
 export class RightSidebarComponent implements OnInit {
   topreviews:any[] = [];
   extendedTopreviews:any[] = [];
-  followers: any ;
+  followers: any[] = [];
   extendedFollowers: any = [];
   user: any = [];
 
@@ -28,7 +29,8 @@ export class RightSidebarComponent implements OnInit {
     private router: Router,
     private userInfo: UserInfoService,
     private locationSer: LocationsService,
-    private http: HttpRequestService
+    private http: HttpRequestService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -106,6 +108,7 @@ export class RightSidebarComponent implements OnInit {
         this.user.picture = `${this.baseUrl}${this.user.picture}`;
         this.extendedFollowers = this.user.followers;
         for(let follower of this.extendedFollowers) {
+          follower.notifCount = 0;
           if(!follower.picture.includes(this.baseUrl)) {
             follower.picture = `${this.baseUrl}${follower.picture}`;
           }
@@ -119,11 +122,52 @@ export class RightSidebarComponent implements OnInit {
        }
        console.log("data:");
        console.log(data);
+
+       this.trackNotifications();
       },
       error: (err) => {
         console.log(err.status);
       }
     });
-  } 
+  }
+
+  trackNotifications() {
+    if (this.notificationService.isActive) {
+      let person: any;
+      for (let notif of this.notificationService.notifications.list) {
+        person = this.followers.find((follower) => follower.username == notif.from);
+        if (person) {
+          person.notifCount++;
+        }
+      }
+      this.notificationService.observe.subscribe( {
+        next: (response: any) => {
+          if (response.type == 'message') {
+            let notif = response.data; 
+            person = this.followers.find((follower) => follower.username == notif.from);
+            if (person) person.notifCount++;
+          }
+
+          else if (response.type == 'fetch') {
+            for (let notif of this.notificationService.notifications.list) {
+              person = this.followers.find((follower) => follower.username == notif.from);
+              if (person) person.notifCount++;
+            }
+          }
+        },
+
+        error: (err) => {
+
+        },
+
+        complete: () => {
+          console.log('noti comp');
+        }
+      });
+
+    }
+
+    else this.notificationService.connect(this.user.username);
+  }
 
 }
