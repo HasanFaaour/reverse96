@@ -67,7 +67,7 @@ export class SideBarComponent implements OnInit {
               this.authenticateUser();
             },
             error: (er) => {
-              alert ("Session expired. Please login again.");
+              // alert ("Session expired. Please login again.");
               this.router.navigateByUrl('logout');
             }
           });

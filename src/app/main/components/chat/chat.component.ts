@@ -86,7 +86,7 @@ export class ChatComponent implements OnInit {
 
       //Valid user
       next: (response: any) => {
-        this.timesRefreshed = 0;
+        // this.timesRefreshed = 0;
 
         let info = response.message;
 
@@ -129,27 +129,27 @@ export class ChatComponent implements OnInit {
           //     return;
           //   }
           // }
-          this.timesRefreshed ++;
+        //   this.timesRefreshed ++;
 
-          if (this.timesRefreshed > 3) {
-            alert(`This session is expired (refreshed ${this.timesRefreshed}times). Please login again. `);
-            this.router.navigate(['logout']);
-            return;
-          }
-          this.authService.refresh().subscribe({
-            next: (v) => {
-              this.ngOnInit();
-              return;
-            },
-            error: (er) => {
-              console.log("failed refresh");
-              alert("This session is expired. Please login again.");
-              this.router.navigate(['logout']);
-            }
-          });
-        }
+        //   if (this.timesRefreshed > 3) {
+        //     alert(`This session is expired (refreshed ${this.timesRefreshed}times). Please login again. `);
+        //     this.router.navigate(['logout']);
+        //     return;
+        //   }
+        //   this.authService.refresh().subscribe({
+        //     next: (v) => {
+        //       this.ngOnInit();
+        //       return;
+        //     },
+        //     error: (er) => {
+        //       console.log("failed refresh");
+        //       alert("This session is expired. Please login again.");
+        //       this.router.navigate(['logout']);
+        //     }
+        //   });
+        // }
 
-        else {
+        // else {
           alert(`Authentication error (${response.status}). Please login again.`);
           this.router.navigate(['logout']);
         }
@@ -398,15 +398,15 @@ export class ChatComponent implements OnInit {
           if (response.status == 401){
             // alert('Token expired, please login again! (' + response.status + ')');
             // this.router.navigate(['logout']);
-            this.authService.refresh().subscribe({
-              next: (v) => {
-                console.log('token refreshed');
-                this.getGroupChat(group);
-              },
-              error: (er) => {
-                console.log(`Invalid user: ${member}`);
-              }
-            })
+            // this.authService.refresh().subscribe({
+            //   next: (v) => {
+            //     console.log('token refreshed');
+            //     this.getGroupChat(group);
+            //   },
+            //   error: (er) => {
+            //     console.log(`Invalid user: ${member}`);
+            //   }
+            // })
           }
         },
 

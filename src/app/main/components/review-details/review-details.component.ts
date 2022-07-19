@@ -13,7 +13,7 @@ export class ReviewDetailsComponent implements OnInit {
   fromHomePage: any;
   commentText: string = '';
   comment: any = {comment_text: ""};
-  commentsList: any;
+  commentsList: any[] = [];
 
   showProg = false;
 
@@ -75,7 +75,8 @@ export class ReviewDetailsComponent implements OnInit {
   getComments(id: number){
     this.locSer.getCommentsReview(id).subscribe({
       next: (data: any) => {  
-        this.commentsList = data.message;
+        this.commentsList = data.message as any[];
+        this.commentsList.forEach((comment) => comment.picture = this.locSer.baseUrl2 + comment.picture);
         console.log("comments:")
         console.log(data);
       },

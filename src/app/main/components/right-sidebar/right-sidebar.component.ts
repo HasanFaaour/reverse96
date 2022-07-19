@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { HttpRequestService } from 'src/app/http-service.service';
 import { LocationsService } from '../../services/locations.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserInfoService } from '../../services/user-info.service';
+import { ReviewDetailsComponent } from '../review-details/review-details.component';
 
 @Component({
   selector: 'app-right-sidebar',
@@ -30,7 +32,8 @@ export class RightSidebarComponent implements OnInit {
     private userInfo: UserInfoService,
     private locationSer: LocationsService,
     private http: HttpRequestService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -70,7 +73,7 @@ export class RightSidebarComponent implements OnInit {
   }
 
   getReviews(id: number):void {
-    this.http.getReviews(id).subscribe({
+    this.http.getReviews(2).subscribe({
       next: (response: any) => {
         for (let review of response.message) {
           if(!review.picture.includes(this.baseUrl)) {
@@ -94,19 +97,33 @@ export class RightSidebarComponent implements OnInit {
       },
       error: (error) => {
         if (error.status == 401){
-          alert("Session expired. Please login again.");
+          // alert("Session expired. Please login again.");
           this.router.navigate(['logout']);
         }
       }
     });
   }
 
+  openPopup (review: any) {
+    let pageValue = [{
+      item: review,
+      title: review.title,
+      text: review.description,
+      picture: review.picture,
+      id: review.id
+    }]
+    const dialogRef = this.dialog.open(ReviewDetailsComponent, {
+      width:'900px', height: 'auto',
+      panelClass: 'custom-dialog-container',
+      data: {pageValue}
+    });  }
+
   getFollows() {
     this.userInfo.getUserInfo().subscribe({
       next: (data: any) => {  
         this.user = data.message;
         this.user.picture = `${this.baseUrl}${this.user.picture}`;
-        this.extendedFollowers = this.user.followers;
+        this.extendedFollowers = this.user.followings;
         for(let follower of this.extendedFollowers) {
           follower.notifCount = 0;
           if(!follower.picture.includes(this.baseUrl)) {

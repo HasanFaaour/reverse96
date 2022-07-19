@@ -147,24 +147,24 @@ export class UserInfoComponent implements OnInit {
     },
     error: (err) => {
       console.log(err);
-      if (err.status == 401) {
-        this.httpRequest.refresh().subscribe({
-          next: (v) => {
-            console.log("token ref");
-            this.ngOnInit();
-            return;
+      // if (err.status == 401) {
+      //   this.httpRequest.refresh().subscribe({
+      //     next: (v) => {
+      //       console.log("token ref");
+      //       this.ngOnInit();
+      //       return;
             
-          },
-          error: (er) => {
-            alert('Invalid authorization. Please login again.');
-            this.router.navigateByUrl('logout');
-            return;
-          }
+      //     },
+      //     error: (er) => {
+      //       alert('Invalid authorization. Please login again.');
+      //       this.router.navigateByUrl('logout');
+      //       return;
+      //     }
 
-        });
-        return;
-      }
-      alert(`Invalid auth(${err.status})`);
+      //   });
+      //   return;
+      // }
+      // alert(`Invalid auth(${err.status})`);
       this.router.navigateByUrl('logout');
       return;
     }
@@ -269,7 +269,7 @@ export class UserInfoComponent implements OnInit {
         review.likes -= d;
         review.liked = !review.liked;
         if (error.status == 401) {
-          alert("Token expired. Please login again.");
+          // alert("Token expired. Please login again.");
           this.router.navigate(['logout']);
         }
       }

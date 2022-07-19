@@ -24,8 +24,8 @@ export class NotificationService {
   apiUrl: string;
   wsUrl: string;
 
-  private notificationCount = -5;
-  private notificationList: any[] = [];
+  public notificationCount = -5;
+  public notificationList: any[] = [];
 
   private obs: Observable<{type: string, data: any}> = new Observable();
 

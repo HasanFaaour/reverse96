@@ -101,6 +101,7 @@
     background-color: rgb(163, 33, 33);
   }
   .icon-list .ico {
+    cursor: pointer;
     margin-right: 4%;
     margin-top: 10px;
   }

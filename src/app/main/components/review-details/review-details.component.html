@@ -10,8 +10,8 @@
           </div>
           <hr>
           <div *ngFor="let c of commentsList" class="comment-content">
-            <img src="assets/images/pr9.png" style="width: 36px; height: 36px; border-radius: 100px; float: left;" >  
-            <div class="text"><span class="auth">{{c.auth}} </span> {{c.text}}</div>
+            <img [src]="c.picture" style="width: 36px; height: 36px; border-radius: 100px; float: left;" >  
+            <div class="text"><span class="auth">{{c.auth}} </span> {{c.comment_text}}</div>
           </div>
         </div>
         <div class="icon-list">

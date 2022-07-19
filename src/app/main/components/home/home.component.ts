@@ -101,7 +101,7 @@ export class HomeComponent implements OnInit {
         item.likes -= d;
         item.liked = !item.liked;
         if (error.status == 401) {
-          alert("Token expired. Please login again.");
+          // alert("Token expired. Please login again.");
           this.router.navigate(['logout']);
         }
       }
@@ -137,7 +137,7 @@ export class HomeComponent implements OnInit {
         },
         error: (error) => {
           this.serverConnection = 'lost';
-          alert (`Authentication problem (${error.status})`);
+          // alert (`Authentication problem (${error.status})`);
           this.router.navigate(['logout']);
         }
       });
@@ -146,7 +146,7 @@ export class HomeComponent implements OnInit {
   }
 
   getReviews(id: number) {
-    this.http.getReviews(id).subscribe({
+    this.http.getReviews(1).subscribe({
       next: (response: any) => {
         this.serverConnection = "connected"
         for (let review of response.message) {
@@ -165,7 +165,7 @@ export class HomeComponent implements OnInit {
       error: (error) => {
         this.serverConnection = 'lost';
         if (error.status == 401){
-          alert("Session expired. Please login again.");
+          // alert("Session expired. Please login again.");
           this.router.navigate(['logout']);
         }
       }
@@ -209,7 +209,7 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => {
         if (error.status == 401) {
-          alert("Token expired. Please login again.");
+          // alert("Token expired. Please login again.");
           this.router.navigateByUrl('logout');
         }
       }
