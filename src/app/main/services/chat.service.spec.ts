@@ -150,7 +150,7 @@ describe('ChatService', () => {
     // let sp = jasmine.createSpyObj(WebSocket.prototype,['constructor'])
     // sw = jasmine.createSpy('base');
     // spyOn(window, 'WebSocket').and.callFake((url) => new WebSocketStub(url));
-    WebSocket = WebSocketStub;
+    WebSocket = WebSocketStub as any;
   });
 
   it ('should be created', () => {
