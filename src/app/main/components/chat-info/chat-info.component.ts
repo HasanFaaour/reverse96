@@ -1,10 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { UserInfoService } from '../../services/user-info.service';
 
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+import { Observable } from 'rxjs';
+
+import { UserInfoService } from '../../services/user-info.service';
 import { BigImage } from '../home/home.component';
 
 const selectImage = "assets/images/icons8-add-image-48.png";

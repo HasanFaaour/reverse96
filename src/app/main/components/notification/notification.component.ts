@@ -1,4 +1,5 @@
-import { AfterContentChecked, AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, OnInit } from '@angular/core';
+
 import { HttpRequestService } from 'src/app/http-service.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserInfoService } from '../../services/user-info.service';
@@ -8,7 +9,7 @@ import { UserInfoService } from '../../services/user-info.service';
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css']
 })
-export class NotificationComponent implements AfterContentChecked {
+export class NotificationComponent implements OnInit, AfterContentChecked {
 
   notificationList: any[] = [];
 

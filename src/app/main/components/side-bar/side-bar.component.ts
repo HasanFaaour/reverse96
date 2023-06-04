@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
-import {MatProgressBarModule, ProgressBarMode} from '@angular/material/progress-bar';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+
+import { Subscription } from 'rxjs';
+
 import { HttpRequestService } from 'src/app/http-service.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserInfoService } from '../../services/user-info.service';

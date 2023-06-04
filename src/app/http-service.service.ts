@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subscriber, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpContext} from '@angular/common/http';
+
+import { Observable } from 'rxjs';
+
 import { BaseService } from './main/components/services/base.service';
+import { AUTHORIZE } from './main/http-contexts/http-contexts';
 
 
 @Injectable({

@@ -1,34 +1,40 @@
 <body>
-<mat-progress-bar class="connection-bar" mode="indeterminate" *ngIf="serverConnection == 'connecting'">Connecting to server</mat-progress-bar>
-<div class="connection-fail" *ngIf="serverConnection == 'lost' " >Connection to server failed.</div>
-<div class="blank-1" ></div>
-<div *ngFor="let item of list; let i = index;" class="place-card">
-  <div class="title">{{item.title}}</div><div class="author">By <a routerLink="../userInfo/{{item.username}}">{{item.username}}</a></div>
-  <div class="place-image">
-    <input type="image" (click)="display(item.picture)" [src]="item.picture" style="height: 100%; width: 100%; border-radius: 8px; object-fit: cover;">
-  </div>
-  <div class="icon-list">
-    <a *ngIf ="!item.liked" (click)="onLike(item)" class="ico"><span class="fav1"><mat-icon >favorite_border</mat-icon></span></a>
-    <a *ngIf ="item.liked" (click)="onLike(item)"  class="ico"><span class="fav2"><mat-icon >favorite</mat-icon></span></a>
-    <a (click)="openDialog(item , item.title ,item.text , item.picture , item.id)" class="ico"><mat-icon >chat_bubble_outline</mat-icon></a>
-    <a href="#" class="ico"><mat-icon >share</mat-icon></a>
-  </div>
-  <div class="info">
-    <p class="likes">{{item.likes}} likes </p>
-    <div class="text-content" [ngClass]="{'limitTextHeight': !item.isReadMore }">
-      {{item.text}}
+  <mat-progress-bar class="connection-bar" mode="indeterminate" *ngIf="serverConnection == 'connecting'">Connecting to
+    server</mat-progress-bar>
+  <div class="connection-fail" *ngIf="serverConnection == 'lost' ">Connection to server failed.</div>
+  <div class="blank-1"></div>
+  <div *ngFor="let item of list; let i = index;" class="place-card">
+    <div class="title">{{item.title}}</div>
+    <div class="author">By <a routerLink="../userInfo/{{item.username}}">{{item.username}}</a></div>
+    <div class="place-image">
+      <input type="image" (click)="display(item.picture)" [src]="item.picture"
+        style="height: 100%; width: 100%; border-radius: 8px; object-fit: cover;">
     </div>
-    <a class="view-more" (click)="showAllText(i)">
-      {{ isReadMore ? 'View more': 'View less' }}
-    </a>
-    <div class="input-container">
-    <input type="text" class="add-comment" placeholder="Add a comment" [(ngModel)]="item.newComment"  >
-    <a (click)="addComent(item)" ><mat-icon>add</mat-icon></a>
+    <div class="icon-list">
+      <a *ngIf="!item.liked" (click)="onLike(item)" class="ico"><span
+          class="fav1"><mat-icon>favorite_border</mat-icon></span></a>
+      <a *ngIf="item.liked" (click)="onLike(item)" class="ico"><span
+          class="fav2"><mat-icon>favorite</mat-icon></span></a>
+      <a (click)="openDialog(item , item.title ,item.text , item.picture , item.id)"
+        class="ico"><mat-icon>chat_bubble_outline</mat-icon></a>
+      <a href="#" class="ico"><mat-icon>share</mat-icon></a>
+    </div>
+    <div class="info">
+      <p class="likes">{{item.likes}} likes </p>
+      <div class="text-content" [ngClass]="{'limitTextHeight': !item.isReadMore }">
+        {{item.text}}
+      </div>
+      <a class="view-more" (click)="showAllText(i)">
+        {{ isReadMore ? 'View more': 'View less' }}
+      </a>
+      <div class="input-container">
+        <input type="text" class="add-comment" placeholder="Add a comment" [(ngModel)]="item.newComment">
+        <a (click)="addComent(item)"><mat-icon>add</mat-icon></a>
+      </div>
+    </div>
   </div>
-  </div>
-</div>
 
-<div class="blank-two">
-</div>
-<app-right-sidebar></app-right-sidebar>
+  <div class="blank-two">
+  </div>
+  <app-right-sidebar></app-right-sidebar>
 </body>

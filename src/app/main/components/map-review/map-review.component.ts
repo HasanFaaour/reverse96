@@ -1,16 +1,19 @@
 import { AfterViewInit, Component, OnInit, ViewChild, Injector, ComponentFactoryResolver, Input } from '@angular/core';
-import { Observable, Subscriber } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+
+import { MatDialog } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
+
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import * as L from 'leaflet';
-import { MatSidenav } from '@angular/material/sidenav';
+
+import {NgbAlertConfig} from '@ng-bootstrap/ng-bootstrap';
+
 import { LocationsService } from '../../services/locations.service';
 import { AddReviewComponent } from '../add-review/add-review.component';
-import { MatDialog } from '@angular/material/dialog';
 import { AddPlaceComponent } from '../add-place/add-place.component';
-import {NgbAlertConfig} from '@ng-bootstrap/ng-bootstrap';
 import { UserInfoService } from '../../services/user-info.service';
 import { BaseService } from '../services/base.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-map-review',
@@ -19,7 +22,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 
-export class MapReviewComponent implements AfterViewInit  {
+export class MapReviewComponent implements OnInit, AfterViewInit  {
   @ViewChild('drawer')
   sidenav!: MatSidenav;
   showLocationDetail = false;

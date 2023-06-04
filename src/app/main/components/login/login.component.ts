@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpRequestService } from '../../../http-service.service';
-import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
-import { Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  FormGroup, FormControl, AbstractControl,
+  Validators, ValidatorFn, ValidationErrors,
+} from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { Subscription } from 'rxjs';
 
+import { HttpRequestService } from '../../../http-service.service';
 
 //Creating a Custom Validator For Username or Email Field
 function validateUserMail(): ValidatorFn{

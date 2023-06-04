@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { MatDialog } from '@angular/material/dialog';
+
 import { UserInfoService } from '../../services/user-info.service';
 import { HttpRequestService } from 'src/app/http-service.service';
 import { BigImage } from '../home/home.component';
-import { MatDialog } from '@angular/material/dialog';
 import { ChatInfoComponent } from '../chat-info/chat-info.component';
 import { ReviewDetailsComponent } from '../review-details/review-details.component';
 
