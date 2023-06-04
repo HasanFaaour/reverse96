@@ -95,7 +95,7 @@ export class RightSidebarComponent implements OnInit {
             this.topreviews.push(this.extendedTopreviews[i]);
           }
         }
-        console.log(response);
+        // console.log(response);
       },
       error: (error) => {
         if (error.status == 401){
@@ -139,8 +139,8 @@ export class RightSidebarComponent implements OnInit {
            this.followers.push(this.extendedFollowers[i]);
          }
        }
-       console.log("data:");
-       console.log(data);
+      //  console.log("data:");
+      //  console.log(data);
 
        this.trackNotifications();
       },

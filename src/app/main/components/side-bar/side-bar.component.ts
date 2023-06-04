@@ -32,7 +32,7 @@ export class SideBarComponent implements OnInit {
     if(localStorage.getItem('access')){
       this.isLogin = true;
       this.firstCharName = localStorage.getItem('username')?.charAt(0).toUpperCase();
-      console.log(this.firstCharName);
+      // console.log(this.firstCharName);
       this.authenticateUser();
     }
 
@@ -41,7 +41,7 @@ export class SideBarComponent implements OnInit {
         if(localStorage.getItem('access')){
           this.isLogin = true;
           this.firstCharName = localStorage.getItem('username')?.charAt(0).toUpperCase();
-          console.log(this.firstCharName);
+          // console.log(this.firstCharName);
           this.authenticateUser();
         }else{
           this.isLogin = false;
@@ -55,7 +55,7 @@ export class SideBarComponent implements OnInit {
     this.userInfo.getUserInfo().subscribe( {
       next: (response: any) => {
         this.username = response.message.username;
-        console.log('(sied-bar call) Active State: '+this.notificationService.isActive);
+        // console.log('(sied-bar call) Active State: '+this.notificationService.isActive);
                 
         this.trackNotifications();
         
@@ -93,7 +93,7 @@ export class SideBarComponent implements OnInit {
           console.log("(side-bar) next: ",message);
           if (['message','fetch'].includes(message.type)) {
             this.notificationCount = this.notificationService.notifications.count;
-            console.log("notif count: ", this.notificationCount);
+            // console.log("notif count: ", this.notificationCount);
           }
           
         },
@@ -109,10 +109,10 @@ export class SideBarComponent implements OnInit {
       this.notificationService.connect(this.username)?.subscribe({
 
         next: (message) => {
-          console.log("(side-bar) next: ",message)
+          // console.log("(side-bar) next: ",message)
           if (['message','fetch'].includes(message.type)) {
             this.notificationCount = this.notificationService.notifications.count;
-            console.log("notif count: ", this.notificationCount);
+            // console.log("notif count: ", this.notificationCount);
           }
         },
 
