@@ -37,7 +37,9 @@ import { AuthorizationInterceptor } from './main/interceptors/authorization/auth
     NgbModule
   ],
 
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthorizationInterceptor, multi: true}
+  ],
 
   bootstrap: [AppComponent]
 })

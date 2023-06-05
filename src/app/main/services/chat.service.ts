@@ -78,14 +78,14 @@ export class ChatService {
   }
 
   createPV (username: string, guyName: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/chat/create/`,{participants: [username, guyName], name: `${username} @private ${guyName}`, description: ''},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    return this.http.post(`${this.apiUrl}/api/chat/create/`,{participants: [username, guyName], name: `${username} @private ${guyName}`, description: ''},{ observe: 'body', responseType: 'json'});
   }
 
   createGroup (members: string[], name: string, description: string, image: any = null): Observable<any>{
     
     // No Image
     if (image === null) {
-      return this.http.post(`${this.apiUrl}/api/chat/create/`,{participants: members, name: name, description: description},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+      return this.http.post(`${this.apiUrl}/api/chat/create/`,{participants: members, name: name, description: description},{ observe: 'body', responseType: 'json'});
     }
 
     // Create Form Data
@@ -98,14 +98,14 @@ export class ChatService {
     data.append('description', description);
 
     // Send Request
-    return this.http.post(`${this.apiUrl}/api/chat/create/`,data,{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    return this.http.post(`${this.apiUrl}/api/chat/create/`,data,{ observe: 'body', responseType: 'json'});
   }
 
   editGroup (groupId: number, members: string[], name: string, description: string, image: any = null): Observable<any>{
 
     // No Image
     if (image === null) {
-      return this.http.patch(`${this.apiUrl}/api/chat/${groupId}/update/`,{participants: members, name: name, description: description},{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+      return this.http.patch(`${this.apiUrl}/api/chat/${groupId}/update/`,{participants: members, name: name, description: description},{ observe: 'body', responseType: 'json'});
     }
 
     // Create Form Data
@@ -118,7 +118,7 @@ export class ChatService {
     data.append('description', description);
 
     // Send Request
-    return this.http.patch(`${this.apiUrl}/api/chat/${groupId}/update/`,data,{headers:{authorization: `Bearer ${localStorage.getItem('access')}`}, observe: 'body', responseType: 'json'});
+    return this.http.patch(`${this.apiUrl}/api/chat/${groupId}/update/`,data,{ observe: 'body', responseType: 'json'});
   }
 
   fetch (chatId: number): void {

@@ -29,13 +29,11 @@ export class LocationsService {
 
   addPlace(model: any): Observable<any> {
     console.log("access" +localStorage.getItem('access'));
-    return this.http.post(`${this.baseUrl}/api/add_location`, 
-           model, { headers:{'authorization':`Bearer ${localStorage.getItem('access')}`}});
+    return this.http.post(`${this.baseUrl}/api/add_location`, model);
   }
 
   addCommentForReview(model: any , id: number): Observable<any> {
-    return this.http.post(`${this.baseUrl}/api/add_user_comment/${id}`, 
-           model, { headers:{'authorization':`Bearer ${localStorage.getItem('access')}`}});
+    return this.http.post(`${this.baseUrl}/api/add_user_comment/${id}`, model);
   }
 
   getReviewById(id: any): Observable<any> {
@@ -45,8 +43,7 @@ export class LocationsService {
   }
 
   getCommentsReview(id: number): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/api/get_user_comments/${id}`,
-    { headers:{'authorization':`Bearer ${localStorage.getItem('access')}`}});
+    return this.http.post<any>(`${this.baseUrl}/api/get_user_comments/${id}`,{});
   }
 
   getTopReviews(): Observable<any> {

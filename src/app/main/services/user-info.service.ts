@@ -32,7 +32,7 @@ export class UserInfoService {
 
   getUserReviews(userId: string): Observable<object> {
 
-    return this.http.get(`${this.baseUrl}/api/get_user_reviews/${userId}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}});
+    return this.http.get(`${this.baseUrl}/api/get_user_reviews/${userId}`);
   }
 
   editProfile (data: {key: string, value: any}[], image: File | null = null): Observable<object> {
@@ -41,12 +41,12 @@ export class UserInfoService {
     data.forEach((entrie) => body.append(entrie.key, entrie.value));
 
     if (image === null) {
-      return this.http.patch(`${this.baseUrl}/api/Edit-userProfile`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}});
+      return this.http.patch(`${this.baseUrl}/api/Edit-userProfile`,body);
     }
 
     body.append('picture', image, image.name);
 
-    return this.http.patch(`${this.baseUrl}/api/Edit-userProfile`,body,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}});
+    return this.http.patch(`${this.baseUrl}/api/Edit-userProfile`,body);
   }
   
   get server(): string {
