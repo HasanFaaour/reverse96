@@ -68,16 +68,6 @@ const routes: Routes = [
         component: HomeComponent,
       },
       {
-        path: 'login',
-        component:LoginComponent        
-      },
-      
-      {
-        path: 'signup',
-        component: SignupComponent
-      },
-
-      {
         path: 'logout',
         component: LogoutComponent
       },
