@@ -2,15 +2,15 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { NavigationEnd, Router } from '@angular/router';
-import { MainComponent } from '../../container/main/main.component';
-import { LocationsService } from '../../services/locations.service';
+import { OnDestroy } from 'node_modules1/@angular/core/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-top-nav',
   templateUrl: './top-nav.component.html',
   styleUrls: ['./top-nav.component.css']
 })
-export class TopNavComponent implements OnInit {
+export class TopNavComponent implements OnInit, OnDestroy {
   name: string = '';
   message: boolean = false;
   tes : boolean = false;
@@ -23,18 +23,41 @@ export class TopNavComponent implements OnInit {
   searchText: string = "";
   value = 50;
   bufferValue = 75;
-  constructor(
-    private route: Router,
-    private locationSer: LocationsService
-  ) { 
 
-    this.ngOnInit();
-  }
+  subscriptions: Subscription[] = [];
+
+  constructor(
+    private router: Router,
+  ) { }
   
+  ngOnInit(): void {
+  
+    if(localStorage.getItem('access')){
+      this.isLogin = true;
+      this.showSerch = true;
+    }
+
+    const sub = this.router.events.subscribe((routerEvent) => {
+      
+      if(routerEvent.constructor.name == 'NavigationEnd') {
+        if(localStorage.getItem('access')){
+          this.isLogin = true;
+          this.showSerch = true
+          return;
+        }
+
+        this.isLogin = false;
+        this.showSerch = false;
+      }
+    
+    });
+
+    this.subscriptions.push(sub);
+  }
+
   search(){
     if(this.searchText){
-      this.route.navigate([`../search/${this.searchText}`]);
-      this.showSerch = false;
+      this.router.navigate([`../search/${this.searchText}`]);
     }
     this.searchText = "";
    
@@ -42,31 +65,12 @@ export class TopNavComponent implements OnInit {
 
   onLogout(){
     if(confirm("Do you really want to log out?")) {
-      console.log("Implement delete functionality here");
-      this.route.navigate(['/logout']);
+      this.router.navigate(['/logout']);
     }
   }
-
-  ngOnInit(): void {
   
-    this.route.events.subscribe((routerEvent) => {
-      if(routerEvent.constructor.name == 'NavigationEnd') {
-        if(localStorage.getItem('access')){
-          this.isLogin = true;
-        }else{
-          this.isLogin = false;
-        }
-      }
-    });
-
-    this.route.events.subscribe((routerEvent) => {
-      if(routerEvent.constructor.name == 'NavigationStart') {
-        if(!this.showSerch)
-        this.showSerch = true;
-      }
-    });
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub.unsubscribe())
   }
-
-  
   
 }

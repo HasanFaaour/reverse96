@@ -12,7 +12,7 @@ import { UserInfoService } from '../../services/user-info.service';
   templateUrl: './side-bar.component.html',
   styleUrls: ['./side-bar.component.css']
 })
-export class SideBarComponent implements OnInit {
+export class SideBarComponent implements OnInit, OnDestroy {
   isLogin: boolean = false;
   show: boolean = false;
   firstCharName: any;
@@ -20,6 +20,8 @@ export class SideBarComponent implements OnInit {
   notificationCount = 0;
 
   username = "@@";
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -36,7 +38,7 @@ export class SideBarComponent implements OnInit {
       this.authenticateUser();
     }
 
-    this.router.events.subscribe((routerEvent) => {
+    const sub = this.router.events.subscribe((routerEvent) => {
       if(routerEvent.constructor.name == 'NavigationEnd') {
         if(localStorage.getItem('access')){
           this.isLogin = true;
@@ -49,6 +51,7 @@ export class SideBarComponent implements OnInit {
         }
       }
     });
+    this.subscriptions.push(sub);
   }
 
   authenticateUser () {
@@ -76,9 +79,9 @@ export class SideBarComponent implements OnInit {
     if (this.notificationService.isActive) {
       this.notificationCount = this.notificationService.notifications.count;
 
-      this.notificationService.observe.subscribe({
+      const sub = this.notificationService.observe.subscribe({
         next: (message) => {
-          console.log("(side-bar) next: ",message);
+          // console.log("(side-bar) next: ",message);
           if (['message','fetch'].includes(message.type)) {
             this.notificationCount = this.notificationService.notifications.count;
             // console.log("notif count: ", this.notificationCount);
@@ -91,10 +94,11 @@ export class SideBarComponent implements OnInit {
         }
 
       });
+      this.subscriptions.push(sub);
     }
 
     else {
-      this.notificationService.connect(this.username)?.subscribe({
+      const sub = this.notificationService.connect(this.username)?.subscribe({
 
         next: (message) => {
           // console.log("(side-bar) next: ",message)
@@ -109,7 +113,15 @@ export class SideBarComponent implements OnInit {
         }
 
       });
+      if (sub)
+        this.subscriptions.push(sub);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach( sub =>
+      sub.unsubscribe()
+    )
   }
 
 }
