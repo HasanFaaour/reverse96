@@ -1,34 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MainComponent } from './container/main/main.component';
-import { TopNavComponent } from './components/top-nav/top-nav.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { RouterModule, Routes } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
-import { SideBarComponent } from './components/side-bar/side-bar.component';
-import { HomeComponent } from './components/home/home.component';
-
 import { ReactiveFormsModule } from '@angular/forms';
-
-import { LoginComponent } from './components/login/login.component';
-import { SignupComponent } from './components/signup/signup.component';
-import { LogoutComponent } from './components/logout/logout.component';
-import { MapReviewComponent } from './components/map-review/map-review.component';
-import { AddPlaceComponent } from './components/add-place/add-place.component';
-import { AddReviewComponent } from './components/add-review/add-review.component';
-import { ChatComponent } from './components/chat/chat.component';
-import { ChatInfoComponent } from './components/chat-info/chat-info.component';
-import { NotificationComponent } from './components/notification/notification.component';
-import { UserInfoComponent } from './components/user-info/user-info.component';
-import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
-import { ReviewDetailsComponent } from './components/review-details/review-details.component';
-import { SearchResultComponent } from './components/search-result/search-result.component';
-
-import { AppComponent } from '../app.component';
-import { ComponentsComponent } from './components/components.component';
+import { HttpClientModule } from '@angular/common/http';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -46,15 +21,30 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonToggleModule} from '@angular/material/button-toggle'
-
+import { MatIconModule } from '@angular/material/icon';
 
 import { NgxPhotoEditorModule } from 'ngx-photo-editor';
 import { NgbAlertModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from '../app-routing.module';
-
-
+import { MainComponent } from './container/main/main.component';
+import { TopNavComponent } from './components/top-nav/top-nav.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { SideBarComponent } from './components/side-bar/side-bar.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { SignupComponent } from './components/signup/signup.component';
+import { LogoutComponent } from './components/logout/logout.component';
+import { MapReviewComponent } from './components/map-review/map-review.component';
+import { AddPlaceComponent } from './components/add-place/add-place.component';
+import { AddReviewComponent } from './components/add-review/add-review.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { ChatInfoComponent } from './components/chat-info/chat-info.component';
+import { NotificationComponent } from './components/notification/notification.component';
+import { UserInfoComponent } from './components/user-info/user-info.component';
+import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.component';
+import { ReviewDetailsComponent } from './components/review-details/review-details.component';
+import { SearchResultComponent } from './components/search-result/search-result.component';
+import { ComponentsComponent } from './components/components.component';
 
 const routes: Routes = [
   {
@@ -77,16 +67,6 @@ const routes: Routes = [
         path: 'home',
         component: HomeComponent,
       },
-      {
-        path: 'login',
-        component:LoginComponent        
-      },
-      
-      {
-        path: 'signup',
-        component: SignupComponent
-      },
-
       {
         path: 'logout',
         component: LogoutComponent
@@ -159,17 +139,17 @@ const routes: Routes = [
   ],
   imports: [
     HttpClientModule,
-    
-
     CommonModule,
-    MatIconModule,
     RouterModule,
     RouterModule.forChild(routes),
+    ReactiveFormsModule,
+    FormsModule,
+
+    MatIconModule,
     MatCardModule,
     MatButtonModule,
     MatSelectModule,
     MatRadioModule,
-    ReactiveFormsModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSidenavModule,
@@ -183,13 +163,12 @@ const routes: Routes = [
     MatBadgeModule,
     MatTabsModule,
     MatButtonToggleModule,
-    FormsModule,
-    NgxPhotoEditorModule,
     MatProgressSpinnerModule,
+
+    NgxPhotoEditorModule,
+    
     NgbPaginationModule,
     NgbAlertModule,
-    ReactiveFormsModule,
-    FormsModule
   ],
 })
 export class MainModule { }

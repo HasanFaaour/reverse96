@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ThemePalette } from '@angular/material/core';
-import {MatProgressBarModule, ProgressBarMode} from '@angular/material/progress-bar';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+
+import { Subscription } from 'rxjs';
+
 import { HttpRequestService } from 'src/app/http-service.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserInfoService } from '../../services/user-info.service';
@@ -11,7 +12,7 @@ import { UserInfoService } from '../../services/user-info.service';
   templateUrl: './side-bar.component.html',
   styleUrls: ['./side-bar.component.css']
 })
-export class SideBarComponent implements OnInit {
+export class SideBarComponent implements OnInit, OnDestroy {
   isLogin: boolean = false;
   show: boolean = false;
   firstCharName: any;
@@ -19,6 +20,8 @@ export class SideBarComponent implements OnInit {
   notificationCount = 0;
 
   username = "@@";
+
+  subscriptions: Subscription[] = [];
 
   constructor(
     private router: Router,
@@ -31,16 +34,16 @@ export class SideBarComponent implements OnInit {
     if(localStorage.getItem('access')){
       this.isLogin = true;
       this.firstCharName = localStorage.getItem('username')?.charAt(0).toUpperCase();
-      console.log(this.firstCharName);
+      // console.log(this.firstCharName);
       this.authenticateUser();
     }
 
-    this.router.events.subscribe((routerEvent) => {
+    const sub = this.router.events.subscribe((routerEvent) => {
       if(routerEvent.constructor.name == 'NavigationEnd') {
         if(localStorage.getItem('access')){
           this.isLogin = true;
           this.firstCharName = localStorage.getItem('username')?.charAt(0).toUpperCase();
-          console.log(this.firstCharName);
+          // console.log(this.firstCharName);
           this.authenticateUser();
         }else{
           this.isLogin = false;
@@ -48,32 +51,21 @@ export class SideBarComponent implements OnInit {
         }
       }
     });
+    this.subscriptions.push(sub);
   }
 
   authenticateUser () {
-    this.userInfo.getUserInfo().subscribe( {
+    this.userInfo.currentUser.subscribe( {
       next: (response: any) => {
         this.username = response.message.username;
-        console.log('(sied-bar call) Active State: '+this.notificationService.isActive);
+        // console.log('(sied-bar call) Active State: '+this.notificationService.isActive);
                 
         this.trackNotifications();
         
       },
       error: (err) => {
-        if (err.status == 401) {
-          this.httpRequest.refresh().subscribe({
-            next: (n) => {
-              console.log('ref');
-              this.authenticateUser();
-            },
-            error: (er) => {
-              // alert ("Session expired. Please login again.");
-              this.router.navigateByUrl('logout');
-            }
-          });
-          return;
-        }
-        console.log("Error:",err.status);
+        console.log('SB Auth Err');
+        
       }
     });  
   }
@@ -87,12 +79,12 @@ export class SideBarComponent implements OnInit {
     if (this.notificationService.isActive) {
       this.notificationCount = this.notificationService.notifications.count;
 
-      this.notificationService.observe.subscribe({
+      const sub = this.notificationService.observe.subscribe({
         next: (message) => {
-          console.log("(side-bar) next: ",message);
+          // console.log("(side-bar) next: ",message);
           if (['message','fetch'].includes(message.type)) {
             this.notificationCount = this.notificationService.notifications.count;
-            console.log("notif count: ", this.notificationCount);
+            // console.log("notif count: ", this.notificationCount);
           }
           
         },
@@ -102,16 +94,17 @@ export class SideBarComponent implements OnInit {
         }
 
       });
+      this.subscriptions.push(sub);
     }
 
     else {
-      this.notificationService.connect(this.username)?.subscribe({
+      const sub = this.notificationService.connect(this.username)?.subscribe({
 
         next: (message) => {
-          console.log("(side-bar) next: ",message)
+          // console.log("(side-bar) next: ",message)
           if (['message','fetch'].includes(message.type)) {
             this.notificationCount = this.notificationService.notifications.count;
-            console.log("notif count: ", this.notificationCount);
+            // console.log("notif count: ", this.notificationCount);
           }
         },
 
@@ -120,7 +113,15 @@ export class SideBarComponent implements OnInit {
         }
 
       });
+      if (sub)
+        this.subscriptions.push(sub);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach( sub =>
+      sub.unsubscribe()
+    )
   }
 
 }

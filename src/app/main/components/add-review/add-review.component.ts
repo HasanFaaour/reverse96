@@ -2,8 +2,11 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { Subscription } from 'rxjs';
+
 import { HttpRequestService } from 'src/app/http-service.service';
+
 
 const selectImageIcon = 'assets/images/icons8-add-image-48.png';
 const selectImageHint = "Click to select an image(10MB or smaller)";

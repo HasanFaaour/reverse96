@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+
 import { LoginComponent } from './main/components/login/login.component';
 import { SignupComponent } from './main/components/signup/signup.component';
 

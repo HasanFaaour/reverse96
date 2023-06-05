@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpRequestService } from '../../../http-service.service';
-import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
-import { Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  FormGroup, FormControl, AbstractControl,
+  Validators, ValidatorFn, ValidationErrors,
+} from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { Subscription } from 'rxjs';
 
+import { HttpRequestService } from '../../../http-service.service';
 
 //Creating a Custom Validator For Username or Email Field
 function validateUserMail(): ValidatorFn{
@@ -44,12 +47,12 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {  
 
     //Checking if the user is already logged in (redirect to homepage if so)
-    if (localStorage.getItem('access') && localStorage.getItem('refresh')){
+    // if (localStorage.getItem('access') && localStorage.getItem('refresh')){
 
-      console.log("Already logged in");
-      this.router.navigate(['home']);
+    //   console.log("Already logged in");
+    //   this.router.navigate(['home']);
 
-    }
+    // }
   }
 
   //Defining Logic Flags

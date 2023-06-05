@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+
+import { MatDialog } from '@angular/material/dialog';
+
 import { HttpRequestService } from 'src/app/http-service.service';
 import { LocationsService } from '../../services/locations.service';
 import { NotificationService } from '../../services/notification.service';
@@ -93,7 +95,7 @@ export class RightSidebarComponent implements OnInit {
             this.topreviews.push(this.extendedTopreviews[i]);
           }
         }
-        console.log(response);
+        // console.log(response);
       },
       error: (error) => {
         if (error.status == 401){
@@ -119,10 +121,10 @@ export class RightSidebarComponent implements OnInit {
     });  }
 
   getFollows() {
-    this.userInfo.getUserInfo().subscribe({
+    this.userInfo.currentUser.subscribe({
       next: (data: any) => {  
         this.user = data.message;
-        this.user.picture = `${this.baseUrl}${this.user.picture}`;
+        this.user.picture = this.user.picture;
         this.extendedFollowers = this.user.followings;
         for(let follower of this.extendedFollowers) {
           follower.notifCount = 0;
@@ -137,8 +139,8 @@ export class RightSidebarComponent implements OnInit {
            this.followers.push(this.extendedFollowers[i]);
          }
        }
-       console.log("data:");
-       console.log(data);
+      //  console.log("data:");
+      //  console.log(data);
 
        this.trackNotifications();
       },

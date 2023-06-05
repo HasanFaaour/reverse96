@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import { HttpRequestService } from 'src/app/http-service.service';
 import { LocationsService } from '../../services/locations.service';
 import { UserInfoService } from '../../services/user-info.service';
@@ -63,7 +65,6 @@ export class HomeComponent implements OnInit {
  
   openDialog(ite: any , tit: string , tex: string , pic: any , reviewId: number) {
     this.pageValue = [{item: ite , title: tit , text: tex, picture: pic , id: reviewId }];
-    console.log(ite);
     const dialogRef = this.dialog.open(ReviewDetailsComponent, {
       width:'900px', height: 'auto',
       panelClass: 'custom-dialog-container',
@@ -127,7 +128,7 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['../login']);
     }
     else {
-      this.userInfo.getUserInfo().subscribe({
+      this.userInfo.currentUser.subscribe({
         next: (response) => {
           this.userId = response.message.id;
           this.username = response.message.username;
@@ -158,9 +159,9 @@ export class HomeComponent implements OnInit {
           this.list.push(review);
         }
         this.test = response;
-        console.log("reviews:::");
-        console.log(response);
-        console.log(this.list);
+        // console.log("reviews:::");
+        // console.log(response);
+        // console.log(this.list);
       },
       error: (error) => {
         this.serverConnection = 'lost';
@@ -178,8 +179,8 @@ export class HomeComponent implements OnInit {
       next: (data: any[])=> {  
         this.commentsList = data;
         this.pageValue = [{title: this.reviewTitle , picture: this.reviewPicture , id: this.reviewId , comments: this.commentsList}];
-        console.log("comments:")
-        console.log("length"+ this.commentsList.length);
+        // console.log("comments:")
+        // console.log("length"+ this.commentsList.length);
       },
       error: (err) => {
         console.log(err.status);
@@ -189,10 +190,10 @@ export class HomeComponent implements OnInit {
   }
 
   addComent (item: any) {
-    console.log(item);
+    // console.log(item);
     if (!item.newComment){
       //this.addCommentMessage = "comment submited ";
-      console.log("ignored");
+      // console.log("ignored");
       return;
     }
     //this.serverConnection = 'connecting';
@@ -200,12 +201,12 @@ export class HomeComponent implements OnInit {
       next: (response: any) => {
         item.newComment = "";
         this.addCommentMessage = response.message;
-        console.log(response);
-        console.log(this.addCommentMessage);
+        // console.log(response);
+        // console.log(this.addCommentMessage);
         //this.serverConnection = '';
-        if(response.message === "comment submited "){
-          console.log("comment added successful!");
-        }
+        // if(response.message === "comment submited "){
+        //   console.log("comment added successful!");
+        // }
       },
       error: (error) => {
         if (error.status == 401) {

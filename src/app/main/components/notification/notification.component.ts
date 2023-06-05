@@ -1,4 +1,5 @@
-import { AfterContentChecked, AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, OnInit } from '@angular/core';
+
 import { HttpRequestService } from 'src/app/http-service.service';
 import { NotificationService } from '../../services/notification.service';
 import { UserInfoService } from '../../services/user-info.service';
@@ -8,7 +9,7 @@ import { UserInfoService } from '../../services/user-info.service';
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css']
 })
-export class NotificationComponent implements AfterContentChecked {
+export class NotificationComponent implements OnInit, AfterContentChecked {
 
   notificationList: any[] = [];
 
@@ -29,22 +30,22 @@ export class NotificationComponent implements AfterContentChecked {
     this.seen = [];
     console.log('-----------------------init--------------------');
     
-    this.userInfoService.getUserInfo().subscribe({
+    this.userInfoService.currentUser.subscribe({
 
       next: (response: any) => {
         this.username = response.message.username;
 
         if (this.notifService.isActive) {
-          console.log("already active");
+          // console.log("already active");
 
           this.notificationList = this.notifService.notifications.list;
           
           this.notifService.observe.subscribe({
             next: (ev) => {
-              console.log("(notif page) next: ", ev);
+              // console.log("(notif page) next: ", ev);
               
               if (ev.type == "open") {
-              console.log('notif page connected');
+              // console.log('notif page connected');
               }
 
               else {
@@ -55,19 +56,19 @@ export class NotificationComponent implements AfterContentChecked {
         }
         
         else {
-          console.log("not active");
+          // console.log("not active");
           
           this.notifService.connect(this.username)?.subscribe({
             next: (ev) => {
-              console.log("(notif page) next: ", ev);
+              // console.log("(notif page) next: ", ev);
               
               if (ev.type == "open") {
-              console.log('notif page connected');
+              // console.log('notif page connected');
               }
               
               else {
                 this.notificationList = this.notifService.notifications.list;
-                console.log("(notif page) notif list now: ",this.notificationList);
+                // console.log("(notif page) notif list now: ",this.notificationList);
                 
               }
             }
@@ -85,15 +86,15 @@ export class NotificationComponent implements AfterContentChecked {
   }
 
   check(): void {
-    console.log(`Check(${this.checked})`);
+    // console.log(`Check(${this.checked})`);
     
     if (!this.checked) {
-      console.log(('go in'));
+      // console.log(('go in'));
       
       this.seen = [];
       for (let notif of this.notificationList) {
         if (notif && notif.notif != 'follow_request') {
-          console.log('add ' + notif.notif_id);
+          // console.log('add ' + notif.notif_id);
           this.seen.push(+notif.notif_id);
           this.checked = true;
         }
@@ -105,7 +106,7 @@ export class NotificationComponent implements AfterContentChecked {
   accept (from: string, ev: MouseEvent, notif: any): void {
     ev.stopImmediatePropagation();
     ev.preventDefault();
-    console.log('accept');
+    // console.log('accept');
     
     this.httpService.acceptFollow(from,true);
     this.notifService.markAsRead([notif.notif_id]);

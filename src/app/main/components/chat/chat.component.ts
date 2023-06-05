@@ -1,15 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import {Clipboard} from '@angular/cdk/clipboard';
+
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+
+import { Observable } from 'rxjs';
+
 import { ChatService } from '../../services/chat.service';
 import { UserInfoService } from '../../services/user-info.service';
 import { ChatMessage, Bubble, MessageList } from './MessageClasses';
-import {Clipboard} from '@angular/cdk/clipboard';
 import { HttpRequestService } from 'src/app/http-service.service';
-// import { MatList } from '@angular/material/list';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ChatInfoComponent } from '../chat-info/chat-info.component';
-import { Observable } from 'rxjs';
+
 
 const groupDefaultIcon = 'assets/images/GroupChat.png';
 
@@ -82,7 +85,7 @@ export class ChatComponent implements OnInit {
     console.log('init');
 
     //Authenticate user
-    this.userInfo.getUserInfo().subscribe({
+    this.userInfo.currentUser.subscribe({
 
       //Valid user
       next: (response: any) => {
@@ -92,7 +95,7 @@ export class ChatComponent implements OnInit {
 
         //record user's info
         this.username = info.username;
-        this.userImage = this.chatService.server + info.picture;
+        this.userImage = info.picture;
         this.participantsInfo[this.username] = {name: info.name, image: this.userImage};
 
         this.followers = [];

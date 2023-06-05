@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { LocationsService } from '../../services/locations.service';
 import { BaseService } from '../services/base.service';
 

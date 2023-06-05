@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, Inject, OnInit, Optional } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable, Subscriber } from 'rxjs';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import { LocationsService } from '../../services/locations.service';
 
 interface Food {
