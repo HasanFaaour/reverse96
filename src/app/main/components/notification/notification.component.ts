@@ -30,7 +30,7 @@ export class NotificationComponent implements OnInit, AfterContentChecked {
     this.seen = [];
     console.log('-----------------------init--------------------');
     
-    this.userInfoService.getUserInfo().subscribe({
+    this.userInfoService.currentUser.subscribe({
 
       next: (response: any) => {
         this.username = response.message.username;

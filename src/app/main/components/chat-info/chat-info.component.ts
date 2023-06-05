@@ -76,7 +76,7 @@ export class ChatInfoComponent implements OnInit {
           next: (response: any) => {
             let info = response.message;
 
-            this.members.push({username: member, image: this.userInfoService.server + info.picture});
+            this.members.push({username: member, image: info.picture});
           },
           error: (err) => {
             this.members.push({username: member, image: 'invalid user'})

@@ -52,7 +52,7 @@ export class SideBarComponent implements OnInit {
   }
 
   authenticateUser () {
-    this.userInfo.getUserInfo().subscribe( {
+    this.userInfo.currentUser.subscribe( {
       next: (response: any) => {
         this.username = response.message.username;
         // console.log('(sied-bar call) Active State: '+this.notificationService.isActive);
@@ -61,20 +61,8 @@ export class SideBarComponent implements OnInit {
         
       },
       error: (err) => {
-        if (err.status == 401) {
-          this.httpRequest.refresh().subscribe({
-            next: (n) => {
-              console.log('ref');
-              this.authenticateUser();
-            },
-            error: (er) => {
-              // alert ("Session expired. Please login again.");
-              this.router.navigateByUrl('logout');
-            }
-          });
-          return;
-        }
-        console.log("Error:",err.status);
+        console.log('SB Auth Err');
+        
       }
     });  
   }

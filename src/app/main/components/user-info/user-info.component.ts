@@ -94,7 +94,7 @@ export class UserInfoComponent implements OnInit {
 
   // Authenticate User
   
-  this.userInfoService.getUserInfo().subscribe({
+  this.userInfoService.currentUser.subscribe({
     next: (data: any) => {
       let list = data.message;      
       
@@ -104,7 +104,7 @@ export class UserInfoComponent implements OnInit {
       this.user.email = list.email;
       this.user.address = list.address;
       this.user.phone_number = list.phone_number;
-      this.user.picture = this.userInfoService.server + list.picture;
+      this.user.picture = list.picture;
 
       this.user.followerCount = list.followers?.length
       this.user.followingCount = list.followings?.length

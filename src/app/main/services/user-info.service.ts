@@ -16,16 +16,52 @@ export class UserInfoService {
   //baseUrl = "https://reverse96-reverse96.fandogh.cloud"
   httpHeaders = new HttpHeaders ({'Content-Type' : 'application/json'});
 
-  constructor(private http: HttpClient,
-              private baseSer: BaseService)
-               {
+  // private _currentUser: User | undefined;
+  private _currentUser: any;
+
+  private userReady$: Subject<any> = new Subject();
+
+  constructor(
+    private http: HttpClient,
+    private baseSer: BaseService
+  ) {
     this.baseUrl = this.baseSer.apiServer;
+    this.getCurrentUser();
   }
-  getUserInfo(userId = ""): Observable<any> {
-    if (userId){
-      return this.http.get(`${this.baseUrl}/api/public-profile/${userId}`,{headers: {authorization: `Bearer ${localStorage.getItem('access')}`}});
-    }
-    return this.http.get<any>(`${this.baseUrl}/api/get-user-detail` ,{headers:{'authorization':`Bearer ${localStorage.getItem('access')}`}});
+
+  private getCurrentUser() {
+    this.http.get(`${this.baseUrl}/api/get-user-detail`).pipe(catchError(err => {
+      this.userReady$.error(err);
+      return EMPTY;
+    })).subscribe((res: any) => {
+      // let responseUser = res.message;
+      // this._currentUser = {
+      //   id: responseUser.id,
+      //   username: responseUser.username,
+      //   name: responseUser.name,
+      //   email: responseUser.email,
+      //   isActive: responseUser.is_active,
+      //   isPublic: responseUser.is_public,
+      //   bio: responseUser.bio,
+      //   address: responseUser.address,
+      //   liked: responseUser.liked,
+      //   followState: undefined,
+      //   phoneNumber: responseUser.phone_number,
+      //   picture: responseUser.picture,
+      //   followers: (responseUser.followers as any[]).map(user => ({...user,email: ""})),
+      //   followings: (responseUser.followings as any[]).map(user => ({...user,email: ""})),
+      //   mutuals: (responseUser.mutuals as any[]).map(user => ({...user,email: ""}))
+      // }
+      this._currentUser = res;
+      this._currentUser.message.picture = this.server+res.message.picture;
+      this.userReady$.next({...this._currentUser});
+      this.userReady$.complete();
+      this.userReady$ = new Subject();
+    })
+  }
+  
+  getUserInfo(userId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/public-profile/${userId}`);
   }
 
   
@@ -52,5 +88,27 @@ export class UserInfoService {
   get server(): string {
     return this.baseUrl;
   }
+
+  get currentUser(): Observable<any> {
+    return this._currentUser? of({...this._currentUser}) : this.userReady$.asObservable();
+  }
   
 }
+
+// type User = {
+//   id: number,
+//   username: string,
+//   email: string
+//   name?: string,
+//   bio?: string,
+//   address?: string,
+//   phoneNumber?: string,
+//   picture?: string,
+//   isActive: boolean,
+//   isPublic: boolean,
+//   followers?: User[],
+//   followings?: User[],
+//   mutuals?: User[],
+//   liked?: any[],
+//   followState?: boolean
+// }

@@ -128,7 +128,7 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['../login']);
     }
     else {
-      this.userInfo.getUserInfo().subscribe({
+      this.userInfo.currentUser.subscribe({
         next: (response) => {
           this.userId = response.message.id;
           this.username = response.message.username;

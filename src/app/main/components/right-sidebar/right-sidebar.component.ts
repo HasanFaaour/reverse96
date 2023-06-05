@@ -121,10 +121,10 @@ export class RightSidebarComponent implements OnInit {
     });  }
 
   getFollows() {
-    this.userInfo.getUserInfo().subscribe({
+    this.userInfo.currentUser.subscribe({
       next: (data: any) => {  
         this.user = data.message;
-        this.user.picture = `${this.baseUrl}${this.user.picture}`;
+        this.user.picture = this.user.picture;
         this.extendedFollowers = this.user.followings;
         for(let follower of this.extendedFollowers) {
           follower.notifCount = 0;
