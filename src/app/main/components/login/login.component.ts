@@ -47,12 +47,12 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {  
 
     //Checking if the user is already logged in (redirect to homepage if so)
-    if (localStorage.getItem('access') && localStorage.getItem('refresh')){
+    // if (localStorage.getItem('access') && localStorage.getItem('refresh')){
 
-      console.log("Already logged in");
-      this.router.navigate(['home']);
+    //   console.log("Already logged in");
+    //   this.router.navigate(['home']);
 
-    }
+    // }
   }
 
   //Defining Logic Flags
