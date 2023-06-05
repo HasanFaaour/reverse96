@@ -23,26 +23,9 @@ export class LogoutComponent implements OnInit {
     }
 
     //Send the request
-    let sub = this.request.logout(localStorage.getItem('refresh')).subscribe({
-      next: (response) =>{
-
-      //Successful response
-      localStorage.clear();
-      console.log("success!");
-      this.router.navigate(['../home']);
-      sub.unsubscribe();
-      return;
-    },
-    error: (response) => {
-
-      //Failed response
-      console.log("Logout Error");
-      localStorage.clear();
-      this.router.navigate(["../home"]);
-      sub.unsubscribe();
-      return;
-    }
-  });
+    let sub = this.request.logout(localStorage.getItem('refresh')).subscribe()
+    localStorage.clear();
+    this.router.navigate(['../login']);
 
   }
 
