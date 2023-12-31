@@ -1,25 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 
 import { Observable, Subscriber, TeardownLogic } from 'rxjs';
 
 import { BaseService } from '../components/services/base.service';
 
-type WS = WebSocket;
-let WS: any = WebSocket;
+export const WSIT = new InjectionToken<any>('WebSocket Class') 
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
 
-  constructor(private baseUrl: BaseService) {
+  constructor(private baseUrl: BaseService, @Inject(WSIT) private WSClass: any) {
     // this.apiUrl = baseUrl.apiServer;
     this.wsUrl = baseUrl.wsServer;
   }
 
-  mockWebSocket (stub: any) {
-    WS = stub;
-  }
+  // mockWebSocket (stub: any) {
+  //   WS = stub;
+  // }
 
   socket: any = null;
   
@@ -36,7 +35,7 @@ export class NotificationService {
     // console.log('Asked to connect');
     
     
-    if (this.socket && this.socket.readyState == WS.OPEN){
+    if (this.socket && this.socket.readyState == WebSocket.OPEN){
       // console.log("Already connected. duplicate call");
       
       return;
@@ -46,7 +45,7 @@ export class NotificationService {
       
       let subscribersList: Subscriber<{type: string, data: any}>[] = [];
 
-      _this.socket = new WS(`${_this.wsUrl}/ws/notification/${url}/`);
+      _this.socket = new _this.WSClass(`${_this.wsUrl}/ws/notification/${url}/`);
       
       return (observer: Subscriber<{type: string, data: any}>): TeardownLogic => {
 
@@ -118,7 +117,7 @@ export class NotificationService {
   markAsRead (list: number[]): void {
     console.log('mAR: '+list);
     
-    if (this.socket && this.socket.readyState == WS.OPEN && list.length > 0){
+    if (this.socket && this.socket.readyState == WebSocket.OPEN && list.length > 0){
       this.socket.send(JSON.stringify({received_id: list}));
       this.notificationCount -= list.length;
       let i = 0;
@@ -147,7 +146,7 @@ export class NotificationService {
   }
 
   get isActive(): boolean {
-    return (this.socket && this.socket.readyState==WS.OPEN)?true: false;
+    return (this.socket && this.socket.readyState==WebSocket.OPEN)?true: false;
   }
 
 

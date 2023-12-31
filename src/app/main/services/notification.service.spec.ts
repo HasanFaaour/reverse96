@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { NEVER, of } from 'rxjs';
 import { BaseService } from '../components/services/base.service';
 
-import { NotificationService } from './notification.service';
+import { NotificationService, WSIT } from './notification.service';
 
 describe('NotificationService', () => {
   let service: NotificationService;
@@ -44,16 +44,11 @@ describe('NotificationService', () => {
   class WebSocketStub {
     static log = "";
 
-    static readonly CLOSED = 0;
-    static readonly CLOSING = 1;
-    static readonly CONNECTING = 2;
-    static readonly OPEN = 3;
-
     static clearLog () {
       this.log = "";
     }
 
-    state: 0|1|2|3 = 0;
+    state = 0;
 
 
     constructor (url: string | URL, protocols?: string | string[] | undefined) {
@@ -63,12 +58,12 @@ describe('NotificationService', () => {
     setState (rState: 'open'|'close') {
       switch(rState) {
         case 'open': {
-          this.state = WebSocketStub.OPEN;
+          this.state = WebSocket.OPEN;
           break;
         }
         
         case 'close': {
-          this.state = 1;
+          this.state = WebSocket.CLOSED;
           break;
         }
       }
@@ -95,10 +90,10 @@ describe('NotificationService', () => {
       providers: [
         {provide: HttpClient, useValue: httpClientStub},
         {provide: BaseService, useValue: baseServiceStub},
+        {provide: WSIT, useValue: WebSocketStub},
       ]
     });
     service = TestBed.inject(NotificationService);
-    service.mockWebSocket(WebSocketStub);
   });
 
   it ('should be created', () => {

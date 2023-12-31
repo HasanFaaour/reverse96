@@ -65,7 +65,7 @@ describe('UserInfoService', () => {
 
     localStorage.setItem('access', 'token')
     
-    let result = service.getUserInfo();
+    let result = service.currentUser;
 
     expect(result).toEqual(expectedResult);
     expect(hCLog.length).toBe(1);

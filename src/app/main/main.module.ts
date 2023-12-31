@@ -45,6 +45,7 @@ import { RightSidebarComponent } from './components/right-sidebar/right-sidebar.
 import { ReviewDetailsComponent } from './components/review-details/review-details.component';
 import { SearchResultComponent } from './components/search-result/search-result.component';
 import { ComponentsComponent } from './components/components.component';
+import { WSIT } from './services/notification.service';
 
 const routes: Routes = [
   {
@@ -170,5 +171,8 @@ const routes: Routes = [
     NgbPaginationModule,
     NgbAlertModule,
   ],
+  providers: [
+    {provide: WSIT, useValue: WebSocket}
+  ]
 })
 export class MainModule { }
