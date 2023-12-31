@@ -3,10 +3,11 @@ import {
   HttpRequest, HttpHandler,
   HttpEvent, HttpInterceptor
 } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import {
   Observable, throwError, tap, 
-  share, catchError, switchMap, map
+  share, map, last, of, retry, defer
 } from 'rxjs';
 
 import { AUTHORIZE } from '../../http-contexts/http-contexts';
@@ -16,15 +17,17 @@ import { HttpRequestService } from 'src/app/http-service.service';
 @Injectable()
 export class AuthorizationInterceptor implements HttpInterceptor {
 
-  constructor(private httpService: HttpRequestService) {}
+  constructor(private httpService: HttpRequestService, private router: Router) {}
 
-  private refreshToken$ = this.httpService.refresh().pipe(
-    tap(res => {
-      localStorage.setItem('access', res.access);
-      localStorage.setItem('refresh', res.refresh);
-    }),
-    share(),
-  );
+  private refreshToken$ = defer(() =>
+    this.httpService.refresh().pipe(
+      tap(res => {
+        localStorage.setItem('access', res.access);
+        localStorage.setItem('refresh', res.refresh);
+      }),
+      map(res => res.access),
+    )
+  ).pipe(share());
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const url = request.url;
@@ -34,38 +37,45 @@ export class AuthorizationInterceptor implements HttpInterceptor {
     if (!authorize)
       return next.handle(request);
 
-    const token = localStorage.getItem('access');
+    let token = localStorage.getItem('access');
 
     if (!token)
       return throwError(() => "Access token missing");
 
-    const authorizedRequest = request.clone({
-      setHeaders: {Authorization: `Bearer ${token}`}
-    })
+    return defer( () => {
+      const authorizedRequest = request.clone({
+        setHeaders: {Authorization: `Bearer ${token}`}
+      })
+    
+      return next.handle(authorizedRequest);
+    }).pipe(
+      retry({
+        count: 3,
+        delay: (error, retryCount) => {
 
-    return next.handle(authorizedRequest).pipe(
-      catchError(err => {
-        if (err.status != 401)
-          return throwError(() => err);
+          if (error.status != 401)
+            return throwError(() => error);
 
-        return this.refreshThenRetry(authorizedRequest, next)
-      }
-      ),
+          return this.refreshToken(token!).pipe(
+            tap(res => token = res)
+          );
+        }
+      })
     );
   }
 
-  private refreshThenRetry(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  private refreshToken(usedToken: string): Observable<string> {
+    let currentToken = localStorage.getItem('access');
+   
+    if (currentToken && currentToken != usedToken)      
+      return of(currentToken);
+
     return this.refreshToken$.pipe(
-      switchMap(res => {
-        const token = res.access;
-
-        const authorizedRequest = request.clone({
-          setHeaders: {Authorization: `Bearer ${token}`}
-        })
-
-        return next.handle(authorizedRequest);
-      }
-    ));
+      last(),
+      tap({error: err => 
+        this.router.navigateByUrl('/logout')
+      }),
+    );
   }
         
 }

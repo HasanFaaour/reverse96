@@ -29,7 +29,7 @@
                     [viewMode]="0"
                 ></ngx-photo-editor>
                
-                <input class="image-display" type="image" alt="Choose an image" src="{{imageDisplay}}" (click)="Image.click()" (click)="$event.preventDefault()" />
+                <input class="image-display" type="image" alt="Choose an image" [src]="imageDisplay" (click)="Image.click()" (click)="$event.preventDefault()" />
                 
                 <mat-hint class="image-hint" *ngIf="(image && image.invalid) || uploading" >{{imageHint}} <mat-progress-bar *ngIf="uploading" value="{{uploadedPercent}}"></mat-progress-bar> </mat-hint><br/>
             </div>

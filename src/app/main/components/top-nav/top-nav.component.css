@@ -1,5 +1,5 @@
 .top-nav {
-    height: 10%;
+    height: 60px;
     width: 100%;
     position: fixed;
     top: 0px;
@@ -8,10 +8,10 @@
     border: 1px solid #ddd;
     background-color: white;
     z-index: 3;
+    box-shadow: 0 -2px 4px 0 gray;
   }
   
   .top-nav a {
-    display: inline-block;
     text-decoration: none;
     font-size: 18px;
     color: rgb(48, 47, 47);

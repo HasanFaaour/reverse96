@@ -2,6 +2,7 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CroppedEvent } from 'ngx-photo-editor';
 
 import { Subscription } from 'rxjs';
 
@@ -192,7 +193,7 @@ export class AddReviewComponent implements OnInit {
 
         //Valid
         this.image!.setValue(selectedImage.file);
-        this.imageDisplay = selectedImage.base64;
+        this.imageDisplay = (selectedImage as CroppedEvent).base64;
       }
       
       else {

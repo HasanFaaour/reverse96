@@ -44,7 +44,17 @@ export class HttpRequestService {
 
   //Defining the refresh post request method (Errors not handled)
   refresh ():Observable<any>{
-    return this.hC.post(`${this.baseUrl}/api/login/refresh`,{refresh: localStorage.getItem('refresh')},{  observe: 'body', responseType: 'json', context: new HttpContext().set(AUTHORIZE, false)});
+    return this.hC.post(`
+      ${this.baseUrl}/api/login/refresh`,
+      {
+        refresh: localStorage.getItem('refresh')
+      },
+      {
+        observe: 'body',
+        responseType: 'json',
+        context: new HttpContext().set(AUTHORIZE, false)
+      }
+    );
   }
 
   //Defining the post request method for adding a review

@@ -6,7 +6,7 @@
           <div class="imag"><img [src]="item.picture" style="height: 100%; width: 100%; border-radius: 10px;"></div>
           <div class="name">
               <a class="tit" (click)="openPopup(item)" >{{item.title}}</a>
-              <a class="user-name" routerLink="../userInfo/{{item.username}}"><span class="by">BY</span>  {{item.username}}</a>
+              <a class="user-name" routerLink="/user/{{item.username}}"><span class="by">BY</span>  {{item.username}}</a>
               <a class="li">{{item.likes}} likes</a>
               <a class="loc">Location {{item.location}}</a>
               <a class="cre-dat">Created in {{item.date_created}}</a>
@@ -23,7 +23,7 @@
         <div class="title2" *ngFor="let follower of followers">
           <div class="image"><img [src]="follower.picture" style="height: 100%; width: 100%; border-radius: 100px;"></div>
           <div class="name">
-              <a class="tit2" routerLink="../userInfo/{{follower.username}}">{{follower.username}}</a>
+              <a class="tit2" routerLink="/user/{{follower.username}}">{{follower.username}}</a>
           </div>
           <div class="notif-count" *ngIf="follower.notifCount > 0" ><div class="num" >{{follower.notifCount}}</div></div>
         </div>

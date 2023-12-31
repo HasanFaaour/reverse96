@@ -64,7 +64,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
         
       },
       error: (err) => {
-        console.log('SB Auth Err');
+        console.log('SB Auth Err', err);
         
       }
     });  

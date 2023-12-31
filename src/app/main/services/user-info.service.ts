@@ -90,7 +90,7 @@ export class UserInfoService {
   }
 
   get currentUser(): Observable<any> {
-    return this._currentUser? of({...this._currentUser}) : this.userReady$.asObservable();
+    return this._currentUser ? of({...this._currentUser}) : this.userReady$.asObservable();
   }
   
 }

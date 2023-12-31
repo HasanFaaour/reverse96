@@ -382,6 +382,7 @@ export class UserInfoComponent implements OnInit {
       picture: review.picture,
       id: review.id
     }]
+
     const dialogRef = this.dialog.open(ReviewDetailsComponent, {
       width:'900px', height: 'auto',
       panelClass: 'custom-dialog-container',
